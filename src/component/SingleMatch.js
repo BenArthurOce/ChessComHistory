@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Board from "../board/Board";
@@ -25,27 +25,30 @@ const SingleMatchComp = styled.div
     display: grid;
     grid-template-columns: 2% 57% 1fr;
     grid-template-rows: repeat(8, 1fr);
-    // width: 50%;
-    // min-width: 700px;
+    width: 50%;
+    min-width: 700px;
     border: 1px solid #ccc;
     padding: 5px;
+    padding-right: 0;
     margin-top: 10px;
     margin-bottom: 10px;
     min-width: 500px;
     min-height: 300px;
 
-    background-color: ${(props) => {
-        switch (props.result) {
-            case "win":
-                return "green";
-            case "lose":
-                return "red";
-            case "draw":
-                return "grey";
-            default:
-                return "white";
-        }
-    }};
+    max-height: 30vh;
+
+    background-color: ${(props) => props.colorBackground};
+
+
+    @media (max-width: 768px) {
+        width: 100%;
+        min-width: unset;
+        grid-template-columns: 2% 50% 1fr;
+        padding: 5px;
+        min-height: unset;
+        max-height: 300px
+    }
+
 `
 ;
 
@@ -55,23 +58,12 @@ const ResultBar = styled.span
     grid-row: 1;
 
     grid-row-start: 1;
-    grid-row-end: 9;
+    grid-row-end: 10;
 
     border-radius: 100px;
-    background-color: gray;
+    background-color: ${(props) => props.colorBar};
 
-    background-color: ${(props) => {
-        switch (props.result) {
-            case "win":
-                return "teal";
-            case "lose":
-                return "pink";
-            case "draw":
-                return "lightgrey";
-            default:
-                return "white";
-        }
-    }};
+    
 `
 ;
 
@@ -79,15 +71,29 @@ const MatchInfoUrl = styled.span
 `
     grid-column: 2;
     grid-row: 1;
+    padding-left: 10px;
 `
 ;
 
 const BoardSpan = styled.span
 `
+    // grid-row: span 10;
 
-    grid-row: span 9;
-    aspect-ratio: 1;
-    border: 10px solid black;
+    display: inline-block;
+
+    align-items: center;
+    justify-content: center;
+
+    grid-column-start: 3;
+    grid-column-end: 3;
+
+    grid-row-start: 1;
+    grid-row-end: 10;
+
+
+    @media (max-width: 768px) {
+        border: 1px solid black;
+    }
 `
 ;
 
@@ -163,6 +169,17 @@ const MatchInfoMoves = styled.span
 `
 ;
 
+const CopyButtonStyled = styled.button
+`
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+`
+;
+
+
 function SingleMatch(props) {
     const { gameInformation } = props;
 
@@ -170,12 +187,53 @@ function SingleMatch(props) {
 
     const [copied, setCopied] = useState(false);
 
+    const [colorBar, setColorBar] = useState("");
+
+    const [colorIcon, setColorIcon] = useState("");
+
+    const [colorBackground, setColorBackground] = useState("");
+
+
+    useEffect(() => {
+        if (gameInformation.results.playerResult === "win") {
+            setColorBar("#19a335");
+            setColorIcon("#19a335");
+            setColorBackground("#8ceda0");
+        } else if (gameInformation.results.playerResult === "lose") {
+            setColorBar("#a33019");
+            setColorIcon("#a33019");
+            setColorBackground("#ed9c8c");
+        } else {
+            setColorBar("#3a3636");
+            setColorIcon("#3a3636");
+            setColorBackground("#a6a0a0");
+        }
+    }, [gameInformation.results.playerResult]);
+
 
     const isRatedString = () => {
         return gameInformation.isRated ? "Rated" : "Casual";
     };
 
+
+    function splitAndConvert(str) {
+        return str.split('+').map(Number);
+    };
+
+
+    const timeValue = (timeString) => {
+        const array = timeString.split('+').map(Number);
+    
+        const totalSeconds = array[0];
+        const minutes = Math.floor(totalSeconds / 60);
+        const extraSeconds = array[1] ? array[1] : 0;
+
+        return `${minutes}+${extraSeconds}`
+    };
+
+
     const copyToClipboard = (text) => {
+        console.log(text);
         navigator.clipboard.writeText(text);
         setCopied(true);
         setTimeout(() => {
@@ -183,24 +241,20 @@ function SingleMatch(props) {
         }, 1500);
     };
 
-    // const CopyButton = () => (
-    //     <button
-    //         onClick={() => copyToClipboard(gameInformation.moves)}
-    //         style={{ background: "none", border: "none", cursor: "pointer" }}
-    //     >
-    //         <FontAwesomeIcon icon={faFlag} className="icon" />
-    //     </button>
-    // );
+
+    const CopyButton = () => (
+        <CopyButtonStyled onClick={() => copyToClipboard(gameInformation.moves)}>
+            <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
+        </CopyButtonStyled>
+    );
+
 
     return (
         <Container>
-
             {gameInformation && (
-                <SingleMatchComp result={gameInformation.results.playerResult}>
-
+                <SingleMatchComp colorBackground={colorBackground}>
                     {/* Win / Loss bar */}
-                    <ResultBar result={gameInformation.results.playerResult}></ResultBar>
-
+                    <ResultBar colorBar={colorBar}></ResultBar>
 
                     {/* Line - Match ID */}
                     <MatchInfoUrl>
@@ -216,18 +270,16 @@ function SingleMatch(props) {
                         </h3>
                     </MatchInfoUrl>
 
-
                     {/* Chessboard Display */}
                     <BoardSpan>
                         <Board position={gameInformation.position} />
                     </BoardSpan>
 
-
                     {/* Line - General Match Info */}
                     <MatchInfoGeneral>
-                        <SingleMatchIcon icon={gameInformation.timeClass}></SingleMatchIcon>
+                        <SingleMatchIcon icon={gameInformation.timeClass} color={colorIcon}></SingleMatchIcon>
                         <p>
-                            {Math.floor(gameInformation.timeControl / 60)} min
+                            {timeValue(gameInformation.timeControl)}
                             &nbsp; &middot; &nbsp;
                             {isRatedString(gameInformation.isRated)}
                             &nbsp; &middot; &nbsp;
@@ -235,35 +287,35 @@ function SingleMatch(props) {
                         </p>
                     </MatchInfoGeneral>
 
-
                     {/* Line - White Details */}
                     <MatchInfoWhite>
-                    <SingleMatchIcon icon={"whitePawn"}></SingleMatchIcon>
+                        <SingleMatchIcon icon={"whitePawn"} color={colorIcon}></SingleMatchIcon>
                         <p>{gameInformation.white.username}</p>
-                        <strong> <p>({gameInformation.white.elo})</p> </strong>
+                        &nbsp;
+                        <strong>
+                            <p>({gameInformation.white.elo})</p>
+                        </strong>
                     </MatchInfoWhite>
-
 
                     {/* Line - Black Details */}
                     <MatchInfoBlack>
-                        <SingleMatchIcon icon={"blackPawn"}></SingleMatchIcon>
+                        <SingleMatchIcon icon={"blackPawn"} color={colorIcon}></SingleMatchIcon>
                         <p>{gameInformation.black.username}</p>
+                        &nbsp;
                         <strong>
                             <p>({gameInformation.black.elo})</p>
                         </strong>
                     </MatchInfoBlack>
 
-
                     {/* Line - Winner */}
                     <MatchInfoResult>
-                        <SingleMatchIcon icon={gameInformation.results.keyword}></SingleMatchIcon>
+                        <SingleMatchIcon icon={gameInformation.results.keyword} color={colorIcon}></SingleMatchIcon>
                         <p>{gameInformation.results.result}</p>
                     </MatchInfoResult>
 
-
                     {/* Line - ECO opening and link */}
                     <MatchInfoOpening>
-                        <SingleMatchIcon icon={"book"}></SingleMatchIcon>
+                        <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
                         <a
                             href={gameInformation.opening.url}
                             target="_blank"
@@ -275,14 +327,11 @@ function SingleMatch(props) {
                         </a>
                     </MatchInfoOpening>
 
-
                     {/* Line - List of Moves */}
                     <MatchInfoMoves>
-                        <SingleMatchIcon icon={"copy"}></SingleMatchIcon>
-                        {/* <CopyButton></CopyButton> */}
+                        <CopyButton />
                         <p>{gameInformation.moves}</p>
                     </MatchInfoMoves>
-
                 </SingleMatchComp>
             )}
         </Container>

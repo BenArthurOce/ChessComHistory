@@ -5,7 +5,7 @@ import Piece from './Piece';
 const SquareContainer = styled.div`
     flex: 1;
     aspect-ratio: 1;
-    border: 1px solid black;
+    // border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;

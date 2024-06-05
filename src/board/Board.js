@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Square from './Square';
 
-const BoardContainer = styled.div`
+
+// Styled components
+const Container = styled.div
+`
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    border: 2px solid black;
-`;
+`
+;
+
+// const BoardContainer = styled.div`
+//     display: grid;
+//     grid-template-columns: repeat(8, 1fr);
+//     grid-template-rows: repeat(8, 1fr);
+// `
+// ;
 
 const parseFEN = (fen) => {
     const isCapitalized = (char) => /[A-Z]/.test(char);
@@ -55,9 +65,9 @@ const Board = (props) => {
     }, [props.position]);
 
     return (
-        <BoardContainer className="chessboard">
+        <Container>
             {renderSquares(chessBoard)}
-        </BoardContainer>
+        </Container>
     );
 };
 
