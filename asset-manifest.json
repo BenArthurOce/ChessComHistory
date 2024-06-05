@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ChessComHistory/static/css/main.92875615.css",
+    "main.js": "/ChessComHistory/static/js/main.73232f50.js",
+    "index.html": "/ChessComHistory/index.html",
+    "main.92875615.css.map": "/ChessComHistory/static/css/main.92875615.css.map",
+    "main.73232f50.js.map": "/ChessComHistory/static/js/main.73232f50.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.92875615.css",
+    "static/js/main.73232f50.js"
+  ]
+}
