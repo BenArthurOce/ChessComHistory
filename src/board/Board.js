@@ -58,6 +58,7 @@ const renderSquares = (board) => {
 };
 
 const Board = (props) => {
+
     const [chessBoard, setChessBoard] = useState(() => parseFEN(props.position));
 
     useEffect(() => {

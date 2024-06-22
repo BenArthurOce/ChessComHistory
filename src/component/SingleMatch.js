@@ -212,7 +212,7 @@ function SingleMatch(props) {
 
 
     const isRatedString = () => {
-        return gameInformation.isRated ? "Rated" : "Casual";
+        return gameInformation.general.isRated ? "Rated" : "Casual";
     };
 
 
@@ -248,11 +248,14 @@ function SingleMatch(props) {
         </CopyButtonStyled>
     );
 
+    const handleClick = () => {
+        console.log(props.gameInformation);
+    };
 
     return (
         <Container>
             {gameInformation && (
-                <SingleMatchComp colorBackground={colorBackground}>
+                <SingleMatchComp colorBackground={colorBackground} onClick={handleClick}>
                     {/* Win / Loss bar */}
                     <ResultBar colorBar={colorBar}></ResultBar>
 
@@ -260,30 +263,30 @@ function SingleMatch(props) {
                     <MatchInfoUrl>
                         <h3 className="game-id">
                             <a
-                                href={`${gameInformation.url}`}
+                                href={`${gameInformation.general.url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Site: {gameInformation.site} || ID:{" "}
-                                {gameInformation.id}
+                                Site: {gameInformation.general.site} || ID:{" "}
+                                {gameInformation.general.id}
                             </a>
                         </h3>
                     </MatchInfoUrl>
 
                     {/* Chessboard Display */}
                     <BoardSpan>
-                        <Board position={gameInformation.position} />
+                        <Board position={gameInformation.results.fen} />
                     </BoardSpan>
 
                     {/* Line - General Match Info */}
                     <MatchInfoGeneral>
-                        <SingleMatchIcon icon={gameInformation.timeClass} color={colorIcon}></SingleMatchIcon>
+                        <SingleMatchIcon icon={gameInformation.time.class} color={colorIcon}></SingleMatchIcon>
                         <p>
-                            {timeValue(gameInformation.timeControl)}
+                            {timeValue(gameInformation.time.control)}
                             &nbsp; &middot; &nbsp;
-                            {isRatedString(gameInformation.isRated)}
+                            {isRatedString(gameInformation.general.isRated)}
                             &nbsp; &middot; &nbsp;
-                            {gameInformation.event}
+                            {gameInformation.general.event}
                         </p>
                     </MatchInfoGeneral>
 
