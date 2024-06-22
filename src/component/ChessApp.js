@@ -60,7 +60,7 @@ function ChessApp() {
 
     const fetchMatchHistory = async (username) => {
         try {
-            const response = await fetch(`https://api.chess.com/pub/player/${username}/games/2024/05`);
+            const response = await fetch(`https://api.chess.com/pub/player/${username}/games/2024/06`);
             const data = await response.json();
             setMatchCount(data.games.length);
 
@@ -247,7 +247,7 @@ function ChessApp() {
                 )}
             </section>
 
-            <section id="playerInfo">
+            {/* <section id="playerInfo">
                 {playerData && (
                     <PlayerInformation playerInformation={playerData} />
                 )}
@@ -261,7 +261,7 @@ function ChessApp() {
                         ))}
                     </div>
                 )}
-            </section>
+            </section> */}
 
 
 

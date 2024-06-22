@@ -1,0 +1,29 @@
+/* UniqueMoves.css */
+.heatmap-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.heatmap-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.heatmap-high {
+    background-color: #7CFC00; /* Light Green */
+}
+
+.heatmap-medium {
+    background-color: #FFFF00; /* Yellow */
+}
+
+.heatmap-low {
+    background-color: #FFA500; /* Orange */
+}
+
+.heatmap-very-low {
+    background-color: #FF6347; /* Tomato */
+}

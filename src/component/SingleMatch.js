@@ -203,10 +203,15 @@ function SingleMatch(props) {
             setColorBar("#a33019");
             setColorIcon("#a33019");
             setColorBackground("#ed9c8c");
-        } else {
+        } else if (gameInformation.results.playerResult === "draw") {
             setColorBar("#3a3636");
             setColorIcon("#3a3636");
             setColorBackground("#a6a0a0");
+        }   
+        else {
+            setColorBar("black");
+            setColorIcon("black");
+            setColorBackground("black");
         }
     }, [gameInformation.results.playerResult]);
 
