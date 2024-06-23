@@ -1,0 +1,66 @@
+/* UniqueMoves.css */
+
+/* Container for the heatmap and input boxes */
+.input-container {
+    margin-bottom: 20px;
+}
+
+/* Style for input boxes and select */
+.input-boxes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-boxes label {
+    font-weight: bold;
+}
+
+.input-boxes input[type="number"],
+.input-boxes select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-boxes input[type="number"] {
+    width: 80px;
+}
+
+.input-boxes select {
+    min-width: 120px;
+}
+
+/* Heatmap container */
+.heatmap-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+/* Individual heatmap item */
+.heatmap-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Heatmap item background colors based on win percentage */
+.heatmap-high {
+    background-color: #7CFC00; /* Light Green */
+}
+
+.heatmap-medium {
+    background-color: #FFFF00; /* Yellow */
+}
+
+.heatmap-low {
+    background-color: #FFA500; /* Orange */
+}
+
+.heatmap-very-low {
+    background-color: #FF6347; /* Tomato */
+}

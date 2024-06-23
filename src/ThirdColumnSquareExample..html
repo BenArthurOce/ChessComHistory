@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equal Height Container</title>
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 2fr 3fr; /* Different widths for the columns */
+        grid-template-rows: auto auto auto; /* Define three rows */
+        grid-gap: 10px; /* Gap between grid items */
+    }
+    .column {
+        border: 1px solid black;
+        padding: 20px;
+    }
+    .third-column {
+        grid-row: 1 / span 3; /* Span the third column over all rows */
+        aspect-ratio: 1; /* Sets the aspect ratio to 1:1 */
+        border: 1px solid black;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="column">First Column</div>
+        <div class="column">Second Column</div>
+        <div class="third-column">Third Column</div>
+    </div>
+</body>
+</html>
