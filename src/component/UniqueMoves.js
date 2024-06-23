@@ -131,12 +131,6 @@ const UniqueMoves = (props) => {
         setSelectedTeam(event.target.value);
     };
 
-    // const handleMobileClick = (move) => {
-    //     if (isMobile) {
-    //         console.log(`Mobile click detected on move: ${move}`);
-    //     }
-    // };
-
     const handleMobileClick = (move) => {
         if (isMobile) {
             setSelectedMove(move);
@@ -147,15 +141,19 @@ const UniqueMoves = (props) => {
         <div className="container">
             <h2>Winning Moves Heatmap</h2>
             <div className="input-boxes">
-                <label htmlFor="startInput">Start:</label>
-                <input id="startInput" type="number" value={start} onChange={handleStartChange} />
-                <label htmlFor="endInput">End:</label>
-                <input id="endInput" type="number" value={end} onChange={handleEndChange} />
-                <label htmlFor="teamSelect">Select Team:</label>
-                <select id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                    <option value="white">White</option>
-                    <option value="black">Black</option>
-                </select>
+                <div>
+                    <label htmlFor="startInput">Start:</label>
+                    <input id="startInput" type="number" value={start} onChange={handleStartChange} />
+                    <label htmlFor="endInput">End:</label>
+                    <input id="endInput" type="number" value={end} onChange={handleEndChange} />
+                </div>
+                <div>
+                    <label htmlFor="teamSelect">Select Team:</label>
+                    <select id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                    </select>
+                </div>
             </div>
             <div className="heatmap-container">
                 {Object.entries(pieceMoves).map(([pieceType, moves]) => (
@@ -164,19 +162,22 @@ const UniqueMoves = (props) => {
 
                         {/* storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 }; */}
                         {moves.map((moveObj) => (
-                            <div 
-                                key={moveObj.move} 
+                            <div
+                                key={moveObj.move}
                                 className={`heatmap-item ${getColorClass(moveObj.winpct)}`}
-                                onClick={() => handleMobileClick(moveObj)} // Pass the entire object to the handler
+                                onClick={() => handleMobileClick(moveObj)}
                             >
-                                <span>{moveObj.move}</span>
-                                <br />
-                                <span>Games: {moveObj.played}</span>
-                                <br />
-                                <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
 
-                                {isMobile && selectedMove === moveObj && (
-                                    <div className="move-details-bubble">
+
+                            {/* If viewport is Mobile */}
+                            {isMobile && (
+                                    <span>{moveObj.move}</span>
+                            )}
+
+
+                            {/* If viewport is Mobile and user clicked */}
+                            {isMobile && selectedMove === moveObj && (
+                                    <div className={`move-details-bubble heatmap-item ${getColorClass(moveObj.winpct)}`}>
                                         <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
                                         <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
                                         <br></br>
@@ -184,9 +185,22 @@ const UniqueMoves = (props) => {
                                         <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
                                         <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
                                         <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
-
                                     </div>
                                 )}
+
+
+
+                            {/* If viewport is PC */}
+                            {!isMobile && (
+                                <div>
+                                    <span>{moveObj.move}</span>
+                                    <br></br>
+                                    <span>Games: {moveObj.played}</span>
+                                    <br></br>
+                                    <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
+                                </div>
+                            )}
+
                             </div>
                             
                             

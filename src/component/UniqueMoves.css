@@ -49,49 +49,21 @@
     position: relative;
 }
 
-/* Hide text except for move on mobile */
-@media (max-width: 768px) {
 
-    .piece-section {
-        width: 12vw;
-    }
-
-    .piece-section > h3 {
-        font-size: 15px;
-    }
-
-    .heatmap-container {
-        display: flex;
-        gap: 10px;
-    }
-
-    .heatmap-item span {
-        display: none;
-    }
-
-    .heatmap-item {
-        text-align: center;
-    }
-
-    .heatmap-item > span:first-child {
-        display: inline;
-        font-size: 12px;
-        text-wrap: nowrap;
-    }
-}
 
 /* Bubble for move details */
 .move-details-bubble {
     position: absolute;
     top: 40px;
     left: 10px;
-    background: white;
-    border: 1px solid #ccc;
+    border: 5px solid black;
     border-radius: 5px;
     padding: 5px;
     z-index: 10;
     width: 120px;
+    white-space: nowrap; /* Ensure contents do not wrap */
 }
+
 
 .move-details-bubble > span {
     display: flex;
@@ -121,4 +93,81 @@
 
 .heatmap-very-low {
     background-color: #f44336; /* Red */
+}
+
+
+
+
+
+
+/* Hide text except for move on mobile */
+@media (max-width: 768px) {
+
+
+    .input-boxes {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 120px;
+        position: sticky;
+        left: 0;
+        top: 0;
+        background-color: white;
+        padding: 10px;
+        z-index: 100;
+        align-items: start;
+        padding: 10px;
+        border: 5px solid #ccc;
+    }
+
+    .input-boxes label {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+       
+
+    .piece-section {
+        width: 12vw;
+    }
+
+    .piece-section > h3 {
+        font-size: 15px;
+    }
+
+    .heatmap-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* .heatmap-item span {
+        display: none;
+    } */
+
+    .heatmap-item {
+        text-align: center;
+    }
+
+    .heatmap-item > span {
+        font-size: 12px;
+        text-wrap: nowrap;
+    }
+
+
+    .move-details-bubble .heatmap-high {
+        background-color: #4caf50; /* Green */
+    }
+    
+    .move-details-bubble .heatmap-medium {
+        background-color: #ffeb3b; /* Yellow */
+    }
+    
+    .move-details-bubble .heatmap-low {
+        background-color: #ff9800; /* Orange */
+    }
+    
+    .move-details-bubble .heatmap-very-low {
+        background-color: #f44336; /* Red */
+    }
+
+
 }
