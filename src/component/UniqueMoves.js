@@ -14,26 +14,29 @@ const UniqueMoves = (props) => {
 
     const [start, setStart] = useState(8); // Default start value
     const [end, setEnd] = useState(15);   // Default end value
+    const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
+
 
     useEffect(() => {
         const uniqueMoves = getUniqueMoves(props.matchHistory, start, end);
-        const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end);
+        // const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end);
+        const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end, selectedTeam);
 
         // Sort uniqueMoveStats by played count in descending order
         const sortedMoves = sortMovesByPlayed(uniqueMoveStats);
 
         const categorizedMoves = {
-            pawn: filterPawnMoves(sortedMoves),
-            rook: filterMoves(sortedMoves, "R"),
-            knight: filterMoves(sortedMoves, "N"),
-            bishop: filterMoves(sortedMoves, "B"),
-            queen: filterMoves(sortedMoves, "Q"),
-            king: filterMoves(sortedMoves, "K"),
-            castling: filterCastlingMoves(sortedMoves)
+              pawn: filterPawnMoves(sortedMoves)
+            , rook: filterMoves(sortedMoves, "R")
+            , knight: filterMoves(sortedMoves, "N")
+            , bishop: filterMoves(sortedMoves, "B")
+            , queen: filterMoves(sortedMoves, "Q")
+            , king: filterMoves(sortedMoves, "K")
+            , castling: filterCastlingMoves(sortedMoves)
         };
-
         setPieceMoves(categorizedMoves);
-    }, [props.matchHistory, start, end]);
+    }, [props.matchHistory, start, end, selectedTeam]);
+
 
     const getUniqueMoves = (matchHistory, start, end) => {
         const filteredMoves = filterMatches(matchHistory);
@@ -43,19 +46,22 @@ const UniqueMoves = (props) => {
         return uniqueMoves;
     };
 
+
     const filterMatches = (matchHistory) => {
         return matchHistory.map(match => {
             const team = match.playerResults.team;
-            const moves = match.allMoves[team];
+            const moves = match.moves[team];
             return moves;
         });
     };
 
-    const extractMoves = (allMovesArrays, start, end) => {
-        return allMovesArrays.map(moves => moves.slice(start, end));
+
+    const extractMoves = (movesArrays, start, end) => {
+        return movesArrays.map(moves => moves.slice(start, end));
     };
 
-    const calculateWinningMoves = (matchHistory, uniqueMoves, start, end) => {
+
+    const calculateWinningMoves = (matchHistory, uniqueMoves, start, end, selectedTeam) => {
         const storedResults = {};      
         uniqueMoves.forEach(move => {
             storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 };
@@ -63,17 +69,19 @@ const UniqueMoves = (props) => {
             matchHistory.forEach(match => { 
                 const team = match.playerResults.team;
                 const outcome = match.playerResults.outcome;
-                const moves = match.allMoves[team].slice(start, end);
-                const exists = moves.includes(move);
-                
-                if (!exists) {
-                    storedResults[move].nullcount += 1;
-                } else {
-                    if (outcome === "win")  storedResults[move].win += 1;
-                    if (outcome === "lose") storedResults[move].lose += 1;
-                    if (outcome === "draw") storedResults[move].draw += 1;
+                if (team === selectedTeam) {
+                    const moves = match.moves[team].slice(start, end);
+                    const exists = moves.includes(move);
+                    
+                    if (!exists) {
+                        storedResults[move].nullcount += 1;
+                    } else {
+                        if (outcome === "win")  storedResults[move].win += 1;
+                        if (outcome === "lose") storedResults[move].lose += 1;
+                        if (outcome === "draw") storedResults[move].draw += 1;
+                    }
                 }
-            }); 
+            });  
 
             storedResults[move].played = storedResults[move].win + storedResults[move].lose + storedResults[move].draw;
             storedResults[move].winpct = (storedResults[move].win / storedResults[move].played) * 100;
@@ -87,16 +95,16 @@ const UniqueMoves = (props) => {
         return sortedMoves;
     };
 
-    const filterMoves = (allMoveStats, code) => {
-        return allMoveStats.filter(({ move }) => move.startsWith(code));
+    const filterMoves = (movestats, code) => {
+        return movestats.filter(({ move }) => move.startsWith(code));
     };
 
-    const filterPawnMoves = (allMoveStats) => {
-        return allMoveStats.filter(({ move }) => typeof move === 'string' && /^[a-z]/.test(move));
+    const filterPawnMoves = (movestats) => {
+        return movestats.filter(({ move }) => typeof move === 'string' && /^[a-z]/.test(move));
     };
 
-    const filterCastlingMoves = (allMoveStats) => {
-        return allMoveStats.filter(({ move }) => move.startsWith("O"));
+    const filterCastlingMoves = (movestats) => {
+        return movestats.filter(({ move }) => move.startsWith("O"));
     };
 
     const getColorClass = (winPercentage) => {
@@ -114,6 +122,10 @@ const UniqueMoves = (props) => {
         setEnd(parseInt(event.target.value));
     };
 
+    const handleTeamChange = (event) => {
+        setSelectedTeam(event.target.value);
+    };
+
     return (
         <div>
             <h2>Winning Moves Heatmap</h2>
@@ -122,6 +134,11 @@ const UniqueMoves = (props) => {
                 <input id="startInput" type="number" value={start} onChange={handleStartChange} />
                 <label htmlFor="endInput">End:</label>
                 <input id="endInput" type="number" value={end} onChange={handleEndChange} />
+                <label htmlFor="teamSelect">Select Team:</label>
+                <select id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                </select>
             </div>
             <div className="heatmap-container">
                 {Object.entries(pieceMoves).map(([pieceType, moves]) => (

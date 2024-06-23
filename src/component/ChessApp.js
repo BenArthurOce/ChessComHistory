@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useQuery, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SearchForm from './SearchForm';
 import PlayerInformation from './PlayerInformation';
 import SingleMatch from './SingleMatch';
-
 import UniqueMoves from './UniqueMoves';
 
 function ChessApp() {
@@ -13,13 +13,25 @@ function ChessApp() {
     const [matchCount, setMatchCount] = useState(0);
     const [matchesToDisplay, setMatchesToDisplay] = useState(10);
 
+    const mountedRef = useRef(true);    // Does not trigger a re-render
+
+
+    useEffect(() => {
+        mountedRef.current = true;
+        return () => {
+            mountedRef.current = false; // Cleanup function to set mountedRef to false when component unmounts
+        };
+    }, []);
+
+    
     useEffect(() => {
         if (inputString) {
             fetchPlayerData(inputString);
         }
     }, [inputString]);
 
-    const fetchPlayerData = async (username) => {
+
+    const fetchPlayerData = useCallback(async (username) => {
         setError(null);
         setWaitingFlag(true);
 
@@ -37,6 +49,8 @@ function ChessApp() {
                 return;
             }
 
+            if (!mountedRef.current) return;
+
             const playerObject = {
                   avatar:       data.avatar
                 , id:           data.player_id
@@ -48,7 +62,6 @@ function ChessApp() {
                 , url:          data.url
                 , username:     data.username
             };
-
             setPlayerData(playerObject);
             setWaitingFlag(false);
         } catch (error) {
@@ -56,29 +69,24 @@ function ChessApp() {
             setWaitingFlag(false);
             console.error('Error fetching player information:', error);
         }
-    };
+    }, []);
 
-    const fetchMatchHistory = async (username) => {
-        try {
-            const response = await fetch(`https://api.chess.com/pub/player/${username}/games/2024/06`);
-            const data = await response.json();
-            setMatchCount(data.games.length);
 
-            const matchObjects = await Promise.all(data.games.map(async (match) => {
-                const parsedData = parsePGNString(match.pgn);
-                return createMatchObject(match, parsedData, username);
-            }));
+    const fetchMatchHistory = useCallback(async (username) => {
+        const response = await fetch(`https://api.chess.com/pub/player/${username}/games/2024/06`);
+        const data = await response.json();
+        setMatchCount(data.games.length);
 
-            return matchObjects;
-        } catch (error) {
-            setError(true);
-            setWaitingFlag(false);
-            console.error('Error fetching match history:', error);
-            return [];
-        }
-    };
+        const matchObjects = await Promise.all(data.games.map(async (match) => {
+            const parsedData = parsePGNString(match.pgn);
+            return createMatchObject(match, parsedData, username);
+        }));
 
-    const parsePGNString = (inputString) => {
+        return matchObjects;
+    }, []);
+
+
+    const parsePGNString = useCallback((inputString) => {
         const regex = /\[([\w\s]+)\s"([^"]+)"\]/g;
         let match;
         const parsedData = {};
@@ -91,15 +99,17 @@ function ChessApp() {
 
         parsedData.moves = buildMoveString(remainingData);
         return parsedData;
-    };
+    }, []);
 
-    const buildMoveString = (input) => {
+
+    const buildMoveString = useCallback((input) => {
         return input.replace(/\{[^{}]*\}|\[[^\[\]]*\]/g, '')
                     .replace(/\d+\.{3}/g, ' ')
                     .replace(/\s+/g, ' ')
                     .replace(/\s+\./g, '.').replace(/\.\s+/g, '.')
                     .trim();
-    };
+    }, []);
+
 
     const createMatchObject = (match, parsedData, username) => {
         const moveObject = createMoveObject(parsedData.moves);
@@ -120,7 +130,7 @@ function ChessApp() {
               , userPlayed:     userPlayed
             }
             ,
-            allMoves: {
+            moves: {
                 pgn:              parsedData.moves
               , full:             moveObject
               , white:            getPlayerMoves(moveObject, "white")
@@ -135,6 +145,7 @@ function ChessApp() {
               , keyword:          parsedData.Termination.split(' ').pop()
               , playerResult:     playerResult
               , fen:              parsedData.CurrentPosition
+              , winner:           winner
             }
             ,
             playerResults: {
@@ -173,26 +184,8 @@ function ChessApp() {
         };
     };
 
-    const getUserPlayedColor = (match, username) => {
-        if (match.white.username.toLowerCase() === username.toLowerCase()) return "white";
-        if (match.black.username.toLowerCase() === username.toLowerCase()) return "black";
-        return "";
-    };
 
-    const getMatchWinner = (match) => {
-        if (match.white.result.toLowerCase() === "win") return "white";
-        if (match.black.result.toLowerCase() === "win") return "black";
-        return "draw";
-    };
-
-    const getPlayerResult = (match, parsedData, username) => {
-        if (match.white.result === "win" && match.white.username.toLowerCase() === username.toLowerCase()) return "win";
-        if (match.black.result === "win" && match.black.username.toLowerCase() === username.toLowerCase()) return "win";
-        if (parsedData.Result === "1/2-1/2") return "draw";
-        return "lose";
-    };
-
-    const createMoveObject = (notation) => {
+    const createMoveObject = useCallback((notation) => {
         const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
         let match;
         const moves = {};
@@ -203,24 +196,49 @@ function ChessApp() {
             const blackMove = match[3] || undefined;
             moves[moveNumber] = [whiteMove, blackMove];
         }
-
         return moves;
-    };
+    }, []);
 
-    const getPlayerMoves = (movesObject, player) => {
+
+    const getUserPlayedColor = useCallback((match, username) => {
+        if (match.white.username.toLowerCase() === username.toLowerCase()) return "white";
+        if (match.black.username.toLowerCase() === username.toLowerCase()) return "black";
+        return "";
+    }, []);
+
+
+    const getMatchWinner = useCallback((match) => {
+        if (match.white.result.toLowerCase() === "win") return "white";
+        if (match.black.result.toLowerCase() === "win") return "black";
+        return "draw";
+    }, []);
+
+
+    const getPlayerResult = useCallback((match, parsedData, username) => {
+        if (match.white.result === "win" && match.white.username.toLowerCase() === username.toLowerCase()) return "win";
+        if (match.black.result === "win" && match.black.username.toLowerCase() === username.toLowerCase()) return "win";
+        if (parsedData.Result === "1/2-1/2") return "draw";
+        return "lose";
+    }, []);
+
+
+    const getPlayerMoves = useCallback((movesObject, player) => {
         const isWhite = player.toLowerCase() === 'white';
         return Object.values(movesObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
-    };
+    }, []);
 
-    const extractOpeningName = (openingURL) => {
+
+    const extractOpeningName = useCallback((openingURL) => {
         const index = openingURL.indexOf("/openings/");
         return openingURL.substring(index + "/openings/".length).replace(/-/g, ' ');
-    };
+    }, []);
 
-    const extractGameId = (gameURL) => {
+
+    const extractGameId = useCallback((gameURL) => {
         const index = gameURL.indexOf("/live/");
         return parseInt(gameURL.substring(index + "/live/".length), 10);
-    };
+    }, []);
+
 
     return (
         <div id="wrapper">
