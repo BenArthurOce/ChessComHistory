@@ -1,6 +1,100 @@
 import React, { useState, useEffect } from "react";
-import "./UniqueMoves.css";
-import useIsMobile from "../hooks/useIsMobile";
+import styled from "styled-components";
+
+const Container = styled.div`
+    padding: 20px;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
+`;
+
+const InputBoxes = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="number"], select {
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input[type="number"] {
+        width: 80px;
+    }
+
+    select {
+        min-width: 120px;
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+
+        input[type="number"], select {
+            width: 100%;
+        }
+    }
+`;
+
+const HeatmapContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+`;
+
+const HeatmapItem = styled.div`
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+    &.heatmap-high {
+        background-color: #7CFC00; /* Light Green */
+    }
+
+    &.heatmap-medium {
+        background-color: #FFFF00; /* Yellow */
+    }
+
+    &.heatmap-low {
+        background-color: #FFA500; /* Orange */
+    }
+
+    &.heatmap-very-low {
+        background-color: #FF6347; /* Tomato */
+    }
+
+    @media (max-width: 768px) {
+        padding: 8px;
+    }
+`;
+
+const PieceSection = styled.div`
+    margin-bottom: 20px;
+
+    h3 {
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+        h3 {
+            font-size: 1.2em;
+        }
+    }
+`;
 
 const UniqueMoves = (props) => {
     const [pieceMoves, setPieceMoves] = useState({
@@ -13,21 +107,15 @@ const UniqueMoves = (props) => {
         castling: []
     });
 
-
     const [start, setStart] = useState(8); // Default start value
     const [end, setEnd] = useState(15);   // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
 
-    const [selectedMove, setSelectedMove] = useState(null); // for Mobile - Displays Bubble if selected
-    const isMobile = useIsMobile(); // Custom hook to test if mobile device
-
 
     useEffect(() => {
         const uniqueMoves = getUniqueMoves(props.matchHistory, start, end);
-        // const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end);
         const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end, selectedTeam);
 
-        // Sort uniqueMoveStats by played count in descending order
         const sortedMoves = sortMovesByPlayed(uniqueMoveStats);
 
         const categorizedMoves = {
@@ -131,22 +219,10 @@ const UniqueMoves = (props) => {
         setSelectedTeam(event.target.value);
     };
 
-    // const handleMobileClick = (move) => {
-    //     if (isMobile) {
-    //         console.log(`Mobile click detected on move: ${move}`);
-    //     }
-    // };
-
-    const handleMobileClick = (move) => {
-        if (isMobile) {
-            setSelectedMove(move);
-        }
-    };
-
     return (
-        <div className="container">
+        <Container>
             <h2>Winning Moves Heatmap</h2>
-            <div className="input-boxes">
+            <InputBoxes>
                 <label htmlFor="startInput">Start:</label>
                 <input id="startInput" type="number" value={start} onChange={handleStartChange} />
                 <label htmlFor="endInput">End:</label>
@@ -156,45 +232,24 @@ const UniqueMoves = (props) => {
                     <option value="white">White</option>
                     <option value="black">Black</option>
                 </select>
-            </div>
-            <div className="heatmap-container">
+            </InputBoxes>
+            <HeatmapContainer>
                 {Object.entries(pieceMoves).map(([pieceType, moves]) => (
-                    <div key={pieceType} className="piece-section">
+                    <PieceSection key={pieceType}>
                         <h3>{pieceType.toUpperCase()} Moves</h3>
-
-                        {/* storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 }; */}
-                        {moves.map((moveObj) => (
-                            <div 
-                                key={moveObj.move} 
-                                className={`heatmap-item ${getColorClass(moveObj.winpct)}`}
-                                onClick={() => handleMobileClick(moveObj)} // Pass the entire object to the handler
-                            >
-                                <span>{moveObj.move}</span>
+                        {moves.map(({ move, win, lose, draw, nullcount, played, winpct }) => (
+                            <HeatmapItem key={move} className={getColorClass(winpct)}>
+                                <span>{move}</span>
                                 <br />
-                                <span>Games: {moveObj.played}</span>
+                                <span>Games: {played}</span>
                                 <br />
-                                <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
-
-                                {isMobile && selectedMove === moveObj && (
-                                    <div className="move-details-bubble">
-                                        <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
-                                        <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
-                                        <br></br>
-                                        <span><p><b>Games:</b></p> <p>{moveObj.played}</p></span>
-                                        <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
-                                        <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
-                                        <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
-
-                                    </div>
-                                )}
-                            </div>
-                            
-                            
+                                <span>Win Rate: {winpct.toFixed(2)}%</span>
+                            </HeatmapItem>
                         ))}
-                    </div>
+                    </PieceSection>
                 ))}
-            </div>
-        </div>
+            </HeatmapContainer>
+        </Container>
     );
 };
 

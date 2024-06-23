@@ -46,21 +46,79 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
+    position: relative;
 }
 
-/* Heatmap item background colors based on win percentage */
+/* Hide text except for move on mobile */
+@media (max-width: 768px) {
+
+    .piece-section {
+        width: 12vw;
+    }
+
+    .piece-section > h3 {
+        font-size: 15px;
+    }
+
+    .heatmap-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .heatmap-item span {
+        display: none;
+    }
+
+    .heatmap-item {
+        text-align: center;
+    }
+
+    .heatmap-item > span:first-child {
+        display: inline;
+        font-size: 12px;
+        text-wrap: nowrap;
+    }
+}
+
+/* Bubble for move details */
+.move-details-bubble {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 10;
+    width: 120px;
+}
+
+.move-details-bubble > span {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 5px;
+}
+
+
+
+
+/* span:first-child  */
+
+
+/* Color classes for heatmap items */
 .heatmap-high {
-    background-color: #7CFC00; /* Light Green */
+    background-color: #4caf50; /* Green */
 }
 
 .heatmap-medium {
-    background-color: #FFFF00; /* Yellow */
+    background-color: #ffeb3b; /* Yellow */
 }
 
 .heatmap-low {
-    background-color: #FFA500; /* Orange */
+    background-color: #ff9800; /* Orange */
 }
 
 .heatmap-very-low {
-    background-color: #FF6347; /* Tomato */
+    background-color: #f44336; /* Red */
 }

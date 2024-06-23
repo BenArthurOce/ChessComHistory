@@ -13,21 +13,17 @@ const UniqueMoves = (props) => {
         castling: []
     });
 
-
     const [start, setStart] = useState(8); // Default start value
     const [end, setEnd] = useState(15);   // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
+    const [selectedMove, setSelectedMove] = useState(null); // State for the selected move
 
-    const [selectedMove, setSelectedMove] = useState(null); // for Mobile - Displays Bubble if selected
-    const isMobile = useIsMobile(); // Custom hook to test if mobile device
-
+    const isMobile = useIsMobile(); // Custom Hook to check device
 
     useEffect(() => {
         const uniqueMoves = getUniqueMoves(props.matchHistory, start, end);
-        // const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end);
         const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end, selectedTeam);
 
-        // Sort uniqueMoveStats by played count in descending order
         const sortedMoves = sortMovesByPlayed(uniqueMoveStats);
 
         const categorizedMoves = {
@@ -42,7 +38,6 @@ const UniqueMoves = (props) => {
         setPieceMoves(categorizedMoves);
     }, [props.matchHistory, start, end, selectedTeam]);
 
-
     const getUniqueMoves = (matchHistory, start, end) => {
         const filteredMoves = filterMatches(matchHistory);
         const extractedMoves = extractMoves(filteredMoves, start, end);
@@ -50,7 +45,6 @@ const UniqueMoves = (props) => {
         const uniqueMoves = [...new Set(flattenedMoves)];
         return uniqueMoves;
     };
-
 
     const filterMatches = (matchHistory) => {
         return matchHistory.map(match => {
@@ -60,11 +54,9 @@ const UniqueMoves = (props) => {
         });
     };
 
-
     const extractMoves = (movesArrays, start, end) => {
         return movesArrays.map(moves => moves.slice(start, end));
     };
-
 
     const calculateWinningMoves = (matchHistory, uniqueMoves, start, end, selectedTeam) => {
         const storedResults = {};      
@@ -131,15 +123,9 @@ const UniqueMoves = (props) => {
         setSelectedTeam(event.target.value);
     };
 
-    // const handleMobileClick = (move) => {
-    //     if (isMobile) {
-    //         console.log(`Mobile click detected on move: ${move}`);
-    //     }
-    // };
-
-    const handleMobileClick = (move) => {
+    const handleMobileClick = (move, moveDetails) => {
         if (isMobile) {
-            setSelectedMove(move);
+            setSelectedMove(moveDetails);
         }
     };
 
@@ -161,35 +147,21 @@ const UniqueMoves = (props) => {
                 {Object.entries(pieceMoves).map(([pieceType, moves]) => (
                     <div key={pieceType} className="piece-section">
                         <h3>{pieceType.toUpperCase()} Moves</h3>
-
-                        {/* storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 }; */}
-                        {moves.map((moveObj) => (
+                        {moves.map((moveDetails) => (
                             <div 
-                                key={moveObj.move} 
-                                className={`heatmap-item ${getColorClass(moveObj.winpct)}`}
-                                onClick={() => handleMobileClick(moveObj)} // Pass the entire object to the handler
+                                key={moveDetails.move} 
+                                className={`heatmap-item ${getColorClass(moveDetails.winpct)}`}
+                                onClick={() => handleMobileClick(moveDetails.move, moveDetails)} // Add the onClick handler
                             >
-                                <span>{moveObj.move}</span>
-                                <br />
-                                <span>Games: {moveObj.played}</span>
-                                <br />
-                                <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
-
-                                {isMobile && selectedMove === moveObj && (
+                                <span>{moveDetails.move}</span>
+                                {isMobile && selectedMove === moveDetails && (
                                     <div className="move-details-bubble">
-                                        <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
-                                        <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
-                                        <br></br>
-                                        <span><p><b>Games:</b></p> <p>{moveObj.played}</p></span>
-                                        <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
-                                        <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
-                                        <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
-
+                                        <span>Games: {moveDetails.played}</span>
+                                        <br />
+                                        <span>Win Rate: {moveDetails.winpct.toFixed(2)}%</span>
                                     </div>
                                 )}
                             </div>
-                            
-                            
                         ))}
                     </div>
                 ))}
