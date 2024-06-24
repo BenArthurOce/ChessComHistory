@@ -195,15 +195,15 @@ function SingleMatch(props) {
 
 
     useEffect(() => {
-        if (gameInformation.results.playerResult === "win") {
+        if (gameInformation.results.userResult === "win") {
             setColorBar("#19a335");
             setColorIcon("#19a335");
             setColorBackground("#8ceda0");
-        } else if (gameInformation.results.playerResult === "lose") {
+        } else if (gameInformation.results.userResult === "lose") {
             setColorBar("#a33019");
             setColorIcon("#a33019");
             setColorBackground("#ed9c8c");
-        } else if (gameInformation.results.playerResult === "draw") {
+        } else if (gameInformation.results.userResult === "draw") {
             setColorBar("#3a3636");
             setColorIcon("#3a3636");
             setColorBackground("#a6a0a0");
@@ -213,7 +213,7 @@ function SingleMatch(props) {
             setColorIcon("black");
             setColorBackground("black");
         }
-    }, [gameInformation.results.playerResult]);
+    }, [gameInformation.results.userResult]);
 
 
     const isRatedString = () => {
@@ -317,8 +317,8 @@ function SingleMatch(props) {
 
                     {/* Line - Winner */}
                     <MatchInfoResult>
-                        <SingleMatchIcon icon={gameInformation.results.keyword} color={colorIcon}></SingleMatchIcon>
-                        <p>{gameInformation.results.result}</p>
+                        <SingleMatchIcon icon={gameInformation.results.terminationWord} color={colorIcon}></SingleMatchIcon>
+                        <p>{gameInformation.results.terminationFull}</p>
                     </MatchInfoResult>
 
                     {/* Line - ECO opening and link */}
@@ -338,7 +338,7 @@ function SingleMatch(props) {
                     {/* Line - List of Moves */}
                     <MatchInfoMoves>
                         <CopyButton />
-                        <p>{gameInformation.moves}</p>
+                        <p>{gameInformation.moves.pgn}</p>
                     </MatchInfoMoves>
                 </SingleMatchComp>
             )}

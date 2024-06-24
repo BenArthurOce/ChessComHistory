@@ -22,13 +22,23 @@ const UniqueMoves = (props) => {
     const isMobile = useIsMobile(); // Custom hook to test if mobile device
 
 
+
+
+
     useEffect(() => {
-        const uniqueMoves = getUniqueMoves(props.matchHistory, start, end);
-        // const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end);
-        const uniqueMoveStats = calculateWinningMoves(props.matchHistory, uniqueMoves, start, end, selectedTeam);
+
+        // Array of objects. Each objects contains details about a single match
+        const filteredMatchesByTeam = getFilteredMatches(props.matchHistory, selectedTeam)
+
+        // Every unique move that the player did, based on a range of turns
+        const uniqueSingleMoves = getUniqueMoves(filteredMatchesByTeam, start, end);
+
+        // Every unique move, compared to match history to determie winrate of each move
+        const winLossPerMove = getWinLossPerMove(filteredMatchesByTeam, uniqueSingleMoves, start, end, selectedTeam);
+        // console.log(winLossPerMove)
 
         // Sort uniqueMoveStats by played count in descending order
-        const sortedMoves = sortMovesByPlayed(uniqueMoveStats);
+        const sortedMoves = sortMovesByPlayed(winLossPerMove);
 
         const categorizedMoves = {
               pawn: filterPawnMoves(sortedMoves)
@@ -43,37 +53,40 @@ const UniqueMoves = (props) => {
     }, [props.matchHistory, start, end, selectedTeam]);
 
 
-    const getUniqueMoves = (matchHistory, start, end) => {
-        const filteredMoves = filterMatches(matchHistory);
-        const extractedMoves = extractMoves(filteredMoves, start, end);
-        const flattenedMoves = extractedMoves.flat();
-        const uniqueMoves = [...new Set(flattenedMoves)];
-        return uniqueMoves;
-    };
-
-
-    const filterMatches = (matchHistory) => {
-        return matchHistory.map(match => {
-            const team = match.playerResults.team;
-            const moves = match.moves[team];
-            return moves;
+    const getFilteredMatches = (matchHistory, userPlayed) => {
+        return matchHistory.filter(({ results }) => {
+            return (
+                results.userPlayed === userPlayed
+            );
         });
     };
 
 
-    const extractMoves = (movesArrays, start, end) => {
-        return movesArrays.map(moves => moves.slice(start, end));
+    const getUniqueMoves = (matchHistory, start, end) => {
+        // Function to extract moves between move numbers
+        function extractMoves(movesArray) {
+            return movesArray.slice(start, end); // Slice from index 8 to 15 (16 is exclusive)
+        };
+
+        // Use map to extract userMoves and filter moves between the start/end move, then flatMap to flatten
+        const filteredUserMoves = matchHistory.map(game => extractMoves(game.playerResults.userMoves)).flatMap(moves => moves);
+        const uniqueMoves = [...new Set(filteredUserMoves)];
+        return uniqueMoves;
     };
 
 
-    const calculateWinningMoves = (matchHistory, uniqueMoves, start, end, selectedTeam) => {
+
+    const getWinLossPerMove = (matchHistory, uniqueMoves, start, end, selectedTeam) => {
         const storedResults = {};      
         uniqueMoves.forEach(move => {
+
             storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 };
 
             matchHistory.forEach(match => { 
-                const team = match.playerResults.team;
-                const outcome = match.playerResults.outcome;
+
+                const team = match.playerResults.userPlayed;
+                const outcome = match.playerResults.userResult;
+
                 if (team === selectedTeam) {
                     const moves = match.moves[team].slice(start, end);
                     const exists = moves.includes(move);
@@ -185,6 +198,7 @@ const UniqueMoves = (props) => {
                                         <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
                                         <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
                                         <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
+                                        <span><p><b>Null:</b></p> <p>{moveObj.nullcount}</p></span>
                                     </div>
                                 )}
 
@@ -198,6 +212,16 @@ const UniqueMoves = (props) => {
                                     <span>Games: {moveObj.played}</span>
                                     <br></br>
                                     <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
+
+                                        {/* <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
+                                        <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
+                                        <br></br>
+                                        <span><p><b>Games:</b></p> <p>{moveObj.played}</p></span>
+                                        <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
+                                        <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
+                                        <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
+                                        <span><p><b>Null:</b></p> <p>{moveObj.nullcount}</p></span>
+                                        <span><p><b>Review:</b></p> <p>{moveObj.win + moveObj.lose + moveObj.draw + moveObj.nullcount}</p></span> */}
                                 </div>
                             )}
 

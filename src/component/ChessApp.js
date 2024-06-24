@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useQuery, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SearchForm from './SearchForm';
+import PlayerHistorySummary from './PlayerHistorySummary';
 import PlayerInformation from './PlayerInformation';
 import SingleMatch from './SingleMatch';
 import UniqueMoves from './UniqueMoves';
 
 function ChessApp() {
-    const [inputString, setInputString] = useState('');
+    // const [playerUsername, setplayerUsername] = useState('');
+    // const [gamesNumber, setGamesNumber] = useState(0);
+
+    const [formData, setFormData] = useState(null);
+
+
     const [waitingFlag, setWaitingFlag] = useState(false);
     const [playerData, setPlayerData] = useState(null);
     const [error, setError] = useState(null);
-    const [matchCount, setMatchCount] = useState(0);
     const [matchesToDisplay, setMatchesToDisplay] = useState(10);
 
     const mountedRef = useRef(true);    // Does not trigger a re-render
+
 
 
     useEffect(() => {
@@ -23,20 +29,23 @@ function ChessApp() {
         };
     }, []);
 
-    
-    useEffect(() => {
-        if (inputString) {
-            fetchPlayerData(inputString);
-        }
-    }, [inputString]);
 
 
-    const fetchPlayerData = useCallback(async (username) => {
+    const triggerFormSubmitted = (newFormData) => {
+        console.log("triggerFormSubmitted");
+        setFormData(newFormData);
+        fetchPlayerData(newFormData);
+    }
+
+  
+
+
+    const fetchPlayerData = useCallback(async (formData) => {
         setError(null);
         setWaitingFlag(true);
 
         try {
-            const response = await fetch(`https://api.chess.com/pub/player/${username}`, {
+            const response = await fetch(`https://api.chess.com/pub/player/${formData.username}`, {
                 headers: {
                     Accept: 'application/ld+json',
                 },
@@ -58,7 +67,7 @@ function ChessApp() {
                 , country:      data.country
                 , dateJoined:   data.joined
                 , dateOnline:   data.last_online
-                , matchHistory: await fetchMatchHistory(username)
+                , matchHistory: await fetchMatchHistory(formData)
                 , url:          data.url
                 , username:     data.username
             };
@@ -72,32 +81,36 @@ function ChessApp() {
     }, []);
 
 
-    const fetchMatchHistory = useCallback(async (username) => {
-        const response = await fetch(`https://api.chess.com/pub/player/${username}/games/2024/06`);
+    const fetchMatchHistory = useCallback(async (formData) => {
+        const response = await fetch(`https://api.chess.com/pub/player/${formData.username}/games/2024/06`);
         const data = await response.json();
-        setMatchCount(data.games.length);
 
-        const matchObjects = await Promise.all(data.games.map(async (match) => {
+        // Adjust match history by flipping, and extracting last x games
+        const reversedGames = data.games.reverse()
+        const matchHistory = reversedGames.slice(0, formData.lastNGames)
+
+        // Parse the "match.pgn" string into different information, and then create the
+        const matchObjects = await Promise.all(matchHistory.map(async (match) => {
             const parsedData = parsePGNString(match.pgn);
-            return createMatchObject(match, parsedData, username);
+            return createMatchObject(match, parsedData, formData.username);
         }));
 
         return matchObjects;
     }, []);
 
 
-    const parsePGNString = useCallback((inputString) => {
+    const parsePGNString = useCallback((playerUsername) => {
         const regex = /\[([\w\s]+)\s"([^"]+)"\]/g;
         let match;
         const parsedData = {};
-        let remainingData = inputString;
+        let remainingData = playerUsername;
 
-        while ((match = regex.exec(inputString)) !== null) {
+        while ((match = regex.exec(playerUsername)) !== null) {
             parsedData[match[1]] = match[2];
             remainingData = remainingData.replace(match[0], '').trim();
         }
 
-        parsedData.moves = buildMoveString(remainingData);
+        parsedData.movestring = buildMoveString(remainingData);
         return parsedData;
     }, []);
 
@@ -112,12 +125,15 @@ function ChessApp() {
 
 
     const createMatchObject = (match, parsedData, username) => {
-        const moveObject = createMoveObject(parsedData.moves);
+        const moveObject = createMoveObject(parsedData.movestring);
         const userPlayed = getUserPlayedColor(match, username);
         const winner = getMatchWinner(match);
         const playerResult = getPlayerResult(match, parsedData, username);
 
         return {
+
+            // zzOriginal:         match
+            // ,
             general : {
                 url:            match.url
               , site:           parsedData.Site
@@ -127,31 +143,32 @@ function ChessApp() {
               , id:             extractGameId(parsedData.Link)
               , date:           parsedData.Date
               , link:           parsedData.Link
-              , userPlayed:     userPlayed
+              , userPlayed:     userPlayed    
             }
             ,
             moves: {
-                pgn:              parsedData.moves
+                pgn:              parsedData.movestring
               , full:             moveObject
               , white:            getPlayerMoves(moveObject, "white")
               , black:            getPlayerMoves(moveObject, "black")
             }
             ,
             results: {
-                white:            match.white.result
-              , black:            match.black.result
-              , userPlayed:       userPlayed
-              , result:           parsedData.Termination
-              , keyword:          parsedData.Termination.split(' ').pop()
-              , playerResult:     playerResult
+                white:            match.white.result === "win" ? "win" : match.white.result === "draw" ? "draw" : "lose"
+              , black:            match.black.result === "win" ? "win" : match.black.result === "draw" ? "draw" : "lose"
               , fen:              parsedData.CurrentPosition
+              , terminationFull:  parsedData.Termination
+              , terminationWord:  parsedData.Termination.split(' ').pop()             
+              , userPlayed:       userPlayed
+              , userResult:       playerResult
               , winner:           winner
             }
             ,
             playerResults: {
                 name:             username
-              , team:             userPlayed
-              , outcome:          playerResult
+              , userPlayed:       userPlayed
+              , userResult:       playerResult
+              , userMoves:        getPlayerMoves(moveObject, userPlayed)
             }
             ,
             time: {
@@ -188,15 +205,15 @@ function ChessApp() {
     const createMoveObject = useCallback((notation) => {
         const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
         let match;
-        const moves = {};
+        const allMoves = {};
 
         while ((match = MOVE_REGEX.exec(notation)) !== null) {
             const moveNumber = parseInt(match[1]);
             const whiteMove = match[2];
             const blackMove = match[3] || undefined;
-            moves[moveNumber] = [whiteMove, blackMove];
+            allMoves[moveNumber] = [whiteMove, blackMove];
         }
-        return moves;
+        return allMoves;
     }, []);
 
 
@@ -245,41 +262,62 @@ function ChessApp() {
             <h1>Chess Match History</h1>
 
             <section id="form">
-                <SearchForm onFormSubmit={setInputString} />
+                <SearchForm onFormSubmit={triggerFormSubmitted} />
                 {waitingFlag && <p>Loading player information...</p>}
                 {error && <p>Error fetching data. Please try again.</p>}
                 {playerData && (
                     <div>
                         <h2>Player Information</h2>
                         <p>Player Username: {playerData.username}</p>
-                        <p>{matchCount} matches found</p>
                     </div>
                 )}
             </section>
 
-            <section id="uniqueMoves">
-                {playerData && playerData.matchHistory && (
-                    <div>
-                        <UniqueMoves matchHistory={playerData.matchHistory}></UniqueMoves>
-                    </div>
-                )}
-            </section>
 
             {/* <section id="playerInfo">
                 {playerData && (
                     <PlayerInformation playerInformation={playerData} />
                 )}
-            </section>
-
-            <section id="matchHistory">
-                {playerData && playerData.matchHistory && (
-                    <div>
-                        {playerData.matchHistory.map((match, index) => (
-                            index < matchesToDisplay && <SingleMatch key={index} gameInformation={match} />
-                        ))}
-                    </div>
-                )}
             </section> */}
+
+            {/* Match History - Summary */}
+            {/* {!waitingFlag && formData && (
+                <section id="player-history-summary">
+                    {playerData && playerData.matchHistory && (
+                        <div>
+                            <PlayerHistorySummary matchHistory={playerData.matchHistory}></PlayerHistorySummary>
+                        </div>
+                    )}
+                </section>
+            )} */}
+
+
+            {/* {!waitingFlag && formData && (
+                <section id="matchHistory">
+                    {playerData && playerData.matchHistory && (
+                        <div>
+                            {playerData.matchHistory.map((match, index) => (
+                                index < matchesToDisplay && <SingleMatch key={index} gameInformation={match} />
+                            ))}
+                        </div>
+                    )}
+                </section>
+            )} */}
+
+
+            {/* Details of Unique Moves*/}
+            {!waitingFlag && formData && (
+                <section id="uniqueMoves">
+                    {playerData && playerData.matchHistory && (
+                        <div>
+                            <UniqueMoves matchHistory={playerData.matchHistory}></UniqueMoves>
+                        </div>
+                    )}
+                </section>
+            )}
+
+
+
 
 
 
