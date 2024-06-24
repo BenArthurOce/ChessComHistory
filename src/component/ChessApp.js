@@ -82,11 +82,34 @@ function ChessApp() {
 
 
     const fetchMatchHistory = useCallback(async (formData) => {
-        const response = await fetch(`https://api.chess.com/pub/player/${formData.username}/games/2024/06`);
-        const data = await response.json();
+
+        let dataMatchHistories = []
+        const numberRequiredGames = formData.lastNGames
+        let index = -1
+
+
+        const dataSources = [
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/06`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/05`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/04`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/03`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/02`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2024/01`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2023/12`,
+            `https://api.chess.com/pub/player/${formData.username}/games/2023/11`
+        ];
+
+
+        while (dataMatchHistories.length < numberRequiredGames) {
+            index += 1
+            let endpoint = dataSources[index]
+            const response = await fetch(`${endpoint}`);
+            const data = await response.json();
+            dataMatchHistories = dataMatchHistories.concat(data.games);
+        }
 
         // Adjust match history by flipping, and extracting last x games
-        const reversedGames = data.games.reverse()
+        const reversedGames = dataMatchHistories.reverse()
         const matchHistory = reversedGames.slice(0, formData.lastNGames)
 
         // Parse the "match.pgn" string into different information, and then create the
@@ -265,12 +288,12 @@ function ChessApp() {
                 <SearchForm onFormSubmit={triggerFormSubmitted} />
                 {waitingFlag && <p>Loading player information...</p>}
                 {error && <p>Error fetching data. Please try again.</p>}
-                {playerData && (
+                {/* {playerData && (
                     <div>
                         <h2>Player Information</h2>
                         <p>Player Username: {playerData.username}</p>
                     </div>
-                )}
+                )} */}
             </section>
 
 
@@ -281,7 +304,7 @@ function ChessApp() {
             </section> */}
 
             {/* Match History - Summary */}
-            {/* {!waitingFlag && formData && (
+            {!waitingFlag && formData && (
                 <section id="player-history-summary">
                     {playerData && playerData.matchHistory && (
                         <div>
@@ -289,7 +312,7 @@ function ChessApp() {
                         </div>
                     )}
                 </section>
-            )} */}
+            )}
 
 
             {/* {!waitingFlag && formData && (

@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import {
+    useState
+} from 'react';
 import styled from 'styled-components';
 
 // Styled form component
-const Form = styled.form
+const Form = styled.form 
 `
   margin-bottom: 20px;
 `
 ;
 
 // Styled input component
-const Input = styled.input
+const Input = styled.input 
 `
   padding: 8px;
   margin-right: 10px;
@@ -17,9 +19,9 @@ const Input = styled.input
   border-radius: 4px;
 `
 ;
-  
+
 // Styled button component
-const Button = styled.button
+const Button = styled.button 
 `
   padding: 8px 16px;
   background-color: #007bff;
@@ -31,10 +33,8 @@ const Button = styled.button
 ;
 
 function SearchForm(props) {
-    // const [username, setUsername] = useState('');
     const [username, setUsername] = useState('');
-    // const [lastNGames, setLastNGames] = useState('');
-    const [lastNGames, setLastNGames] = useState(null);
+    const [lastNGames, setLastNGames] = useState('');
 
     function handleSubmit(ev) {
         ev.preventDefault();
@@ -42,7 +42,7 @@ function SearchForm(props) {
 
         props.onFormSubmit({
             username: username
-          , lastNGames: lastNGames
+            , lastNGames: lastNGames
         });
     }
 

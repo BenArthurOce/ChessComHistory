@@ -199,6 +199,7 @@ const UniqueMoves = (props) => {
                                         <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
                                         <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
                                         <span><p><b>Null:</b></p> <p>{moveObj.nullcount}</p></span>
+                                        <span><p><b>All Games:</b></p> <p>{moveObj.win + moveObj.lose + moveObj.draw + moveObj.nullcount}</p></span>
                                     </div>
                                 )}
 
