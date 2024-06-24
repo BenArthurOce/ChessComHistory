@@ -32,9 +32,9 @@ const Button = styled.button
 
 function SearchForm(props) {
     // const [username, setUsername] = useState('');
-    const [username, setUsername] = useState('JackSmith_GCC');
+    const [username, setUsername] = useState('');
     // const [lastNGames, setLastNGames] = useState('');
-    const [lastNGames, setLastNGames] = useState(7);
+    const [lastNGames, setLastNGames] = useState(null);
 
     function handleSubmit(ev) {
         ev.preventDefault();
@@ -52,7 +52,7 @@ function SearchForm(props) {
         type="text"
         value={username}
         onChange={(ev) => setUsername(ev.target.value)}
-        placeholder="Enter your search query..."
+        placeholder="Player name..."
       />
       <Input
         type="text"
