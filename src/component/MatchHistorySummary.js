@@ -68,8 +68,14 @@ const TableCell = styled.td
 `
 ;
 
-// PlayerHistorySummary component
-function PlayerHistorySummary(props) {
+const FirstColumnCell = styled(TableCell)
+`
+    width: 150px;
+`
+;
+
+// MatchHistorySummary component
+function MatchHistorySummary(props) {
     const matchHistory = props.matchHistory;
     const [stats, setStats] = useState(null);
 
@@ -184,7 +190,7 @@ function PlayerHistorySummary(props) {
                         </thead>
                         <tbody>
                             <tr>
-                                <TableCell>Daily</TableCell>
+                                <FirstColumnCell>Daily</FirstColumnCell>
                                 <TableCell>
                                     <p>White: {stats.daily.wins.white.length}</p>
                                     <p>Black: {stats.daily.wins.black.length}</p>
@@ -209,7 +215,7 @@ function PlayerHistorySummary(props) {
                                 </TableCell>
                             </tr>
                             <tr>
-                                <TableCell>Rapid</TableCell>
+                                <FirstColumnCell>Rapid</FirstColumnCell>
                                 <TableCell>
                                     <p>White: {stats.rapid.wins.white.length}</p>
                                     <p>Black: {stats.rapid.wins.black.length}</p>
@@ -234,7 +240,7 @@ function PlayerHistorySummary(props) {
                                 </TableCell>
                             </tr>
                             <tr>
-                                <TableCell>Blitz</TableCell>
+                                <FirstColumnCell>Blitz</FirstColumnCell>
                                 <TableCell>
                                     <p>White: {stats.blitz.wins.white.length}</p>
                                     <p>Black: {stats.blitz.wins.black.length}</p>
@@ -259,7 +265,7 @@ function PlayerHistorySummary(props) {
                                 </TableCell>
                             </tr>
                             <tr>
-                                <TableCell>Bullet</TableCell>
+                                <FirstColumnCell>Bullet</FirstColumnCell>
                                 <TableCell>
                                     <p>White: {stats.bullet.wins.white.length}</p>
                                     <p>Black: {stats.bullet.wins.black.length}</p>
@@ -284,7 +290,7 @@ function PlayerHistorySummary(props) {
                                 </TableCell>
                             </tr>
                             <tr>
-                                <TableCell>Total</TableCell>
+                                <FirstColumnCell>Total</FirstColumnCell>
                                 <TableCell>
                                     <p>White: {stats.total.wins.white}</p>
                                     <p>Black: {stats.total.wins.black}</p>
@@ -316,4 +322,4 @@ function PlayerHistorySummary(props) {
     );
 }
 
-export default PlayerHistorySummary;
+export default MatchHistorySummary;

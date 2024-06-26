@@ -8,13 +8,6 @@ import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-<StrictMode>
-  <ChessApp />
-</StrictMode>
+<ChessApp></ChessApp>
 );
 
-//https://api.chess.com/pub/player/BenArthurOCE/games/2024/04
-// https://lichess.org/api/games/user/BenArthurOCE
-
-
-// https://lichess.org/game/export/{gameId}

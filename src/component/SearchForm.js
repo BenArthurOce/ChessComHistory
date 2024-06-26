@@ -33,8 +33,11 @@ const Button = styled.button
 ;
 
 function SearchForm(props) {
-    const [username, setUsername] = useState('');
-    const [lastNGames, setLastNGames] = useState('');
+    // const [username, setUsername] = useState('');
+    // const [lastNGames, setLastNGames] = useState('');
+
+    const [username, setUsername] = useState('BenArthurOCE');
+    const [lastNGames, setLastNGames] = useState(30);
 
     function handleSubmit(ev) {
         ev.preventDefault();

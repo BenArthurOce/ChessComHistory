@@ -83,6 +83,10 @@
     background-color: #4caf50; /* Green */
 }
 
+.heatmap-high {
+    background-color: #8dbd4f; /* Green */
+}
+
 .heatmap-medium {
     background-color: #ffeb3b; /* Yellow */
 }
