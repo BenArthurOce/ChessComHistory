@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useIsMobile from "../hooks/useIsMobile";
+import useTestHook from "../hooks/useTestHook";
 
 
 const UniqueMoveTileStyled = styled.div
@@ -236,7 +237,14 @@ const UniqueMoves = (props) => {
     const [selectedMove, setSelectedMove] = useState(null); // for Mobile - Displays Bubble if selected
     const isMobile = useIsMobile(); // Custom hook to test if mobile device
 
+    const myTestHook = useTestHook(); // Custom hook to test if mobile device
+
+    // console.log(props.matchHistory)
+
     useEffect(() => {
+
+        const a = myTestHook
+        console.log(a)
         // Array of objects. Each objects contains details about a single match
         const filteredMatchesByTeam = getFilteredMatches(props.matchHistory, selectedTeam)
 
@@ -357,6 +365,7 @@ const UniqueMoves = (props) => {
     return (
         <Container>
             <h2>Winning Moves Heatmap</h2>
+
             <InputBoxes>
                 <div>
                     <label htmlFor="startInput">Start:</label>
@@ -372,6 +381,7 @@ const UniqueMoves = (props) => {
                     </select>
                 </div>
             </InputBoxes>
+
             <HeatmapContainer>
                 {Object.entries(pieceMoves).map(([pieceType, moves]) => (
                     <PieceSection key={pieceType}>
@@ -400,6 +410,7 @@ const UniqueMoves = (props) => {
                     </PieceSection>
                 ))}
             </HeatmapContainer>
+            
         </Container>
     );
 };
