@@ -5,6 +5,9 @@ function OpeningAnalysis(props) {
 
     const [ecoList, setEcoList] = useState([]);
 
+    console.log("OpeningAnalysis")
+    console.log(props.matchHistory)
+
 
     useEffect(() => {
 

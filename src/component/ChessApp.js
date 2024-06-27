@@ -103,7 +103,7 @@ function ChessApp() {
             {/* Match History */}
             {!waitingFlag && formData && (
                 <div>
-                    {playerData && <MatchHistory username={formData.username} />}
+                    {playerData && <MatchHistory username={formData.username} lastNGames={formData.lastNGames} />}
                 </div>
             )};
 

@@ -6,12 +6,69 @@ import MatchHistorySummary from './MatchHistorySummary';
 import PlayerInformation from './PlayerInformation';
 import SingleMatch from './SingleMatch';
 import UniqueMoves from './UniqueMoves';
+import OpeningAnalysis from './OpeningAnalysis';
 
+
+
+// The data from a single game on ChessCom comes in two parts: The game data and the pgn.
+// The pgn is a single string with needs to be parsed to get its key/value information
+const SingleMatchParsedData = (unparsedGameString) => {
+
+
+    const pgnParseGameRegx = /\[([\w\s]+)\s"([^"]+)"\]/g;
+    const parsedGameData = {};
+    let match;
+
+    while ((match = pgnParseGameRegx.exec(unparsedGameString)) !== null) {
+        parsedGameData[match[1]] = match[2];
+    };
+
+
+    function buildMoveString(input) {
+        return input.replace(/\{[^{}]*\}|\[[^\[\]]*\]/g, '')
+                    .replace(/\d+\.{3}/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .replace(/\s+\./g, '.').replace(/\.\s+/g, '.')
+                    .trim();
+    };
+
+    
+    function buildMoveObject(notation) {
+        const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
+        let match;
+        const allMoves = {};
+
+        while ((match = MOVE_REGEX.exec(notation)) !== null) {
+            const moveNumber = parseInt(match[1]);
+            const whiteMove = match[2];
+            const blackMove = match[3] || undefined;
+            allMoves[moveNumber] = [whiteMove, blackMove];
+        }
+        return allMoves;
+    };
+
+
+    parsedGameData.MoveString = buildMoveString(unparsedGameString.replace(pgnParseGameRegx, '').trim());
+    parsedGameData.MoveObject = buildMoveObject(parsedGameData.MoveString);
+
+    return parsedGameData;
+
+};
+
+
+
+
+const SingleMatchObject2 = (match, username) => {
+
+}
 
 
 const SingleMatchObject = (match, parsedData, username) => {
 
+    console.log(match)
+
     function createMoveObject(notation) {
+        // console.log(createMoveObject)
         const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
         let match;
         const allMoves = {};
@@ -69,6 +126,8 @@ const SingleMatchObject = (match, parsedData, username) => {
     const userPlayed = getUserPlayedColor(match, username);
     const winner = getMatchWinner(match);
     const playerResult = getPlayerResult(match, parsedData, username);
+
+    // console.log(moveObject)
 
     return {
 
@@ -148,6 +207,7 @@ const SingleMatchObject = (match, parsedData, username) => {
 
 
 const MatchHistory = (props) => {
+    console.log(props)
     const [arrayMatches, SetArrayMatches] = useState([])
     const [matchesToDisplay, SetMatchesToDisplay] = useState(0)
 
@@ -177,7 +237,43 @@ const MatchHistory = (props) => {
         console.log(data)
         prepareMatchData()
         SetMatchesToDisplay(10)
+        const matchHistory = combineAndSortMatchObjects();
+        createAndStoreMoveObjects(matchHistory)
+
     }, [data]);
+
+
+
+
+    function combineAndSortMatchObjects() {
+        let resultMatchHistory = []
+        let index = -1
+
+        // User Inputs a number of required games. Each API endpoint gets the games for that month. We get enough games to pass requirement
+        while (resultMatchHistory.length < props.lastNGames) {
+            index += 1
+            resultMatchHistory = resultMatchHistory.concat(data[index].games);
+        };
+
+        // Then reverse the order, and trim the excess
+        const reversedGames = resultMatchHistory.reverse()
+        const matchHistory = reversedGames.slice(0, props.lastNGames)
+
+        return matchHistory
+    };
+
+    async function createAndStoreMoveObjects(matchHistory) {
+        const matchObjects = await Promise.all(matchHistory.map(async (match) => {
+            // const parsedData = parseMetaInformation(match.pgn);
+            // return SingleMatchObject(match, parsedData, props.username);
+            // return SingleMatchObject2(match, props.username)
+
+            console.log(SingleMatchParsedData(match.pgn))
+        }));
+
+        console.log(matchObjects)
+        return matchObjects;
+    }
 
 
     function prepareMatchData() {
@@ -185,56 +281,35 @@ const MatchHistory = (props) => {
 
 
 
-        function parsePGNString(playerUsername) {
-            if (!playerUsername) {throw new Error("parsePGNString: playerUsername undefined")}
-
-            const regex = /\[([\w\s]+)\s"([^"]+)"\]/g;
-            let match;
-            const parsedData = {};
-            let remainingData = playerUsername;
-    
-            while ((match = regex.exec(playerUsername)) !== null) {
-                parsedData[match[1]] = match[2];
-                remainingData = remainingData.replace(match[0], '').trim();
-            }
-
-    
-            parsedData.movestring = buildMoveString(remainingData);
-            return parsedData;
-        };
-    
-    
-        function buildMoveString(input) {
-            if (!input) {throw new Error("buildMoveString: input undefined")}
-            return input.replace(/\{[^{}]*\}|\[[^\[\]]*\]/g, '')
-                        .replace(/\d+\.{3}/g, ' ')
-                        .replace(/\s+/g, ' ')
-                        .replace(/\s+\./g, '.').replace(/\.\s+/g, '.')
-                        .trim();
-        };
-    
-
-
         async function getSingleMatches(allGames) {
 
-            const matchObjects = await Promise.all(allGames.map(async (match) => {
 
-                const parsedData = parsePGNString(match.pgn);
-                return SingleMatchObject(match, parsedData, props.username);
-            }));
-            return matchObjects;
+
+            // const matchObjects = await Promise.all(allGames.map(async (match) => {
+
+            //     const parsedData = parseMetaInformation(match.pgn);
+            //     return SingleMatchObject(match, parsedData, props.username);
+            // }));
+
+            // return matchObjects;
         };
         
         // Code to combine all arrays
-        const flattenedArray = data.flatMap(obj => obj.games);
+        // const flattenedArray = data.flatMap(obj => obj.games);
 
-        getSingleMatches(flattenedArray)
-        .then(matches => {
-            SetArrayMatches(matches);
-        })
-        .catch(error => {
-            console.error('Error fetching single matches:', error);
-        });
+        const a = getSingleMatches(data)
+        console.log(a)
+        // .then(matches => {
+
+        //     // Adjust match history by flipping, and extracting last x games
+        //     const reversedGames = matches.reverse()
+        //     const matchHistory = reversedGames.slice(0, props.lastNGames)
+
+        //     SetArrayMatches(matchHistory);
+        // })
+        // .catch(error => {
+        //     console.error('Error fetching single matches:', error);
+        // });
     }
 
 
@@ -272,12 +347,17 @@ const MatchHistory = (props) => {
             )} */}
 
 
-
             {!loading && data && (
+                <section id="player-unique-moves">
+                    {data && <OpeningAnalysis matchHistory={arrayMatches} />}
+                </section>
+            )}
+
+            {/* {!loading && data && (
                 <section id="player-unique-moves">
                     {data && <UniqueMoves matchHistory={arrayMatches} />}
                 </section>
-            )}
+            )} */}
 
             {/* {!waitingFlag && formData && currentComponent === 'OpeningAnalysis' && (
                 <section id="player-opening-analysis">
