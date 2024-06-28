@@ -46,16 +46,14 @@ function ChessApp() {
                 <SearchForm onFormSubmit={triggerFormSubmitted} />
                 {/* {waitingFlag && <p>Loading player information...</p>}
                 {error && <p>Error fetching data. Please try again.</p>} */}
-                {renderFlag && <p>renderflag is true</p>}
-                {!renderFlag && <p>renderflag is false</p>}
             </section>
 
             {/* Player Information */}
-            {renderFlag && (
+            {/* {renderFlag && (
                 <div>
                     {<PlayerInformation username={formData.username} />}
                 </div>
-            )};
+            )}; */}
 
 
             {/* Match History */}
