@@ -37,7 +37,7 @@ function SearchForm(props) {
     // const [lastNGames, setLastNGames] = useState('');
 
     const [username, setUsername] = useState('BenArthurOCE');
-    const [lastNGames, setLastNGames] = useState(100);
+    const [lastNGames, setLastNGames] = useState(10);
 
     function handleSubmit(ev) {
         ev.preventDefault();

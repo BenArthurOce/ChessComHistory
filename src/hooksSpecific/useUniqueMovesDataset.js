@@ -56,11 +56,11 @@ const useUniqueMovesDataset = (array) => {
                     const isCapture = hasCapture(move);
                     const isCheck = hasCheck(move);
                     const dict = {
-                          "turn": moveIndex
+                          "move": move
+                        , "turn": moveIndex
                         , "id": id
                         , "team": userPlayed
                         , "result": userOutcome
-                        , "move": move
                         , "piece": pieceType
                         , "isCapture": isCapture
                         , "isCheck": isCheck

@@ -5,220 +5,7 @@ import "./UniqueMoves.css";
 import useIsMobile from "../../hooks/useIsMobile";
 
 import useUniqueMovesDataset from "../../hooksSpecific/useUniqueMovesDataset";
-
-const UniqueMoveTileStyled = styled.div
-// `
-//     position: absolute;
-//     /* Add additional styles as needed */
-//     top: ${(props) => props.top || "0px"};
-//     left: ${(props) => props.left || "0px"};
-//     background-color: ${(props) => props.bgColor || "white"};
-//     padding: ${(props) => props.padding || "10px"};
-//     border: ${(props) => props.border || "1px solid #ccc"};
-//     border-radius: ${(props) => props.borderRadius || "5px"};
-//     z-index: 10;
-// `
-;
-
-
-const UniqueMoveTileStyledMobile = styled.div
-// `
-//     position: absolute;
-//     /* Add additional styles as needed */
-//     top: ${(props) => props.top || "0px"};
-//     left: ${(props) => props.left || "0px"};
-//     background-color: ${(props) => props.bgColor || "white"};
-//     padding: ${(props) => props.padding || "10px"};
-//     border: ${(props) => props.border || "1px solid #ccc"};
-//     border-radius: ${(props) => props.borderRadius || "5px"};
-//     z-index: 10;
-// `
-;
-
-
-// {isMobile && selectedMove === moveObj && (
-//     <UniqueMoveTile moveObj={moveObj} top="40px" left="10px" />
-// )}
-
-
-const UniqueMoveTile = (props) => {
-    // console.log(props)
-    const { moveObj, top, left, bgColor, padding, border, borderRadius } = props;
-
-    return (
-        <UniqueMoveTileStyled 
-            top={top} 
-            left={left} 
-            bgColor={bgColor} 
-            padding={padding} 
-            border={border} 
-            borderRadius={borderRadius}
-        >
-            <span><b>Move:</b> {moveObj.move}</span>
-            <span><b>Rate:</b> {moveObj.winpct.toFixed(2)}%</span>
-            <br />
-            <span><b>Games:</b> {moveObj.played}</span>
-            <span><b>Won:</b> {moveObj.win}</span>
-            <span><b>Lost:</b> {moveObj.lose}</span>
-            <span><b>Draw:</b> {moveObj.draw}</span>
-            <span><b>Null:</b> {moveObj.nullcount}</span>
-            <span><b>All Games:</b> {moveObj.win + moveObj.lose + moveObj.draw + moveObj.nullcount}</span>
-        </UniqueMoveTileStyled>
-    );
-};
-
-
-const MoveDetailsBubble = styled.div
-`
-    position: absolute;
-    top: 40px;
-    left: 10px;
-    border: 5px solid black;
-    border-radius: 5px;
-    padding: 5px;
-    z-index: 10;
-    width: 120px;
-    white-space: nowrap;
-
-    span {
-        display: flex;
-        justify-content: space-between;
-        align-items: start;
-        margin-bottom: 5px;
-    }
-
-    &.heatmap-high {
-        background-color: #4caf50;
-    }
-
-    &.heatmap-medium {
-        background-color: #ffeb3b;
-    }
-
-    &.heatmap-low {
-        background-color: #ff9800;
-    }
-
-    &.heatmap-very-low {
-        background-color: #f44336;
-    }
-`
-;
-
-
-
-const Container = styled.div`
-    .container {
-        margin-bottom: 20px;
-    }
-`;
-
-const InputBoxes = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-
-    label {
-        font-weight: bold;
-    }
-
-    input[type="number"],
-    select {
-        padding: 8px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    input[type="number"] {
-        width: 80px;
-    }
-
-    select {
-        min-width: 120px;
-    }
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-        width: 100%;
-        height: 120px;
-        position: sticky;
-        left: 0;
-        top: 0;
-        background-color: white;
-        padding: 10px;
-        z-index: 100;
-        align-items: start;
-        padding: 10px;
-        border: 5px solid #ccc;
-
-        label {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-    }
-`;
-
-const HeatmapContainer = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-
-    @media (max-width: 768px) {
-        display: flex;
-        gap: 10px;
-    }
-`;
-
-const PieceSection = styled.div`
-    margin-bottom: 20px;
-
-    h3 {
-        font-size: 18px;
-
-        @media (max-width: 768px) {
-            font-size: 15px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        width: 12vw;
-    }
-`;
-
-const HeatmapItem = styled.div`
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    position: relative;
-    text-align: center;
-
-    span {
-        font-size: 12px;
-    }
-
-    &.heatmap-very-high {
-        background-color: #4caf50;
-    }
-
-    &.heatmap-high {
-        background-color: #8dbd4f;
-    }
-
-    &.heatmap-medium {
-        background-color: #ffeb3b;
-    }
-
-    &.heatmap-low {
-        background-color: #ff9800;
-    }
-
-    &.heatmap-very-low {
-        background-color: #f44336;
-    }
-`;
+import HeatmapTile from "./HeatmapTile";
 
 
 
@@ -233,10 +20,9 @@ const UniqueMoves = (props) => {
         castling: []
     });
 
-    const [dataToRender, setDataToRender] = useState(null);
 
-    const [start, setStart] = useState(8); // Default start value
-    const [end, setEnd] = useState(15);   // Default end value
+    const [start, setStart] = useState(0); // Default start value
+    const [end, setEnd] = useState(5);   // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
     const [selectedMove, setSelectedMove] = useState(null); // for Mobile - Displays Bubble if selected
 
@@ -250,13 +36,18 @@ const UniqueMoves = (props) => {
 
     useEffect(() => {
         if (Array.isArray(hookDataSet)) {
+            console.log("====hookDataSet====")
+            console.log(hookDataSet)
+            console.log()
+
             const endData = filterAndTransformData();
-            setDataToRender(endData);
+            // setDataToRender(endData);
+
             setRenderFlag(checkIfAbleToRender(endData));
             // console.log(dataToRender)
             // console.log(pieceMoves)
         } else {
-            setDataToRender(null);
+            // setDataToRender(null);
             setRenderFlag(false);
         }
     }, [hookDataSet, start, end, selectedTeam]);
@@ -270,7 +61,9 @@ const UniqueMoves = (props) => {
             obj.turn <= end
         ));
 
+        console.log("====gameData====")
         console.log(gameData)
+        console.log()
 
         function performSecondaryFilterPlayed(moveString, data) {
             return data.filter(entry => (entry.move === moveString))
@@ -307,13 +100,22 @@ const UniqueMoves = (props) => {
         };
 
 
+
         let uniqueMoves = Array.from(new Set(gameData.map(obj => obj.move)));
-        console.log(uniqueMoves)
         let moveStats = uniqueMoves.map(move => returnMoveStats(move, gameData));
+
+        console.log("====uniqueMoves====")
+        console.log(uniqueMoves)
+        console.log()
+
+    
+        // Sort the moveStats array by the number of games played in descending order
+        moveStats.sort((a, b) => b.played - a.played);
     
         const filterMoves = (moves, piece) => moves.filter(move => move.piece === piece);
         const filterPawnMoves = (moves) => moves.filter(move => move.piece === "Pawn");
         const filterCastlingMoves = (moves) => moves.filter(move => move.piece === "Castling");
+    
     
         const categorizedMoves = {
             pawn: filterPawnMoves(moveStats),
@@ -326,7 +128,12 @@ const UniqueMoves = (props) => {
         };
     
         setPieceMoves(categorizedMoves);
+        // console.log(moveStats)
+
+        console.log("====moveStats====")
         console.log(moveStats)
+        console.log()
+
         return moveStats;
     };
 
@@ -485,69 +292,47 @@ const UniqueMoves = (props) => {
                     <div key={pieceType} className="piece-section">
                         <h3>{pieceType.toUpperCase()} Moves</h3>
 
-                        {/* storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 }; */}
-                        {moves.map((moveObj) => (
+                        {/* {moves.map((moveObj) => (
                             <div
                                 key={moveObj.move}
                                 className={`heatmap-item ${getColorClass(moveObj.winpct)}`}
                                 onClick={() => handleMobileClick(moveObj)}
-                            >
+                            > */}
 
+                            {moves.map((moveObj) => (
+                                <HeatmapTile tileInformation = {moveObj} >
 
-                            {/* If viewport is Mobile */}
-                            {hookIsMobile && (
-                                    <span>{moveObj.move}</span>
-                            )}
-
-
-                            {/* If viewport is Mobile and user clicked */}
-                            {hookIsMobile && selectedMove === moveObj && (
-                                    <div className={`move-details-bubble heatmap-item ${getColorClass(moveObj.winpct)}`}>
-                                        <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
-                                        <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
-                                        <br></br>
-                                        <span><p><b>Games:</b></p> <p>{moveObj.played}</p></span>
-                                        <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
-                                        <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
-                                        <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
-                                        <span><p><b>Null:</b></p> <p>{moveObj.nullcount}</p></span>
-                                        <span><p><b>All Games:</b></p> <p>{moveObj.win + moveObj.lose + moveObj.draw + moveObj.nullcount}</p></span>
-                                    </div>
-                                )}
-
-
-
-                            {/* If viewport is PC */}
-                            {!hookIsMobile && (
-                                <div>
-                                    <span>{moveObj.move}</span>
-                                    <br></br>
-                                    <span>Games: {moveObj.played}</span>
-                                    <br></br>
-                                    <span>Win Rate: {moveObj.winpct.toFixed(2)}%</span>
-
-                                        {/* <span><p><b>Move:</b></p> <p>{moveObj.move}</p></span>
-                                        <span><p><b>Rate:</b></p> <p>{moveObj.winpct.toFixed(2)}%</p></span>
-                                        <br></br>
-                                        <span><p><b>Games:</b></p> <p>{moveObj.played}</p></span>
-                                        <span><p><b>Won:</b></p> <p>{moveObj.win}</p></span>
-                                        <span><p><b>Lost:</b></p> <p>{moveObj.lose}</p></span>
-                                        <span><p><b>Draw:</b></p> <p>{moveObj.draw}</p></span>
-                                        <span><p><b>Null:</b></p> <p>{moveObj.nullcount}</p></span>
-                                        <span><p><b>Review:</b></p> <p>{moveObj.win + moveObj.lose + moveObj.draw + moveObj.nullcount}</p></span> */}
-                                </div>
-                            )}
-
-                            </div>
-                            
-                            
-                        ))}
+                                </HeatmapTile>
+                            ))}
                     </div>
                 ))}
             </div>
         </div>
-    );
+    )
 };
 
 export default UniqueMoves;
 
+
+            {/* {!loading && data && (
+                <section id="matchHistory">
+                    {arrayMatches && (
+                        <div>
+                            {arrayMatches.map((match, index) => (
+                                index < matchesToDisplay && <SingleMatch key={index} gameInformation={match} />
+                            ))}
+                        </div>
+                    )}
+                </section>
+            )} */}
+// {!loading && data && (
+//     <section id="matchHistory">
+//         {arrayMatches && (
+//             <div>
+//                 {arrayMatches.map((match, index) => (
+//                     index < matchesToDisplay && <SingleMatch key={index} gameInformation={match} />
+//                 ))}
+//             </div>
+//         )}
+//     </section>
+// )}

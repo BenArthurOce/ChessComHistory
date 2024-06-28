@@ -15,7 +15,7 @@ import useMatchHistoryAPI from '../hooksSpecific/useMatchHistoryAPI';
 import useMatchHistoryParsePGN from '../hooksSpecific/useMatchHistoryParsePGN';
 
 const MatchHistory = (props) => {
-    console.log(props)
+    // console.log(props)
 
     const [renderFlag, setRenderFlag] = useState(false);
 
@@ -40,6 +40,8 @@ const MatchHistory = (props) => {
     useEffect(() => {
         if (arrayOfParsedMatchObjects) {
             setRenderFlag(checkIfAbleToRender(arrayOfParsedMatchObjects));
+            console.log(arrayOfParsedMatchObjects)
+            
         } else {
             setRenderFlag(false);
         }
@@ -64,6 +66,13 @@ const MatchHistory = (props) => {
                     <button onClick={() => setCurrentComponent('OpeningAnalysis')}>Opening Analysis</button>
                 </div>
             )} */}
+
+            {/* Match History */}
+            {renderFlag && (
+                <div>
+                    <MatchHistorySummary matchHistory={arrayOfParsedMatchObjects} />
+                </div>
+            )};
 
 
 
