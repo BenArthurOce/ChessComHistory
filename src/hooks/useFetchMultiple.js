@@ -6,8 +6,8 @@ const useFetchMultiple = (urls) => {
     const [error, setError] = useState(null);
 
 
-
     const fetchData = useCallback(() => {
+        
         setLoading(true);
         setData(null);
         setError(null);
@@ -23,9 +23,12 @@ const useFetchMultiple = (urls) => {
             setLoading(false);
         });
 
-    }, [urls]);
+    }, []);
 
     useEffect(() => {
+        if (!urls || urls.length === 0) {
+            return;
+        }
         fetchData();
     }, []);
 

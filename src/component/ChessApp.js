@@ -12,68 +12,31 @@ function ChessApp() {
     const [playerData, setPlayerData] = useState(null);
     const [error, setError] = useState(null);
 
+    const [renderFlag, setRenderFlag] = useState(false);
 
-    const mountedRef = useRef(true);    // Does not trigger a re-render
 
     useEffect(() => {
-        mountedRef.current = true;
-        return () => {
-            mountedRef.current = false; // Cleanup function to set mountedRef to false when component unmounts
-        };
-    }, []);
+        if (formData) {
+            setRenderFlag(checkIfAbleToRender(formData));
+        } else {
+            setRenderFlag(false);
+        }
+        console.log(renderFlag)
+        // setRenderFlag(false);
+        // console.log(renderFlag)
+    }, [formData]); // Run code when the data in "SearchForm is changed / submitted"
 
 
+    const checkIfAbleToRender = (formData) => {
+        return formData.username.length >= 3 && formData.lastNGames >= 1;
+    };
+    
 
     const triggerFormSubmitted = (newFormData) => {
-        console.log("triggerFormSubmitted");
-        setFormData(newFormData);
-        fetchPlayerData(newFormData);
-
-        // prepareDictionary()
-    }
+        setFormData(newFormData)
+    };
 
   
-
-    // To be moved to PlayerInformation
-    const fetchPlayerData = useCallback(async (formData) => {
-        setError(null);
-        setWaitingFlag(true);
-
-        try {
-            const response = await fetch(`https://api.chess.com/pub/player/${formData.username}`, {
-                headers: {
-                    Accept: 'application/ld+json',
-                },
-            });
-            const data = await response.json();
-
-            if (!data.player_id) {
-                setError(true);
-                setWaitingFlag(false);
-                return;
-            }
-
-            if (!mountedRef.current) return;
-
-            const playerObject = {
-                  avatar:       data.avatar
-                , id:           data.player_id
-                , name:         data.name
-                , country:      data.country
-                , dateJoined:   data.joined
-                , dateOnline:   data.last_online
-                , url:          data.url
-                , username:     data.username
-            };
-            setPlayerData(playerObject);
-            setWaitingFlag(false);
-        } catch (error) {
-            setError(true);
-            setWaitingFlag(false);
-            console.error('Error fetching player information:', error);
-        }
-    }, []);
-
 
     return (
         <div id="wrapper">
@@ -81,32 +44,27 @@ function ChessApp() {
 
             <section id="form">
                 <SearchForm onFormSubmit={triggerFormSubmitted} />
-                {waitingFlag && <p>Loading player information...</p>}
-                {error && <p>Error fetching data. Please try again.</p>}
+                {/* {waitingFlag && <p>Loading player information...</p>}
+                {error && <p>Error fetching data. Please try again.</p>} */}
+                {renderFlag && <p>renderflag is true</p>}
+                {!renderFlag && <p>renderflag is false</p>}
             </section>
 
-
             {/* Player Information */}
-            {/* {!waitingFlag && formData && (
+            {renderFlag && (
                 <div>
-                    {playerData && <PlayerInformation username={formData.username} />}
-                </div>
-            )}; */}
-
-            {/* {!waitingFlag && formData && currentComponent === 'PlayerInformation' && (
-                <section id="player-info">
-                    {playerData && <PlayerInformation playerInformation={playerData} />}
-                </section>
-            )} */}
-
-
-            {/* Match History */}
-            {!waitingFlag && formData && (
-                <div>
-                    {playerData && <MatchHistory username={formData.username} lastNGames={formData.lastNGames} />}
+                    {<PlayerInformation username={formData.username} />}
                 </div>
             )};
 
+
+            {/* Match History */}
+            {renderFlag && formData && (
+                <div>
+                    {<MatchHistory username={formData.username} lastNGames={formData.lastNGames} />}
+                </div>
+                
+            )};
         </div>
     );
 }

@@ -1,36 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import useIsMobile from "../hooks/useIsMobile";
-import useTestHook from "../hooks/useTestHook";
+// import useIsMobile from "../hooks/useIsMobile";
 
+
+import useIsMobile from "../../hooks/useIsMobile";
+import useTestHook from "../../hooks/useTestHook";
+
+import useUniqueMoves from "../../hooksSpecific/useUniqueMoves";
 
 const UniqueMoveTileStyled = styled.div
-`
-    position: absolute;
-    /* Add additional styles as needed */
-    top: ${(props) => props.top || "0px"};
-    left: ${(props) => props.left || "0px"};
-    background-color: ${(props) => props.bgColor || "white"};
-    padding: ${(props) => props.padding || "10px"};
-    border: ${(props) => props.border || "1px solid #ccc"};
-    border-radius: ${(props) => props.borderRadius || "5px"};
-    z-index: 10;
-`
+// `
+//     position: absolute;
+//     /* Add additional styles as needed */
+//     top: ${(props) => props.top || "0px"};
+//     left: ${(props) => props.left || "0px"};
+//     background-color: ${(props) => props.bgColor || "white"};
+//     padding: ${(props) => props.padding || "10px"};
+//     border: ${(props) => props.border || "1px solid #ccc"};
+//     border-radius: ${(props) => props.borderRadius || "5px"};
+//     z-index: 10;
+// `
 ;
 
 
 const UniqueMoveTileStyledMobile = styled.div
-`
-    position: absolute;
-    /* Add additional styles as needed */
-    top: ${(props) => props.top || "0px"};
-    left: ${(props) => props.left || "0px"};
-    background-color: ${(props) => props.bgColor || "white"};
-    padding: ${(props) => props.padding || "10px"};
-    border: ${(props) => props.border || "1px solid #ccc"};
-    border-radius: ${(props) => props.borderRadius || "5px"};
-    z-index: 10;
-`
+// `
+//     position: absolute;
+//     /* Add additional styles as needed */
+//     top: ${(props) => props.top || "0px"};
+//     left: ${(props) => props.left || "0px"};
+//     background-color: ${(props) => props.bgColor || "white"};
+//     padding: ${(props) => props.padding || "10px"};
+//     border: ${(props) => props.border || "1px solid #ccc"};
+//     border-radius: ${(props) => props.borderRadius || "5px"};
+//     z-index: 10;
+// `
 ;
 
 
@@ -221,6 +225,7 @@ const HeatmapItem = styled.div`
 
 
 const UniqueMoves = (props) => {
+    console.log(props)
     const [pieceMoves, setPieceMoves] = useState({
         pawn: [],
         rook: [],
@@ -231,118 +236,40 @@ const UniqueMoves = (props) => {
         castling: []
     });
 
+
+
     const [start, setStart] = useState(8); // Default start value
     const [end, setEnd] = useState(15);   // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
     const [selectedMove, setSelectedMove] = useState(null); // for Mobile - Displays Bubble if selected
-    const isMobile = useIsMobile(); // Custom hook to test if mobile device
+    // const isMobile = useIsMobile(); // Custom hook to test if mobile device
+
+
+    const [result, setResult] = useState(null); // for Mobile - Displays Bubble if selected
+
+    const data = props.matchHistory
+
+    const isMobile = true;
 
     const myTestHook = useTestHook(); // Custom hook to test if mobile device
 
-    // console.log(props.matchHistory)
+    const uniqueMovesHook = useUniqueMoves(props.matchHistory)
+
+
+
 
     useEffect(() => {
+        console.log(props.matchHistory)
+        console.log(data)
+        if (data === null || data === undefined) {
+            return;
+        }
+        
+        setResult(uniqueMovesHook)
+        console.log(result)
+    }, [props.matchHistory]);
 
-        const a = myTestHook
-        console.log(a)
-        // Array of objects. Each objects contains details about a single match
-        const filteredMatchesByTeam = getFilteredMatches(props.matchHistory, selectedTeam)
 
-        // Every unique move that the player did, based on a range of turns
-        const uniqueSingleMoves = getUniqueMoves(filteredMatchesByTeam, start, end);
-
-        // Every unique move, compared to match history to determine winrate of each move
-        const winLossPerMove = getWinLossPerMove(filteredMatchesByTeam, uniqueSingleMoves, start, end, selectedTeam);
-
-        // Sort uniqueMoveStats by played count in descending order
-        const sortedMoves = sortMovesByPlayed(winLossPerMove);
-
-        const categorizedMoves = {
-            pawn: filterPawnMoves(sortedMoves),
-            rook: filterMoves(sortedMoves, "R"),
-            knight: filterMoves(sortedMoves, "N"),
-            bishop: filterMoves(sortedMoves, "B"),
-            queen: filterMoves(sortedMoves, "Q"),
-            king: filterMoves(sortedMoves, "K"),
-            castling: filterCastlingMoves(sortedMoves)
-        };
-        setPieceMoves(categorizedMoves);
-    }, [props.matchHistory, start, end, selectedTeam]);
-
-    const getFilteredMatches = (matchHistory, userPlayed) => {
-        return matchHistory.filter(({ results }) => {
-            return (
-                results.userPlayed === userPlayed
-            );
-        });
-    };
-
-    const getUniqueMoves = (matchHistory, start, end) => {
-        // Function to extract moves between move numbers
-        function extractMoves(movesArray) {
-            return movesArray.slice(start, end);
-        };
-
-        // Use map to extract userMoves and filter moves between the start/end move, then flatMap to flatten
-        const filteredUserMoves = matchHistory.map(game => extractMoves(game.playerResults.userMoves)).flatMap(moves => moves);
-        const uniqueMoves = [...new Set(filteredUserMoves)];
-        return uniqueMoves;
-    };
-
-    const getWinLossPerMove = (matchHistory, uniqueMoves, start, end, selectedTeam) => {
-        const storedResults = {};
-        uniqueMoves.forEach(move => {
-            storedResults[move] = { move, win: 0, lose: 0, draw: 0, nullcount: 0, played: 0, winpct: 0 };
-
-            matchHistory.forEach(match => {
-                const team = match.playerResults.userPlayed;
-                const outcome = match.playerResults.userResult;
-
-                if (team === selectedTeam) {
-                    const moves = match.moves[team].slice(start, end);
-                    const exists = moves.includes(move);
-
-                    if (!exists) {
-                        storedResults[move].nullcount += 1;
-                    } else {
-                        if (outcome === "win") storedResults[move].win += 1;
-                        if (outcome === "lose") storedResults[move].lose += 1;
-                        if (outcome === "draw") storedResults[move].draw += 1;
-                    }
-                }
-            });
-
-            storedResults[move].played = storedResults[move].win + storedResults[move].lose + storedResults[move].draw;
-            storedResults[move].winpct = (storedResults[move].win / storedResults[move].played) * 100;
-        });
-
-        return storedResults;
-    };
-
-    const sortMovesByPlayed = (moveStats) => {
-        const sortedMoves = Object.values(moveStats).sort((a, b) => b.played - a.played);
-        return sortedMoves;
-    };
-
-    const filterMoves = (movestats, code) => {
-        return movestats.filter(({ move }) => move.startsWith(code));
-    };
-
-    const filterPawnMoves = (movestats) => {
-        return movestats.filter(({ move }) => typeof move === 'string' && /^[a-z]/.test(move));
-    };
-
-    const filterCastlingMoves = (movestats) => {
-        return movestats.filter(({ move }) => move.startsWith("O"));
-    };
-
-    const getColorClass = (winPercentage) => {
-        if (winPercentage >= 60) return "heatmap-very-high";
-        if (winPercentage > 50) return "heatmap-high";
-        else if (winPercentage == 50) return "heatmap-medium";
-        else if (winPercentage >= 40) return "heatmap-low";
-        else return "heatmap-very-low";
-    };
 
     const handleStartChange = (event) => {
         setStart(parseInt(event.target.value));
@@ -357,9 +284,9 @@ const UniqueMoves = (props) => {
     };
 
     const handleMobileClick = (move) => {
-        if (isMobile) {
-            setSelectedMove(move);
-        }
+        // if (isMobile) {
+        //     setSelectedMove(move);
+        // }
     };
 
     return (
@@ -389,7 +316,7 @@ const UniqueMoves = (props) => {
                         {moves.map((moveObj) => (
                             <HeatmapItem
                                 key={moveObj.move}
-                                className={getColorClass(moveObj.winpct)}
+                                // className={getColorClass(moveObj.winpct)}
                                 onClick={() => handleMobileClick(moveObj)}
                             >
                                 {isMobile && <span>{moveObj.move}</span>}

@@ -28,29 +28,8 @@ const useMatchHistoryAPI = (array, lastNGames) => {
         const reversedGames = resultMatchHistory.reverse()
         const matchHistory = reversedGames.slice(0, lastNGames)
 
-        console.log(matchHistory)
-        return matchHistory
+        return matchHistory;
     };
-
-    // async function createAndStoreMoveObjects(matchHistory) {
-    //     const matchObjects = await Promise.all(matchHistory.map(async (match) => {
-    //         // const parsedData = parseMetaInformation(match.pgn);
-    //         // return SingleMatchObject(match, parsedData, props.username);
-    //         // return SingleMatchObject2(match, props.username)
-
-    //         const parsedData = SingleMatchParsedData(match.pgn);
-    //         return SingleMatchObject(match, parsedData, props.username);
-
-    //         // console.log(SingleMatchParsedData(match.pgn))
-    //     }));
-
-    //     // console.log(matchObjects)
-    //     // console.log(matches)
-    //     // await setMatches(matchObjects)
-    //     setMatches(matchObjects)
-    //     // return matchObjects;
-    // }
-
 
     return unparsedMatchObjects;
 };

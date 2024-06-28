@@ -9,17 +9,7 @@ const useMatchHistoryParsePGN = (array, username) => {
         if (array === null || array === undefined) {
             return;
         }
-        
-        console.log("-------------------")
-        console.log(array)
-        console.log("-------------------")
-
-
         getSingleMatches(array)
-        
-
-        // const matchHistory = combineAndSortMatchObjects();
-        // setParsedMatchObjects(matchHistory)
     }, [array]);
 
 
@@ -32,9 +22,6 @@ const useMatchHistoryParsePGN = (array, username) => {
         }));
 
         setParsedMatchObjects(matchObjects)
-        console.log(matchObjects)
-
-        // return matchObjects;
     };
 
 
@@ -43,7 +30,6 @@ const useMatchHistoryParsePGN = (array, username) => {
 // The data from a single game on ChessCom comes in two parts: The game data and the pgn.
 // The pgn is a single string with needs to be parsed to get its key/value information
 const SingleMatchParsedData = (unparsedGameString) => {
-
 
     const pgnParseGameRegx = /\[([\w\s]+)\s"([^"]+)"\]/g;
     const parsedGameData = {};

@@ -1,20 +1,23 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import useFetchMultiple from "../hooks/useFetchMultiple";
+
 
 import MatchHistorySummary from './MatchHistorySummary';
 import PlayerInformation from './PlayerInformation';
 import SingleMatch from './SingleMatch';
-import UniqueMoves from './UniqueMoves';
-import OpeningAnalysis from './OpeningAnalysis';
+// import UniqueMoves from './UniqueMoves';
 
+import UniqueMoves from './moduleUniqueMoves/UniqueMoves';
 
-import useMatchHistoryAPI from '../hooks/useMatchHistoryAPI';
+import OpeningAnalysis from './moduleOpeningAnalysis/OpeningAnalysis';
 
-import useMatchHistoryParsePGN from '../hooks/useMatchHistoryParsePGN';
+import useFetchMultiple from "../hooks/useFetchMultiple";
+import useMatchHistoryAPI from '../hooksSpecific/useMatchHistoryAPI';
+import useMatchHistoryParsePGN from '../hooksSpecific/useMatchHistoryParsePGN';
 
 const MatchHistory = (props) => {
-    const [matches, setMatches] = useState([])
+    console.log(props)
 
+    const [renderFlag, setRenderFlag] = useState(false);
 
     const urls = [
           `https://api.chess.com/pub/player/${props.username}/games/2024/06`
@@ -35,12 +38,18 @@ const MatchHistory = (props) => {
 
 
     useEffect(() => {
-        if (data === null || data === undefined) {
-            return;
+        if (arrayOfParsedMatchObjects) {
+            setRenderFlag(checkIfAbleToRender(arrayOfParsedMatchObjects));
+        } else {
+            setRenderFlag(false);
         }
-        
-        setMatches(arrayOfParsedMatchObjects)
-    }, [data]);
+    }, [arrayOfParsedMatchObjects]);
+
+    const checkIfAbleToRender = (array) => {
+        if (array === null || array === undefined) {return false}
+        if (array <= 1) {return false}
+        return true
+    };
 
 
     return (
@@ -83,17 +92,27 @@ const MatchHistory = (props) => {
                 </section>
             )} */}
 
-            {!loading && data && (
+            {/* {!loading && data && (
                 <section id="player-unique-moves">
+                    
                     {data && <UniqueMoves matchHistory={matches} />}
                 </section>
-            )}
+            )} */}
 
             {/* {!waitingFlag && formData && currentComponent === 'OpeningAnalysis' && (
                 <section id="player-opening-analysis">
                     {playerData && playerData.matchHistory && <OpeningAnalysis matchHistory={playerData.matchHistory} />}
                 </section>
             )} */}
+
+
+
+            {/* Unique Moves Module */}
+            {renderFlag && (
+                <div>
+                    <UniqueMoves matchHistory={arrayOfParsedMatchObjects} />
+                </div>
+            )};
 
         </section>
     );
