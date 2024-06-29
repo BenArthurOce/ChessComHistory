@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import SingleMatchIcon from "../moduleSingleMatch/SingleMatchIcon";
+import SingleMatchIcon from "../SingleMatchIcon";
 
 
 

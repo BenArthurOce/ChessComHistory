@@ -2,52 +2,26 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Board from "../../board/Board";
-import SingleMatchIcon from "./SingleMatchIcon";
+import SingleMatchIcon from "../SingleMatchIcon";
 
 
 // Styled components
-const Container = styled.div
-`
-    //   &.win {
-    //     background-color: lightgreen;
-    //   }
-    //   &.loss {
-    //     background-color: lightcoral;
-    //   }
-    //   &.draw {
-    //     background-color: lightgray;
-    //   }
-`
-;
-
 const SingleMatchComp = styled.div
 `
     display: grid;
-    grid-template-columns: 2% 57% 1fr;
-    grid-template-rows: repeat(8, 1fr);
-    width: 50%;
-    min-width: 700px;
+    grid-template-columns: 2% 5% 50% 1fr;
+    width: 100%;
+
     border: 1px solid #ccc;
     padding: 5px;
     padding-right: 0;
     margin-top: 10px;
     margin-bottom: 10px;
-    min-width: 500px;
-    min-height: 300px;
+    min-height: 200px;
 
-    max-height: 30vh;
+    font-size: 10px;
 
     background-color: ${(props) => props.colorBackground};
-
-
-    @media (max-width: 768px) {
-        width: 100%;
-        min-width: unset;
-        grid-template-columns: 2% 50% 1fr;
-        padding: 5px;
-        min-height: unset;
-        max-height: 300px
-    }
 
 `
 ;
@@ -55,122 +29,36 @@ const SingleMatchComp = styled.div
 const ResultBar = styled.span
 `
     grid-column: 1;
-    grid-row: 1;
 
     grid-row-start: 1;
-    grid-row-end: 10;
+    grid-row-end: 8;
 
     border-radius: 100px;
-    background-color: ${(props) => props.colorBar};
-
-    
+    background-color: ${(props) => props.colorBar}; 
 `
 ;
 
-const MatchInfoUrl = styled.span
+const BoardContainer = styled.span
 `
-    grid-column: 2;
-    grid-row: 1;
-    padding-left: 10px;
-`
-;
-
-const BoardSpan = styled.span
-`
-    // grid-row: span 10;
-
     display: inline-block;
 
     align-items: center;
     justify-content: center;
 
-    grid-column-start: 3;
-    grid-column-end: 3;
+    grid-column-start: 4;
+    grid-column-end: 4;
 
     grid-row-start: 1;
-    grid-row-end: 10;
+    grid-row-end: 8;
 
+    border: 1px solid black;
 
-    @media (max-width: 768px) {
-        border: 1px solid black;
-    }
-`
-;
-
-const MatchInfoGeneral = styled.span
-`
-    grid-column: 2;
-    grid-row: 2;
-
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-`
-;
-
-const MatchInfoWhite = styled.span
-`
-    grid-column: 2;
-    grid-row: 4;
-
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-`
-;
-
-const MatchInfoBlack = styled.span
-`
-    grid-column: 2;
-    grid-row: 5;
-
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-`
-;
-
-const MatchInfoResult = styled.span
-`
-    grid-column: 2;
-    grid-row: 6;
-
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-`
-;
-
-const MatchInfoOpening = styled.span
-`
-    grid-column: 2;
-    grid-row: 8;
-
-    display: block ruby;
-    // align-items: center;
-    padding-left: 10px;
-`
-;
-
-const MatchInfoMoves = styled.span
-`
-    grid-column: 2;
-    grid-row: 9;
-
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-
-    display: flex;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: inherit;
 `
 ;
 
 const CopyButtonStyled = styled.button
 `
+    grid-column: 2;
     background: none;
     border: none;
     cursor: pointer;
@@ -179,8 +67,34 @@ const CopyButtonStyled = styled.button
 `
 ;
 
+const Title = styled.span
+`
+    grid-column: 2 / span 2;
+    display: flex;
+    padding-left: 5px;
+`
+;
 
-function SingleMatch(props) {
+const Icon = styled(SingleMatchIcon)
+`
+    grid-column: 2;
+    align-self: center;
+`
+;
+
+const Row = styled.span
+`
+    grid-column: 3;
+    display: flex;
+    align-items: center;
+`
+;
+
+
+
+
+
+function SingleMatchMobile(props) {
     const { gameInformation } = props;
 
     const [moveString, setMoveString] = useState("");
@@ -249,7 +163,7 @@ function SingleMatch(props) {
 
     const CopyButton = () => (
         <CopyButtonStyled onClick={() => copyToClipboard(gameInformation.moves)}>
-            <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
+            <Icon icon={"dunno"} color={colorIcon} size={13} ></Icon>
         </CopyButtonStyled>
     );
 
@@ -258,15 +172,16 @@ function SingleMatch(props) {
     };
 
     return (
-        <Container>
+        <>
             {gameInformation && (
                 <SingleMatchComp colorBackground={colorBackground} onClick={handleClick}>
+
                     {/* Win / Loss bar */}
                     <ResultBar colorBar={colorBar}></ResultBar>
 
                     {/* Line - Match ID */}
-                    <MatchInfoUrl>
-                        <h3 className="game-id">
+                    <Title>
+                        <p className="game-id">
                             <a
                                 href={`${gameInformation.general.url}`}
                                 target="_blank"
@@ -275,17 +190,18 @@ function SingleMatch(props) {
                                 Site: {gameInformation.general.site} || ID:{" "}
                                 {gameInformation.general.id}
                             </a>
-                        </h3>
-                    </MatchInfoUrl>
+                        </p>
+                    </Title>
 
                     {/* Chessboard Display */}
-                    <BoardSpan>
+                    <BoardContainer>
                         <Board position={gameInformation.results.fen} />
-                    </BoardSpan>
+                    </BoardContainer>
 
                     {/* Line - General Match Info */}
-                    <MatchInfoGeneral>
-                        <SingleMatchIcon icon={gameInformation.time.class} color={colorIcon}></SingleMatchIcon>
+                    <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>
+                    <Row>
+                        
                         <p>
                             {timeValue(gameInformation.time.control)}
                             &nbsp; &middot; &nbsp;
@@ -293,57 +209,56 @@ function SingleMatch(props) {
                             &nbsp; &middot; &nbsp;
                             {gameInformation.general.event}
                         </p>
-                    </MatchInfoGeneral>
+                    </Row>
 
                     {/* Line - White Details */}
-                    <MatchInfoWhite>
-                        <SingleMatchIcon icon={"whitePawn"} color={colorIcon}></SingleMatchIcon>
+                    <Icon icon={"whitePawn"} color={colorIcon} size={13} ></Icon>
+                    <Row>
                         <p>{gameInformation.white.username}</p>
                         &nbsp;
                         <strong>
                             <p>({gameInformation.white.elo})</p>
                         </strong>
-                    </MatchInfoWhite>
+                    </Row>
 
                     {/* Line - Black Details */}
-                    <MatchInfoBlack>
-                        <SingleMatchIcon icon={"blackPawn"} color={colorIcon}></SingleMatchIcon>
+                    <Icon icon={"blackPawn"} color={colorIcon} size={13} ></Icon>
+                    <Row>
+                        
                         <p>{gameInformation.black.username}</p>
                         &nbsp;
                         <strong>
                             <p>({gameInformation.black.elo})</p>
                         </strong>
-                    </MatchInfoBlack>
+                    </Row>
 
                     {/* Line - Winner */}
-                    <MatchInfoResult>
-                        <SingleMatchIcon icon={gameInformation.results.terminationWord} color={colorIcon}></SingleMatchIcon>
+                    <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={13} ></Icon>
+                    <Row>
+                        
                         <p>{gameInformation.results.terminationFull}</p>
-                    </MatchInfoResult>
+                    </Row>
 
                     {/* Line - ECO opening and link */}
-                    <MatchInfoOpening>
-                        <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
-                        <a
-                            href={gameInformation.opening.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <p>{gameInformation.opening.eco}</p>
-                            &nbsp;
-                            <p>{gameInformation.opening.name}</p>
+                    <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
+                    <Row>
+                        <a href={gameInformation.opening.url}  target="_blank"  rel="noopener noreferrer">
+                          <p>{gameInformation.opening.eco} - {gameInformation.opening.name}</p>
                         </a>
-                    </MatchInfoOpening>
+                    </Row>
 
                     {/* Line - List of Moves */}
-                    <MatchInfoMoves>
-                        <CopyButton />
-                        <p>{gameInformation.moves.pgn}</p>
-                    </MatchInfoMoves>
+                    <Icon icon={"dunno"} color={colorIcon} size={13} ></Icon>
+                    <Row>
+                        {/* <CopyButton /> */}
+                        {/* <p>{gameInformation.moves.pgn}</p> */}
+                        <p>placeholder string goes in here</p>
+                    </Row>
+
                 </SingleMatchComp>
             )}
-        </Container>
+        </>
     );
 }
 
-export default SingleMatch;
+export default SingleMatchMobile;

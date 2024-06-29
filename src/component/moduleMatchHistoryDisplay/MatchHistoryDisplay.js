@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
-import SingleMatch from '../moduleSingleMatch/SingleMatch';
+import SingleMatchPC from './SingleMatchPC';
+import SingleMatchMobile from './SingleMatchMobile';
+
+import useIsMobile from '../../hooks/useIsMobile';
 
 const MatchHistoryDisplay = (props) => {
     const matchHistory = props.matchHistory
     const [renderFlag, setRenderFlag] = useState(false);
     const [matchesToRender, setMatchesToRender] = useState(0)
+
+    const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
    
     
     useEffect(() => {
@@ -22,15 +27,21 @@ const MatchHistoryDisplay = (props) => {
 
 
     return (
-        <div>
-            <h1>Note: Work in progress</h1>
-
-            <div>
-                {matchHistory.map((match, index) => (
-                    index < matchesToRender && <SingleMatch key={index} gameInformation={match} />
-                ))}
-            </div>
-        </div>
+        <>
+            {hookIsMobile ? (
+                <>
+                    {matchHistory.map((match, index) => (
+                        index < matchesToRender && <SingleMatchMobile key={index} gameInformation={match} />
+                    ))}
+                </>
+            ) : (
+                <>
+                    {matchHistory.map((match, index) => (
+                        index < matchesToRender && <SingleMatchPC key={index} gameInformation={match} />
+                    ))}
+                </>
+            )}
+        </>
     );
 }
 

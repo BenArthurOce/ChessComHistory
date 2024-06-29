@@ -20,11 +20,13 @@ const SwitchButton = styled.button
 `
   background-color: ${(props) => (props.selected ? '#4CAF50' : '#008CBA')};
   color: white;
-  padding: 10px 20px;
+  padding: 10px 10px;
   margin: 0 10px;
   border: none;
   cursor: pointer;
   outline: none;
+  max-width: 70px;
+  font-size: 10px;
 
   &:hover {
     background-color: ${(props) => (props.selected ? '#45a049' : '#0077A3')};
