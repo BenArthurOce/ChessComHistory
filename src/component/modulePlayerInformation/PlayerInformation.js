@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import useFetch from '../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 
 
 
 
 const PlayerInformation = (props) => {
-    console.log(props)
-
+    const username = props.username;
     const [renderFlag, setRenderFlag] = useState(false);
     const { data, loading, error } = useFetch(`https://api.chess.com/pub/player/${props.username}`)
-
 
 
     useEffect(() => {
@@ -18,7 +16,7 @@ const PlayerInformation = (props) => {
         } else {
             setRenderFlag(false);
         }
-    }, [data]); // Run code when the data in "SearchForm is changed / submitted
+    }, [data]); // Run code when the data in "ChessAppSearchForm is changed / submitted
 
 
     const checkIfAbleToRender = (data) => {
@@ -44,8 +42,7 @@ const PlayerInformation = (props) => {
                     </article>
                 )}
             </section>
-            )};
-
+            )}
         </div>
     );
 }

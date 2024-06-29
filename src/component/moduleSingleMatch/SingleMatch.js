@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import Board from "../board/Board";
+import Board from "../../board/Board";
 import SingleMatchIcon from "./SingleMatchIcon";
 
 
