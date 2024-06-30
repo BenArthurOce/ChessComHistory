@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import SingleMatchIcon from "../SingleMatchIcon";
+import SingleIcon from "../SingleIcon";
 
 
 
@@ -9,9 +9,7 @@ import SingleMatchIcon from "../SingleMatchIcon";
 // Styled component for the outer container
 const MatchHistoryTableContainer = styled.div
 `
-    // display: flex;
     max-width: 600px;
-    // margin: 0 auto;
     padding: 20px;
     background-color: #f0f0f0;
     border-radius: 8px;
@@ -20,7 +18,6 @@ const MatchHistoryTableContainer = styled.div
     @media (max-width: 768px) {
         padding: 10px;
     }
-
 `
 ;
 
@@ -73,11 +70,12 @@ const TableHeader = styled.th
 
 const TableCell = styled.td
 `
+
     padding: 5px 2px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    max-width: 90px;
+    width: 80px;
     white-space: nowrap;
     text-overflow: ellipsis;
 `
@@ -87,7 +85,6 @@ const CellContents = styled.div
 `
     display: inline-block;
     margin-top: 10px;
-    
     width: 50%
 `
 ;
@@ -105,10 +102,8 @@ const FirstColumnCell = styled(TableCell)
 ;
 
 
-
 // props: An array of ParsedMatchObjects
 // This Component combines all the wins/losses/draws of the ParsedMatchObjects and outputs a table of the win/loss data, by piece colour and by time control
-
 function MatchHistoryTable(props) {
 
     const matchHistory = props.matchHistory;
@@ -199,9 +194,6 @@ function MatchHistoryTable(props) {
         return stats;
     };
 
-
-
-
     const filterMatches = (matchHistory, userPlayed, winLoseDraw, timeClass) => {
         return matchHistory.filter(({ results, time }) => {
             return (
@@ -213,11 +205,11 @@ function MatchHistoryTable(props) {
     };
 
 
-    // Function to render pawn icon with associated data
-    // see SingleMatchIcon.js 
+    // Function to render pawn icon with associated number of wins/losses/draws/total
+    // see SingleIcon.js 
     const renderPawnIcon = (iconType, color, count) => (
         <CellContents>
-            <SingleMatchIcon icon={iconType} color={color} size={20} />
+            <SingleIcon icon={iconType} color={color} size={20} />
             <p>{count}</p>
         </CellContents>
     );

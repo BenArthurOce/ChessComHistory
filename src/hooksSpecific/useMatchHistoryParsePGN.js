@@ -75,7 +75,10 @@ const SingleMatchParsedData = (unparsedGameString) => {
 
 const SingleMatchObject = (match, parsedData, username) => {
 
-    // console.log(match)
+    /* 
+        "match" is an object returned from the array of games fetched in the api. it includes "match.pgn" which is a single long string
+        "parsedData" is match.pgn, but has now been parsed into an object with its own key/value pairs
+    */
 
     function createMoveObject(notation) {
         // console.log(createMoveObject)
@@ -91,7 +94,6 @@ const SingleMatchObject = (match, parsedData, username) => {
         }
         return allMoves;
     }
-
 
     function getUserPlayedColor(match, username) {
         if (match.white.username.toLowerCase() === username.toLowerCase()) return "white";
@@ -147,7 +149,7 @@ const SingleMatchObject = (match, parsedData, username) => {
           , site:           parsedData.Site
           , event:          parsedData.Event
           , rules:          match.rules
-          , isRated:        match.rated
+          , rated:          match.rated ? "Rated" : "Casual"
           , id:             extractGameId(parsedData.Link)
           , date:           parsedData.Date
           , link:           parsedData.Link
@@ -155,9 +157,8 @@ const SingleMatchObject = (match, parsedData, username) => {
         }
         ,
         moves: {
-        //     pgn:              parsedData.movestring
-        //   , 
             full:             moveObject
+          , string:           parsedData.MoveString
           , white:            getPlayerMoves(moveObject, "white")
           , black:            getPlayerMoves(moveObject, "black")
         }
@@ -184,10 +185,11 @@ const SingleMatchObject = (match, parsedData, username) => {
             class:          match.time_class
           , control:        match.time_control
           , base:           match.time_control.split('+')[0]
-          , increment:      match.time_control.split('+')[1] || ""
+          , increment:      match.time_control.split('+')[1] || 0
           , bonus:          "not in use"
           , start:          match.start_time
           , end:            match.end_time
+          , minutes:        (match.time_control.split('+')[0]) / 60
         }
         ,
         white: {

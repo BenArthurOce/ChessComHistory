@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Board from "../../board/Board";
-import SingleMatchIcon from "../SingleMatchIcon";
+import SingleIcon from "../SingleIcon";
 
 
 // Styled components
@@ -249,7 +249,7 @@ function SingleMatchPC(props) {
 
     const CopyButton = () => (
         <CopyButtonStyled onClick={() => copyToClipboard(gameInformation.moves)}>
-            <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
+            <SingleIcon icon={"book"} color={colorIcon}></SingleIcon>
         </CopyButtonStyled>
     );
 
@@ -285,7 +285,7 @@ function SingleMatchPC(props) {
 
                     {/* Line - General Match Info */}
                     <MatchInfoGeneral>
-                        <SingleMatchIcon icon={gameInformation.time.class} color={colorIcon}></SingleMatchIcon>
+                        <SingleIcon icon={gameInformation.time.class} color={colorIcon}></SingleIcon>
                         <p>
                             {timeValue(gameInformation.time.control)}
                             &nbsp; &middot; &nbsp;
@@ -297,7 +297,7 @@ function SingleMatchPC(props) {
 
                     {/* Line - White Details */}
                     <MatchInfoWhite>
-                        <SingleMatchIcon icon={"whitePawn"} color={colorIcon}></SingleMatchIcon>
+                        <SingleIcon icon={"whitePawn"} color={colorIcon}></SingleIcon>
                         <p>{gameInformation.white.username}</p>
                         &nbsp;
                         <strong>
@@ -307,7 +307,7 @@ function SingleMatchPC(props) {
 
                     {/* Line - Black Details */}
                     <MatchInfoBlack>
-                        <SingleMatchIcon icon={"blackPawn"} color={colorIcon}></SingleMatchIcon>
+                        <SingleIcon icon={"blackPawn"} color={colorIcon}></SingleIcon>
                         <p>{gameInformation.black.username}</p>
                         &nbsp;
                         <strong>
@@ -317,13 +317,13 @@ function SingleMatchPC(props) {
 
                     {/* Line - Winner */}
                     <MatchInfoResult>
-                        <SingleMatchIcon icon={gameInformation.results.terminationWord} color={colorIcon}></SingleMatchIcon>
+                        <SingleIcon icon={gameInformation.results.terminationWord} color={colorIcon}></SingleIcon>
                         <p>{gameInformation.results.terminationFull}</p>
                     </MatchInfoResult>
 
                     {/* Line - ECO opening and link */}
                     <MatchInfoOpening>
-                        <SingleMatchIcon icon={"book"} color={colorIcon}></SingleMatchIcon>
+                        <SingleIcon icon={"book"} color={colorIcon}></SingleIcon>
                         <a
                             href={gameInformation.opening.url}
                             target="_blank"

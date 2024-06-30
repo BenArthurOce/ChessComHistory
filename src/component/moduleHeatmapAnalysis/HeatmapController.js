@@ -7,6 +7,8 @@ import useIsMobile from "../../hooks/useIsMobile";
 import useUniqueMovesDataset from "../../hooksSpecific/useUniqueMovesDataset";
 import HeatmapTile from "./HeatmapTile";
 
+import MatchHistoryDisplay from "../moduleMatchHistoryDisplay/MatchHistoryDisplay";
+
 
 
 
@@ -25,11 +27,16 @@ const HeatmapController = (props) => {
         castling: []
     });
 
-    console.log(props)
+    // console.log(props)
     const [start, setStart] = useState(0); // Default start value
     const [end, setEnd] = useState(5);   // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
 
+
+    const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
+    const [selectedMatch, setSelectedMatch] = useState(null); // State to hold selected match details
+  
+    const [popupMatchHistory, setPopupMatchHistory] = useState(null); // State to hold selected match details
 
     const [singleTileSelected, setSingleTileSelected] = useState(null); // for Mobile - Displays Bubble if selected
 
@@ -44,9 +51,9 @@ const HeatmapController = (props) => {
     useEffect(() => {
         if (Array.isArray(hookDataSet)) {
             
-            // console.log("====hookDataSet====")
-            // console.log(hookDataSet)
-            // console.log()
+            console.log("====hookDataSet====")
+            console.log(hookDataSet)
+            console.log()
 
             const endData = filterAndTransformData();
             setRenderFlag(checkIfAbleToRender(endData));
@@ -58,6 +65,10 @@ const HeatmapController = (props) => {
     }, [hookDataSet, start, end, selectedTeam]);
 
 
+
+
+
+
     // Once the UI has been updated, we read the DataSet from the hook, and transform it into stats by each unique move
     const filterAndTransformData = () => {
         const gameData = hookDataSet.filter(obj => (
@@ -66,9 +77,9 @@ const HeatmapController = (props) => {
             obj.turn <= end
         ));
 
-        // console.log("====gameData====")
-        // console.log(gameData)
-        // console.log()
+        console.log("====gameData====")
+        console.log(gameData)
+        console.log()
 
         function performSecondaryFilterPlayed(moveString, data) {
             return data.filter(entry => (entry.move === moveString))
@@ -98,6 +109,7 @@ const HeatmapController = (props) => {
                 , "piece": classifyMove(move)
                 , "nullcount": 0
                 , "winpct": 0
+                , "matches": performSecondaryFilterPlayed(move, data)
             }
 
             test["winpct"] = (test["win"] / test["played"]) * 100;
@@ -109,9 +121,9 @@ const HeatmapController = (props) => {
         let uniqueMoves = Array.from(new Set(gameData.map(obj => obj.move)));
         let moveStats = uniqueMoves.map(move => returnMoveStats(move, gameData));
 
-        // console.log("====uniqueMoves====")
-        // console.log(uniqueMoves)
-        // console.log()
+        console.log("====uniqueMoves====")
+        console.log(uniqueMoves)
+        console.log()
 
     
         // Sort the moveStats array by the number of games played in descending order
@@ -168,6 +180,31 @@ const HeatmapController = (props) => {
     };
 
 
+    // When Clicking on a Heatmap Tile, you will get the matches where the game happened
+    const handleIndividualTileClick = (tile) => {
+
+        const matchHistory = props.matchHistory
+        const arrayMatchId = tile.matches.map(entry => entry.id);
+
+        function filterMatchHistory(matchHistory, array) {
+            return matchHistory.filter(obj => array.includes(obj.general.id));
+        };
+
+        const result = filterMatchHistory(matchHistory, arrayMatchId)
+        // console.log(result)
+
+        setPopupMatchHistory(result);
+        setShowPopup(true);
+    };
+
+
+    // const handleIndividualTileClick = (tile) => {
+    //     // Handle click on heatmap tile to show popup
+    //     setSelectedMatch(tile.matches); // Assuming tile.matches holds match details
+    //     setShowPopup(true);
+    //   };
+
+
     return (
         <div className="container">
             <h2>Winning Moves Heatmap</h2>
@@ -198,19 +235,41 @@ const HeatmapController = (props) => {
                                 onClick={() => handleMobileClick(moveObj)}
                             > */}
 
-                            {moves.map((moveObj) => (
+                            {/* {moves.map((moveObj) => (
                                 <div onClick={() => handleMobileClick(moveObj)}>
-                                    {/* <HeatmapTile tileInformation={moveObj} isClicked={singleTileSelected===moveObj}  clickEvent ={handleClickEvent()} > */}
                                     <HeatmapTile tileInformation={moveObj} isClicked={singleTileSelected===moveObj} >
 
                                     </HeatmapTile>
                                 </div>
+                            ))} */}
+
+                            {moves.map((moveObj) => (
+                            <div key={moveObj.move}>
+                                <HeatmapTile
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleTileClick={handleIndividualTileClick} // Pass the handler here
+                                />
+                            </div>
                             ))}
                     </div>
                 ))}
             </div>
+
+            
+      {/* Conditionally render MatchHistoryDisplay as popup */}
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-inner">
+            <button className="close-button" onClick={() => setShowPopup(false)}>
+              Close
+            </button>
+            <MatchHistoryDisplay matchHistory={popupMatchHistory} />
+          </div>
         </div>
-    )
+      )}
+    </div>
+  );
 };
 
 export default HeatmapController;

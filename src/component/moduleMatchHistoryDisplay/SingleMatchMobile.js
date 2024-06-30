@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import Board from "../../board/Board";
-import SingleMatchIcon from "../SingleMatchIcon";
+import SingleIcon from "../SingleIcon";
 
 
 // Styled components
@@ -14,7 +14,6 @@ const SingleMatchComp = styled.div
 
     border: 1px solid #ccc;
     padding: 5px;
-    padding-right: 0;
     margin-top: 10px;
     margin-bottom: 10px;
     min-height: 200px;
@@ -22,16 +21,14 @@ const SingleMatchComp = styled.div
     font-size: 10px;
 
     background-color: ${(props) => props.colorBackground};
-
 `
 ;
 
 const ResultBar = styled.span
 `
     grid-column: 1;
-
     grid-row-start: 1;
-    grid-row-end: 8;
+    grid-row-end: 9;
 
     border-radius: 100px;
     background-color: ${(props) => props.colorBar}; 
@@ -49,21 +46,22 @@ const BoardContainer = styled.span
     grid-column-end: 4;
 
     grid-row-start: 1;
-    grid-row-end: 8;
+    grid-row-end: 9;
 
-    border: 1px solid black;
-
+    padding-right:2px;
 `
 ;
 
-const CopyButtonStyled = styled.button
+const CopyButton = styled.button
 `
     grid-column: 2;
-    background: none;
-    border: none;
+
+    grid-column: 2;
     cursor: pointer;
-    width: 50px;
-    height: 50px;
+    align-self: center;
+
+    background: none;   /* Removes the button "look" */
+    border: none;       /* Removes the button "look" */
 `
 ;
 
@@ -75,7 +73,7 @@ const Title = styled.span
 `
 ;
 
-const Icon = styled(SingleMatchIcon)
+const Icon = styled(SingleIcon)
 `
     grid-column: 2;
     align-self: center;
@@ -87,6 +85,7 @@ const Row = styled.span
     grid-column: 3;
     display: flex;
     align-items: center;
+    overflow: hidden;
 `
 ;
 
@@ -96,8 +95,6 @@ const Row = styled.span
 
 function SingleMatchMobile(props) {
     const { gameInformation } = props;
-
-    const [moveString, setMoveString] = useState("");
 
     const [copied, setCopied] = useState(false);
 
@@ -130,70 +127,50 @@ function SingleMatchMobile(props) {
     }, [gameInformation.results.userResult]);
 
 
-    const isRatedString = () => {
-        return gameInformation.general.isRated ? "Rated" : "Casual";
-    };
-
-
-    function splitAndConvert(str) {
-        return str.split('+').map(Number);
-    };
-
-
-    const timeValue = (timeString) => {
-        const array = timeString.split('+').map(Number);
-    
-        const totalSeconds = array[0];
-        const minutes = Math.floor(totalSeconds / 60);
-        const extraSeconds = array[1] ? array[1] : 0;
-
-        return `${minutes}+${extraSeconds}`
-    };
-
-
+    // When the "Copy" button is clicked on the last two rows, handlers will call this method to copy to clipboard
     const copyToClipboard = (text) => {
-        console.log(text);
         navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 1500);
     };
 
+    // When the "Copy" icon is clicked, "props.gameInformation.moves.string" is copied to the users clipboard
+    const handleCopyPGNButtonClick = (e) => {
+        e.stopPropagation();    // If there is an event listener when the entire component is clicked. This line stops that
+        copyToClipboard(gameInformation.moves.string);
+    };
 
-    const CopyButton = () => (
-        <CopyButtonStyled onClick={() => copyToClipboard(gameInformation.moves)}>
-            <Icon icon={"dunno"} color={colorIcon} size={13} ></Icon>
-        </CopyButtonStyled>
-    );
+    // When the "Copy" icon is clicked, "props.gameInformation.results.fen" is copied to the users clipboard
+    const handleCopyFENButtonClick = (e) => {
+        e.stopPropagation();    // If there is an event listener when the entire component is clicked. This line stops that
+        copyToClipboard(gameInformation.results.fen);
+    };
 
-    const handleClick = () => {
+    // For debugging purposes. When the component is clicked, the ParsedMatchObject is printed to terminal
+    const handleComponentClick = () => {
         console.log(props.gameInformation);
     };
 
     return (
         <>
             {gameInformation && (
-                <SingleMatchComp colorBackground={colorBackground} onClick={handleClick}>
+                <SingleMatchComp colorBackground={colorBackground} onClick={handleComponentClick}>
 
                     {/* Win / Loss bar */}
                     <ResultBar colorBar={colorBar}></ResultBar>
 
                     {/* Line - Match ID */}
                     <Title>
-                        <p className="game-id">
+                        <h3>
                             <a
                                 href={`${gameInformation.general.url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Site: {gameInformation.general.site} || ID:{" "}
-                                {gameInformation.general.id}
+                                <p>Site: {gameInformation.general.site} || ID: {gameInformation.general.id}</p>
                             </a>
-                        </p>
+                        </h3>
                     </Title>
 
-                    {/* Chessboard Display */}
+                    {/* Chessboard Display. "Board" is a seperate component in a different file */}
                     <BoardContainer>
                         <Board position={gameInformation.results.fen} />
                     </BoardContainer>
@@ -201,11 +178,10 @@ function SingleMatchMobile(props) {
                     {/* Line - General Match Info */}
                     <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>
                     <Row>
-                        
                         <p>
-                            {timeValue(gameInformation.time.control)}
+                            {gameInformation.time.minutes}+{gameInformation.time.increment}
                             &nbsp; &middot; &nbsp;
-                            {isRatedString(gameInformation.general.isRated)}
+                            {gameInformation.general.rated}
                             &nbsp; &middot; &nbsp;
                             {gameInformation.general.event}
                         </p>
@@ -216,26 +192,20 @@ function SingleMatchMobile(props) {
                     <Row>
                         <p>{gameInformation.white.username}</p>
                         &nbsp;
-                        <strong>
-                            <p>({gameInformation.white.elo})</p>
-                        </strong>
+                        <strong><p>({gameInformation.white.elo})</p></strong>
                     </Row>
 
                     {/* Line - Black Details */}
                     <Icon icon={"blackPawn"} color={colorIcon} size={13} ></Icon>
                     <Row>
-                        
                         <p>{gameInformation.black.username}</p>
                         &nbsp;
-                        <strong>
-                            <p>({gameInformation.black.elo})</p>
-                        </strong>
+                        <strong><p>({gameInformation.black.elo})</p></strong>
                     </Row>
 
-                    {/* Line - Winner */}
+                    {/* Line - Result */}
                     <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={13} ></Icon>
                     <Row>
-                        
                         <p>{gameInformation.results.terminationFull}</p>
                     </Row>
 
@@ -247,12 +217,20 @@ function SingleMatchMobile(props) {
                         </a>
                     </Row>
 
-                    {/* Line - List of Moves */}
-                    <Icon icon={"dunno"} color={colorIcon} size={13} ></Icon>
+                    {/* Line - String of Moves */}
+                    <CopyButton onClick={handleCopyPGNButtonClick}>
+                            <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
+                    </CopyButton>
                     <Row>
-                        {/* <CopyButton /> */}
-                        {/* <p>{gameInformation.moves.pgn}</p> */}
-                        <p>placeholder string goes in here</p>
+                        <p>{gameInformation.moves.string}</p>
+                    </Row>
+
+                    {/* Line - FEN */}
+                    <CopyButton onClick={handleCopyFENButtonClick}>
+                            <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
+                    </CopyButton>
+                    <Row>
+                        <p>{gameInformation.results.fen}</p>
                     </Row>
 
                 </SingleMatchComp>

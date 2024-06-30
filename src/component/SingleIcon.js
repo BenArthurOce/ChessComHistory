@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faInfoCircle, faClock, faChessPawn, faPersonSkiing, faBolt, faGun } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faInfoCircle, faClock, faChessPawn, faSun, faPersonSkiing, faBolt, faGun } from '@fortawesome/free-solid-svg-icons';
 import { faFlag, faSkullCrossbones, faDoorOpen, faRepeat, faHourglassEnd, faEquals, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
@@ -20,36 +20,37 @@ const Container = styled.div
 `
 ;
 
-
-
-
 const StyledIcon = styled(FontAwesomeIcon)`
 
     // font-size: 30px;
     color: ${props => props.color};
-    font-size: ${props => props.size}px; /* Adjust font size based on size prop */
+    font-size: ${props => props.size}px;
 
-`;
-
+`
+;
 
 const WhitePawn = styled(FontAwesomeIcon)`
 
-    font-size: ${props => props.size}px; /* Adjust font size based on size prop */
+    font-size: ${props => props.size}px;
     color: #ffffff;
     background-color: inherit;
     stroke: black; /* Allows white pawns on white backgrounds to be more visual */
     stroke-width: 10px; 
     
-`;
+`
+;
 
 const BlackPawn = styled(FontAwesomeIcon)`
-    font-size: ${props => props.size}px; /* Adjust font size based on size prop */
+    font-size: ${props => props.size}px;
     color: black;
     background-color: inherit;
-`;
+`
+;
 
 const getIcon = (string, color, size) => {
     switch (string) {
+        case 'daily':
+            return <StyledIcon icon={faSun} color={color} size={size} />;
         case 'rapid':
             return <StyledIcon icon={faPersonSkiing} color={color} size={size} />;
         case 'blitz':
@@ -84,17 +85,16 @@ const getIcon = (string, color, size) => {
             return <StyledIcon icon={faTrophy} color={color} size={size} />;
         default:
             return <StyledIcon icon={faQuestionCircle} color={color} size={size} />;
-    }
+    };
 };
 
-function SingleMatchIcon(props) {
+function SingleIcon(props) {
     return (
         <Container>
             {getIcon(props.icon, props.color, props.size)}
         </Container>
     );
-}
+};
 
 
-export default SingleMatchIcon;
-
+export default SingleIcon;
