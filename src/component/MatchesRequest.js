@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useCallback,
+    useRef,
+} from "react";
 
 // Hooks
 import useFetchMultiple from "../hooks/useFetchMultiple";
-import useMatchHistoryAPI from '../hooksSpecific/useMatchHistoryAPI';
-import useMatchHistoryParsePGN from '../hooksSpecific/useMatchHistoryParsePGN';
+import useMatchHistoryAPI from "../hooksSpecific/useMatchHistoryAPI";
+import useMatchHistoryParsePGN from "../hooksSpecific/useMatchHistoryParsePGN";
 
-
-{/*
+{
+    /*
 ==== MatchesRequest Component===
 
 This is a child component that is tasked with obtaining the match history API, sorting it into ParsedMatchObjects and returning it to the parent component
@@ -51,43 +57,50 @@ Usage:
     The array output will be used almost in every other component that requires data.
     Those components will manipulate and summarise the data for their own requirements
 
-*/}
-
+*/
+}
 
 const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
     const [renderFlag, setRenderFlag] = useState(false);
 
     const urls = [
-          `https://api.chess.com/pub/player/${username}/games/2024/06`
-        , `https://api.chess.com/pub/player/${username}/games/2024/05`
-        , `https://api.chess.com/pub/player/${username}/games/2024/04`
-        , `https://api.chess.com/pub/player/${username}/games/2024/03`
-        , `https://api.chess.com/pub/player/${username}/games/2024/02`
-        , `https://api.chess.com/pub/player/${username}/games/2024/01`
-        , `https://api.chess.com/pub/player/${username}/games/2023/12`
-        , `https://api.chess.com/pub/player/${username}/games/2023/11`
+        `https://api.chess.com/pub/player/${username}/games/2024/06`,
+        `https://api.chess.com/pub/player/${username}/games/2024/05`,
+        `https://api.chess.com/pub/player/${username}/games/2024/04`,
+        `https://api.chess.com/pub/player/${username}/games/2024/03`,
+        `https://api.chess.com/pub/player/${username}/games/2024/02`,
+        `https://api.chess.com/pub/player/${username}/games/2024/01`,
+        `https://api.chess.com/pub/player/${username}/games/2023/12`,
+        `https://api.chess.com/pub/player/${username}/games/2023/11`,
     ];
 
     const { data, loading, error } = useFetchMultiple(urls);
-    const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
-    const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN(hookArrayOfUnparsedMatchObjects, username);
-
+    const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(
+        data,
+        lastNGames
+    );
+    const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN(
+        hookArrayOfUnparsedMatchObjects,
+        username
+    );
 
     useEffect(() => {
         if (hookArrayOfParsedMatchObjects) {
             onDataRequest(hookArrayOfParsedMatchObjects); // Send parsed data to parent
             setRenderFlag(checkIfAbleToRender(hookArrayOfParsedMatchObjects));
-  
         } else {
             setRenderFlag(false);
         }
     }, [hookArrayOfParsedMatchObjects, onDataRequest]);
 
-
     const checkIfAbleToRender = (array) => {
-        if (array === null || array === undefined) {return false}
-        if (array <= 1) {return false}
-        return true
+        if (array === null || array === undefined) {
+            return false;
+        }
+        if (array <= 1) {
+            return false;
+        }
+        return true;
     };
 
     return (

@@ -47,54 +47,64 @@ const BlackPawn = styled(FontAwesomeIcon)`
 `
 ;
 
+
 const getIcon = (string, color, size) => {
     switch (string) {
-        case 'daily':
+        case "daily":
             return <StyledIcon icon={faSun} color={color} size={size} />;
-        case 'rapid':
-            return <StyledIcon icon={faPersonSkiing} color={color} size={size} />;
-        case 'blitz':
+        case "rapid":
+            return (
+                <StyledIcon icon={faPersonSkiing} color={color} size={size} />
+            );
+        case "blitz":
             return <StyledIcon icon={faBolt} color={color} size={size} />;
-        case 'bullet':
+        case "bullet":
             return <StyledIcon icon={faGun} color={color} size={size} />;
-        case 'resignation':
+        case "resignation":
             return <StyledIcon icon={faFlag} color={color} size={size} />;
-        case 'checkmate':
-            return <StyledIcon icon={faSkullCrossbones} color={color} size={size} />;
-        case 'abandoned':
+        case "checkmate":
+            return (
+                <StyledIcon
+                    icon={faSkullCrossbones}
+                    color={color}
+                    size={size}
+                />
+            );
+        case "abandoned":
             return <StyledIcon icon={faDoorOpen} color={color} size={size} />;
-        case 'time':
-            return <StyledIcon icon={faHourglassEnd} color={color} size={size} />;
-        case 'repetition':
+        case "time":
+            return (
+                <StyledIcon icon={faHourglassEnd} color={color} size={size} />
+            );
+        case "repetition":
             return <StyledIcon icon={faRepeat} color={color} size={size} />;
-        case 'stalemate':
+        case "stalemate":
             return <StyledIcon icon={faEquals} color={color} size={size} />;
-        case 'material':
+        case "material":
             return <StyledIcon icon={faEquals} color={color} size={size} />;
-        case 'agreement':
+        case "agreement":
             return <StyledIcon icon={faHandshake} color={color} size={size} />;
-        case 'book':
+        case "book":
             return <StyledIcon icon={faBook} color={color} size={size} />;
-        case 'copy':
+        case "copy":
             return <StyledIcon icon={faCopy} color={color} size={size} />;
-        case 'whitePawn':
+        case "whitePawn":
             return <WhitePawn icon={faChessPawn} color={color} size={size} />;
-        case 'blackPawn':
+        case "blackPawn":
             return <BlackPawn icon={faChessPawn} color={color} size={size} />;
-        case 'trophy':
+        case "trophy":
             return <StyledIcon icon={faTrophy} color={color} size={size} />;
         default:
-            return <StyledIcon icon={faQuestionCircle} color={color} size={size} />;
-    };
+            return (
+                <StyledIcon icon={faQuestionCircle} color={color} size={size} />
+            );
+    }
 };
 
 function SingleIcon(props) {
     return (
-        <Container>
-            {getIcon(props.icon, props.color, props.size)}
-        </Container>
+        <Container>{getIcon(props.icon, props.color, props.size)}</Container>
     );
-};
-
+}
 
 export default SingleIcon;

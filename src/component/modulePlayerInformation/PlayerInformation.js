@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import useFetch from '../../hooks/useFetch';
-
-
-
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useCallback,
+    useRef,
+} from "react";
+import useFetch from "../../hooks/useFetch";
 
 const PlayerInformation = (props) => {
     const username = props.username;
     const [renderFlag, setRenderFlag] = useState(false);
-    const { data, loading, error } = useFetch(`https://api.chess.com/pub/player/${props.username}`)
-
+    const { data, loading, error } = useFetch(
+        `https://api.chess.com/pub/player/${props.username}`
+    );
 
     useEffect(() => {
         if (data) {
@@ -18,14 +22,16 @@ const PlayerInformation = (props) => {
         }
     }, [data]); // Run code when the data in "ChessAppSearchForm is changed / submitted
 
-
     const checkIfAbleToRender = (data) => {
-        if (data === null || data === undefined) { return false } else {return true}
+        if (data === null || data === undefined) {
+            return false;
+        } else {
+            return true;
+        }
     };
 
-
     return (
-        <div>
+        <>
             {renderFlag && (
                 <section className="playerProfile">
                 <h1>PlayerProfile</h1>
@@ -43,7 +49,7 @@ const PlayerInformation = (props) => {
                 )}
             </section>
             )}
-        </div>
+        </>
     );
 }
 

@@ -3,9 +3,6 @@ import styled from "styled-components";
 import SingleIcon from "../SingleIcon";
 
 
-
-
-
 // Styled component for the outer container
 const MatchHistoryTableContainer = styled.div
 `
@@ -398,6 +395,6 @@ function MatchHistoryTable(props) {
             )}
         </MatchHistoryTableContainer>
     );
-}
+};
 
 export default MatchHistoryTable;

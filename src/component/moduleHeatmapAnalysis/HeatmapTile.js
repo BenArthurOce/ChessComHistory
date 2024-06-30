@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import useIsMobile from "../../hooks/useIsMobile";
 
-
 const UniqueMoveTileStyledMobile = styled.div
 `
     position: relative;
@@ -66,79 +65,79 @@ const TilePopupSpan = styled.span
 `
 ;
 
+
+
 function HeatmapTile(props) {
-  const { tileInformation, isClicked, handleTileClick } = props;
-  const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
-  const [colorBackground, setColorBackground] = useState("");
+    const { tileInformation, isClicked, handleTileClick } = props;
+    const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
+    const [colorBackground, setColorBackground] = useState("");
 
-  const tileRef = useRef(null);
+    const tileRef = useRef(null);
 
-  // Sets the background colour of the tile and the popup
-  useEffect(() => {
-    if (tileInformation.winpct >= 60) {
-      setColorBackground("#4caf50"); // Dark Green (win over 60%)
-    } else if (tileInformation.winpct > 50) {
-      setColorBackground("#8dbd4f"); // Light Green (win 50% - 60%)
-    } else if (tileInformation.winpct === 50) {
-      setColorBackground("#ffeb3b"); // Yellow (win 50%)
-    } else if (tileInformation.winpct >= 40) {
-      setColorBackground("#ff9800"); // Orange (win 40% - 50%)
-    } else if (tileInformation.winpct >= 0) {
-      setColorBackground("#f44336"); // Red (win under 40%)
-    } else {
-      setColorBackground("black"); // Indicates an error
-    }
-  }, [tileInformation]);
+    // Sets the background colour of the tile and the popup
+    useEffect(() => {
+        if (tileInformation.winpct >= 60) {
+            setColorBackground("#4caf50"); // Dark Green (win over 60%)
+        } else if (tileInformation.winpct > 50) {
+            setColorBackground("#8dbd4f"); // Light Green (win 50% - 60%)
+        } else if (tileInformation.winpct === 50) {
+            setColorBackground("#ffeb3b"); // Yellow (win 50%)
+        } else if (tileInformation.winpct >= 40) {
+            setColorBackground("#ff9800"); // Orange (win 40% - 50%)
+        } else if (tileInformation.winpct >= 0) {
+            setColorBackground("#f44336"); // Red (win under 40%)
+        } else {
+            setColorBackground("black"); // Indicates an error
+        }
+    }, [tileInformation]);
 
-  // Handles click event of the tile
-  const handleClick = () => {
-    handleTileClick(tileInformation);
-  };
-
-  // Sets the click event for the popup
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (tileRef.current && !tileRef.current.contains(event.target)) {
-        // Implement if needed
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+    // Handles click event of the tile
+    const handleClick = () => {
+        handleTileClick(tileInformation);
     };
-  }, [tileRef]);
 
-  return (
-    <>
-      {/* MOBILE VIEWPORT VERSION */}
-      {props && hookIsMobile && (
-        <UniqueMoveTileStyledMobile
-          ref={tileRef}
-          colorBackground={colorBackground}
-          isClicked={isClicked}
-          onClick={handleClick}
-        >
-          <TilePopupSpan>
-            <p>{tileInformation.move}</p>
-          </TilePopupSpan>
-        </UniqueMoveTileStyledMobile>
-      )}
+    // Sets the click event for the popup
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (tileRef.current && !tileRef.current.contains(event.target)) {
+                // Implement if needed
+            }
+        }
 
-      {/* PC VIEWPORT VERSION */}
-      {props && !hookIsMobile && (
-        <UniqueMoveTileStyledPC
-          ref={tileRef}
-          colorBackground={colorBackground}
-          onClick={handleClick}
-        >
-          <TilePopupSpan>
-            <p>{tileInformation.move}</p>
-          </TilePopupSpan>
-        </UniqueMoveTileStyledPC>
-      )}
-    </>
-  );
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [tileRef]);
+
+    return (
+        <>
+            {/* MOBILE VIEWPORT VERSION */}
+            {props && hookIsMobile && (
+                <UniqueMoveTileStyledMobile
+                    ref={tileRef}
+                    colorBackground={colorBackground}
+                    isClicked={isClicked}
+                    onClick={handleClick}>
+                    <TilePopupSpan>
+                        <p>{tileInformation.move}</p>
+                    </TilePopupSpan>
+                </UniqueMoveTileStyledMobile>
+            )}
+
+            {/* PC VIEWPORT VERSION */}
+            {props && !hookIsMobile && (
+                <UniqueMoveTileStyledPC
+                    ref={tileRef}
+                    colorBackground={colorBackground}
+                    onClick={handleClick}>
+                    <TilePopupSpan>
+                        <p>{tileInformation.move}</p>
+                    </TilePopupSpan>
+                </UniqueMoveTileStyledPC>
+            )}
+        </>
+    );
 }
 
 export default HeatmapTile;

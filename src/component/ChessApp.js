@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import PlayerInformation from './modulePlayerInformation/PlayerInformation';
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useCallback,
+    useRef,
+} from "react";
+import PlayerInformation from "./modulePlayerInformation/PlayerInformation";
 
-import ChessAppSwitcher from './ChessAppSwitcher';
-import ChessAppSearchForm from './ChessAppSearchForm';
-
+import ChessAppSwitcher from "./ChessAppSwitcher";
+import ChessAppSearchForm from "./ChessAppSearchForm";
 
 function ChessApp() {
-
     const [formData, setFormData] = useState(null);
     const [renderFlag, setRenderFlag] = useState(false);
-
 
     useEffect(() => {
         if (formData) {
@@ -19,17 +22,14 @@ function ChessApp() {
         }
     }, [formData]); // Run code when the data in "ChessAppSearchForm is changed / submitted"
 
-
     const checkIfAbleToRender = (formData) => {
         return formData.username.length >= 3 && formData.lastNGames >= 1;
     };
-    
 
     const triggerFormSubmitted = (newFormData) => {
-        setFormData(newFormData)
+        setFormData(newFormData);
     };
 
-  
     return (
         <div id="wrapper">
             <h1>Chess Match History</h1>
@@ -38,14 +38,14 @@ function ChessApp() {
                 <ChessAppSearchForm onFormSubmit={triggerFormSubmitted} />
             </section>
 
-      {renderFlag && (
-        <div>
-          <ChessAppSwitcher
-            username={formData.username}
-            lastNGames={formData.lastNGames}
-          />
-        </div>
-      )}
+            {renderFlag && (
+                <div>
+                    <ChessAppSwitcher
+                        username={formData.username}
+                        lastNGames={formData.lastNGames}
+                    />
+                </div>
+            )}
 
             {/* Player Information */}
             {/* {renderFlag && (
@@ -53,7 +53,6 @@ function ChessApp() {
                     {<PlayerInformation username={formData.username} />}
                 </div>
             )} */}
-
 
             {/* Match History */}
             {/* {renderFlag && formData && (

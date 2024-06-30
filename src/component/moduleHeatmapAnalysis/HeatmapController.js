@@ -9,13 +9,6 @@ import HeatmapTile from "./HeatmapTile";
 
 import MatchHistoryDisplay from "../moduleMatchHistoryDisplay/MatchHistoryDisplay";
 
-
-
-
-
-
-
-
 const HeatmapController = (props) => {
     const [pieceMoves, setPieceMoves] = useState({
         pawn: [],
@@ -24,116 +17,111 @@ const HeatmapController = (props) => {
         bishop: [],
         queen: [],
         king: [],
-        castling: []
+        castling: [],
     });
 
     // console.log(props)
     const [start, setStart] = useState(0); // Default start value
-    const [end, setEnd] = useState(5);   // Default end value
+    const [end, setEnd] = useState(5); // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
-
 
     const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
     const [selectedMatch, setSelectedMatch] = useState(null); // State to hold selected match details
-  
+
     const [popupMatchHistory, setPopupMatchHistory] = useState(null); // State to hold selected match details
 
     const [singleTileSelected, setSingleTileSelected] = useState(null); // for Mobile - Displays Bubble if selected
-
 
     const [renderFlag, setRenderFlag] = useState(false);
 
     const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
 
-    const hookDataSet = useUniqueMovesDataset(props.matchHistory)
-
+    const hookDataSet = useUniqueMovesDataset(props.matchHistory);
 
     useEffect(() => {
         if (Array.isArray(hookDataSet)) {
-            
-            console.log("====hookDataSet====")
-            console.log(hookDataSet)
-            console.log()
+            console.log("====hookDataSet====");
+            console.log(hookDataSet);
+            console.log();
 
             const endData = filterAndTransformData();
             setRenderFlag(checkIfAbleToRender(endData));
-
         } else {
             // setDataToRender(null);
             setRenderFlag(false);
         }
     }, [hookDataSet, start, end, selectedTeam]);
 
-
-
-
-
-
     // Once the UI has been updated, we read the DataSet from the hook, and transform it into stats by each unique move
     const filterAndTransformData = () => {
-        const gameData = hookDataSet.filter(obj => (
-            obj.team === selectedTeam &&
-            obj.turn >= start &&
-            obj.turn <= end
-        ));
+        const gameData = hookDataSet.filter(
+            (obj) =>
+                obj.team === selectedTeam &&
+                obj.turn >= start &&
+                obj.turn <= end
+        );
 
-        console.log("====gameData====")
-        console.log(gameData)
-        console.log()
+        console.log("====gameData====");
+        console.log(gameData);
+        console.log();
 
         function performSecondaryFilterPlayed(moveString, data) {
-            return data.filter(entry => (entry.move === moveString))
-        };
+            return data.filter((entry) => entry.move === moveString);
+        }
 
         function performSecondaryFilterResult(moveString, resultString, data) {
-            return data.filter(entry => (entry.move === moveString && entry.result === resultString ))
-        };
+            return data.filter(
+                (entry) =>
+                    entry.move === moveString && entry.result === resultString
+            );
+        }
 
-        const classifyMove = (move) => ({
-            R: "Rook",
-            N: "Knight",
-            B: "Bishop",
-            Q: "Queen",
-            K: "King",
-            O: "Castling"
-        })[move[0]] || "Pawn";
-
+        const classifyMove = (move) =>
+            ({
+                R: "Rook",
+                N: "Knight",
+                B: "Bishop",
+                Q: "Queen",
+                K: "King",
+                O: "Castling",
+            }[move[0]] || "Pawn");
 
         function returnMoveStats(move, data) {
             const test = {
-                "move": move
-                , "win": performSecondaryFilterResult(move, "win", data).length
-                , "lose": performSecondaryFilterResult(move, "lose", data).length
-                , "draw": performSecondaryFilterResult(move, "draw", data).length
-                , "played": performSecondaryFilterPlayed(move, data).length
-                , "piece": classifyMove(move)
-                , "nullcount": 0
-                , "winpct": 0
-                , "matches": performSecondaryFilterPlayed(move, data)
-            }
+                move: move,
+                win: performSecondaryFilterResult(move, "win", data).length,
+                lose: performSecondaryFilterResult(move, "lose", data).length,
+                draw: performSecondaryFilterResult(move, "draw", data).length,
+                played: performSecondaryFilterPlayed(move, data).length,
+                piece: classifyMove(move),
+                nullcount: 0,
+                winpct: 0,
+                matches: performSecondaryFilterPlayed(move, data),
+            };
 
             test["winpct"] = (test["win"] / test["played"]) * 100;
-            return test
-        };
+            return test;
+        }
 
+        let uniqueMoves = Array.from(new Set(gameData.map((obj) => obj.move)));
+        let moveStats = uniqueMoves.map((move) =>
+            returnMoveStats(move, gameData)
+        );
 
+        console.log("====uniqueMoves====");
+        console.log(uniqueMoves);
+        console.log();
 
-        let uniqueMoves = Array.from(new Set(gameData.map(obj => obj.move)));
-        let moveStats = uniqueMoves.map(move => returnMoveStats(move, gameData));
-
-        console.log("====uniqueMoves====")
-        console.log(uniqueMoves)
-        console.log()
-
-    
         // Sort the moveStats array by the number of games played in descending order
         moveStats.sort((a, b) => b.played - a.played);
-    
-        const filterMoves = (moves, piece) => moves.filter(move => move.piece === piece);
-        const filterPawnMoves = (moves) => moves.filter(move => move.piece === "Pawn");
-        const filterCastlingMoves = (moves) => moves.filter(move => move.piece === "Castling");
-    
-    
+
+        const filterMoves = (moves, piece) =>
+            moves.filter((move) => move.piece === piece);
+        const filterPawnMoves = (moves) =>
+            moves.filter((move) => move.piece === "Pawn");
+        const filterCastlingMoves = (moves) =>
+            moves.filter((move) => move.piece === "Castling");
+
         const categorizedMoves = {
             pawn: filterPawnMoves(moveStats),
             rook: filterMoves(moveStats, "Rook"),
@@ -141,9 +129,9 @@ const HeatmapController = (props) => {
             bishop: filterMoves(moveStats, "Bishop"),
             queen: filterMoves(moveStats, "Queen"),
             king: filterMoves(moveStats, "King"),
-            castling: filterCastlingMoves(moveStats)
+            castling: filterCastlingMoves(moveStats),
         };
-    
+
         setPieceMoves(categorizedMoves);
 
         // console.log("====moveStats====")
@@ -153,11 +141,14 @@ const HeatmapController = (props) => {
         return moveStats;
     };
 
-
     const checkIfAbleToRender = (object) => {
-        if (object === null || object === undefined) {return false}
-        if (object.length <= 1) {return false}
-        return true
+        if (object === null || object === undefined) {
+            return false;
+        }
+        if (object.length <= 1) {
+            return false;
+        }
+        return true;
     };
 
     const handleStartChange = (event) => {
@@ -179,31 +170,27 @@ const HeatmapController = (props) => {
         }
     };
 
-
     // When Clicking on a Heatmap Tile, you will get the matches where the game happened
     const handleIndividualTileClick = (tile) => {
-
-        const matchHistory = props.matchHistory
-        const arrayMatchId = tile.matches.map(entry => entry.id);
+        const matchHistory = props.matchHistory;
+        const arrayMatchId = tile.matches.map((entry) => entry.id);
 
         function filterMatchHistory(matchHistory, array) {
-            return matchHistory.filter(obj => array.includes(obj.general.id));
-        };
+            return matchHistory.filter((obj) => array.includes(obj.general.id));
+        }
 
-        const result = filterMatchHistory(matchHistory, arrayMatchId)
+        const result = filterMatchHistory(matchHistory, arrayMatchId);
         // console.log(result)
 
         setPopupMatchHistory(result);
         setShowPopup(true);
     };
 
-
     // const handleIndividualTileClick = (tile) => {
     //     // Handle click on heatmap tile to show popup
     //     setSelectedMatch(tile.matches); // Assuming tile.matches holds match details
     //     setShowPopup(true);
     //   };
-
 
     return (
         <div className="container">
