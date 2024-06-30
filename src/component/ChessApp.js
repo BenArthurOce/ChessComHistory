@@ -38,28 +38,20 @@ function ChessApp() {
                 <ChessAppSearchForm onFormSubmit={triggerFormSubmitted} />
             </section>
 
-            {renderFlag && (
-                <div>
+            {formData && renderFlag && (
+                <>
                     <ChessAppSwitcher
                         username={formData.username}
                         lastNGames={formData.lastNGames}
                     />
-                </div>
+                </>
             )}
 
-            {/* Player Information */}
-            {/* {renderFlag && (
-                <div>
-                    {<PlayerInformation username={formData.username} />}
-                </div>
-            )} */}
-
-            {/* Match History */}
-            {/* {renderFlag && formData && (
-                <div>
-                    {<MatchHistory username={formData.username} lastNGames={formData.lastNGames} />}
-                </div>
-            )} */}
+            {!renderFlag && (
+                <>
+                    <p>Component: ChessApp: renderFlag is false</p>
+                </>
+            )}
         </div>
     );
 }

@@ -5,13 +5,14 @@
 
 import { useState, useEffect } from 'react';
 
-const useUniqueMovesDataset = (array) => {
+const useHeatmapControllerDataset = (array) => {
     // Array is the list of parsed Match Objects
     const [dataSet, setDataSet] = useState({})
 
     useEffect(() => {
+        if (array.length === 0) {return}
         const sortedMovesArray = createMoveHistoryArray(array)
-        setDataSet(sortedMovesArray)
+        setDataSet(sortedMovesArray);
     }, []);
 
     const createMoveHistoryArray = (matchHistory) => {
@@ -77,4 +78,4 @@ const useUniqueMovesDataset = (array) => {
 
 };
 
-export default useUniqueMovesDataset;
+export default useHeatmapControllerDataset;

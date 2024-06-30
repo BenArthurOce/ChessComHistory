@@ -35,7 +35,7 @@ function ChessAppSearchForm(props) {
     // const [lastNGames, setLastNGames] = useState('');
 
     const [username, setUsername] = useState("BenArthurOCE");
-    const [lastNGames, setLastNGames] = useState(10);
+    const [lastNGames, setLastNGames] = useState(50);
 
     function handleSubmit(ev) {
         console.log("button pressed");

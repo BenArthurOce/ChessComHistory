@@ -93,45 +93,45 @@ const SingleMatchObject = (match, parsedData, username) => {
             allMoves[moveNumber] = [whiteMove, blackMove];
         }
         return allMoves;
-    }
+    };
 
     function getUserPlayedColor(match, username) {
         if (match.white.username.toLowerCase() === username.toLowerCase()) return "white";
         if (match.black.username.toLowerCase() === username.toLowerCase()) return "black";
         return "";
-    }
+    };
 
 
     function getMatchWinner(match) {
         if (match.white.result.toLowerCase() === "win") return "white";
         if (match.black.result.toLowerCase() === "win") return "black";
         return "draw";
-    }
+    };
 
     function getPlayerResult(match, parsedData, username) {
         if (match.white.result === "win" && match.white.username.toLowerCase() === username.toLowerCase()) return "win";
         if (match.black.result === "win" && match.black.username.toLowerCase() === username.toLowerCase()) return "win";
         if (parsedData.Result === "1/2-1/2") return "draw";
         return "lose";
-    }
+    };
 
 
     function getPlayerMoves(movesObject, player) {
         const isWhite = player.toLowerCase() === 'white';
         return Object.values(movesObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
-    }
+    };
 
 
     function extractOpeningName(openingURL) {
         const index = openingURL.indexOf("/openings/");
         return openingURL.substring(index + "/openings/".length).replace(/-/g, ' ');
-    }
+    };
 
 
     function extractGameId(gameURL) {
         const index = gameURL.indexOf("/live/");
         return parseInt(gameURL.substring(index + "/live/".length), 10);
-    }
+    };
 
     const moveObject = createMoveObject(parsedData['MoveString']);
     const userPlayed = getUserPlayedColor(match, username);

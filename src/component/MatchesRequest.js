@@ -75,14 +75,8 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
     ];
 
     const { data, loading, error } = useFetchMultiple(urls);
-    const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(
-        data,
-        lastNGames
-    );
-    const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN(
-        hookArrayOfUnparsedMatchObjects,
-        username
-    );
+    const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
+    const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN( hookArrayOfUnparsedMatchObjects, username);
 
     useEffect(() => {
         if (hookArrayOfParsedMatchObjects) {
@@ -105,13 +99,37 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
 
     return (
         <>
-            {renderFlag && (
-                <div>
-                    <p></p>
-                </div>
+            {data && renderFlag ? (
+                <>
+                    <p>MatchesRequest - data, renderFlag = True</p>
+                </>
+            ) : (
+                <>
+                    <p>MatchesRequest - failed to complete</p>
+                </>
             )}
         </>
     );
-};
+}
 
 export default MatchesRequest;
+
+
+// return (
+//     <>
+//         {hookIsMobile ? (
+//             <>
+//                 {matchHistory.map((match, index) => (
+//                     index < matchesToRender && <SingleMatchMobile key={index} gameInformation={match} />
+//                 ))}
+//             </>
+//         ) : (
+//             <>
+//                 {matchHistory.map((match, index) => (
+//                     index < matchesToRender && <SingleMatchPC key={index} gameInformation={match} />
+//                 ))}
+//             </>
+//         )}
+//     </>
+// );
+// }

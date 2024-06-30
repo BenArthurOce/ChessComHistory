@@ -3,6 +3,7 @@
 /* Container for the heatmap and input boxes */
 .input-container {
     margin-bottom: 20px;
+    /* flex-direction: column; */
 }
 
 /* Style for input boxes and select */
