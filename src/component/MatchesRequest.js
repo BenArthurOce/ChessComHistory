@@ -64,6 +64,7 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
     const [renderFlag, setRenderFlag] = useState(false);
 
     const urls = [
+        `https://api.chess.com/pub/player/${username}/games/2024/07`,
         `https://api.chess.com/pub/player/${username}/games/2024/06`,
         `https://api.chess.com/pub/player/${username}/games/2024/05`,
         `https://api.chess.com/pub/player/${username}/games/2024/04`,
@@ -101,11 +102,11 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
         <>
             {data && renderFlag ? (
                 <>
-                    <p>MatchesRequest - data, renderFlag = True</p>
+                
                 </>
             ) : (
                 <>
-                    <p>MatchesRequest - failed to complete</p>
+                    <p>MatchesRequest - Loading...</p>
                 </>
             )}
         </>

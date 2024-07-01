@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import styled from 'styled-components';
 
 import SingleMatchPC from './SingleMatchPC';
 import SingleMatchMobile from './SingleMatchMobile';
 
 import useIsMobile from '../../hooks/useIsMobile';
+
+
+// Styled component for the scrollable container
+const ScrollableContainer = styled.div
+`
+    max-height: 95vh;
+    overflow-y: auto;
+`
+;
 
 const MatchHistoryDisplay = (props) => {
     const matchHistory = props.matchHistory
@@ -14,7 +24,7 @@ const MatchHistoryDisplay = (props) => {
    
     
     useEffect(() => {
-        setMatchesToRender(10)
+        setMatchesToRender(30) 
         setRenderFlag(checkIfAbleToRender(matchHistory));
     }, [matchHistory]);
 
@@ -27,7 +37,8 @@ const MatchHistoryDisplay = (props) => {
 
 
     return (
-        <>
+        <ScrollableContainer>
+            <h1 style={{ textAlign: "center" }}>Match History</h1>
             {hookIsMobile ? (
                 <>
                     {matchHistory.map((match, index) => (
@@ -41,7 +52,7 @@ const MatchHistoryDisplay = (props) => {
                     ))}
                 </>
             )}
-        </>
+        </ScrollableContainer>
     );
 }
 

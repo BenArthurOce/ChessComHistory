@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import "./UniqueMoves.css";
+
+import HeatmapTileMobile from "./HeatmapTileMobile";
+import HeatmapTilePC from "./HeatmapTilePC";
+import PopupOverlay from "../Overlay";
+import SingleIcon from "../SingleIcon";
 
 import useIsMobile from "../../hooks/useIsMobile";
-
 import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControllerDataset";
 import useHeatmapControllerSortData from "../../hooksSpecific/useHeatmapControllerSortData";
-
-import HeatmapTile from "./HeatmapTile";
-
-import MatchHistoryDisplay from "../moduleMatchHistoryDisplay/MatchHistoryDisplay";
-
-import SingleIcon from "../SingleIcon";
 
 
 
@@ -22,6 +19,14 @@ const InputContainer = styled.div
     gap: 10px;
     margin-top: 10px;
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 ;
 
@@ -40,7 +45,6 @@ const NumberInput = styled.input.attrs({ type: 'number' })
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 80px;
-    color: red;
     margin-right: 10px;
 `
 ;
@@ -58,6 +62,7 @@ const DropDownBox = styled.select
 const HeatmapContainer = styled.div
 `
     display: flex;
+    flex-direction: row;
     gap: 10px;
 `
 ;
@@ -70,46 +75,29 @@ const PieceSection = styled.div
 `
 ;
 
-const PopupOverlay = styled.div
+
+const DisplayColumnTitle = styled.div
 `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    margin-top: 10px;
+    text-align: center;
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 10000;
+    justify-content: center;
+    padding-bottom: 10px;
+    // position: sticky;
+    // top: calc(160px - 20px); /* Adjust based on InputContainer height and margin */
+    // left: 0;
+    // z-index: 900;
+    // background-color: lightgrey;
 `
 ;
 
 
-const PopupInner = styled.div
+const DisplayColumn = styled.div
 `
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-    max-width: 600px;
-    width: 90%;
+    width: 100px;
 `
 ;
-
-const CloseButton = styled.button
-`
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-`
-;
-
-
 
 const HeatmapController = (props) => {
     const [pieceMoves, setPieceMoves] = useState({
@@ -122,46 +110,29 @@ const HeatmapController = (props) => {
         castling: [],
     });
 
+    //
+    // States
+    //
     const [renderFlag, setRenderFlag] = useState(false);
-
-    // console.log(props)
     const [start, setStart] = useState(0); // Default start value
     const [end, setEnd] = useState(5); // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
-
-    const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
-    const [selectedMatch, setSelectedMatch] = useState(null); // State to hold selected match details
-
     const [popupMatchHistory, setPopupMatchHistory] = useState(null); // State to hold selected match details
-
     const [singleTileSelected, setSingleTileSelected] = useState(null); // for Mobile - Displays Bubble if selected
 
+    //
+    // Hooks
+    //
     const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
-
     const hookDataSet = useHeatmapControllerDataset(props.matchHistory);
-    
     const hookSortData = useHeatmapControllerSortData(hookDataSet, start, end, selectedTeam);
-
 
     useEffect(() => {
         if (Object.values(hookDataSet).length > 0) {
             setPieceMoves(hookSortData);
-
-            if (Object.values(hookSortData).length > 0) {
-                setRenderFlag(true);
-            }
-            else {
-                setRenderFlag(false);
-            }
+            setRenderFlag(Object.values(hookSortData).length > 0);
         }  
     }, [props, hookSortData, hookDataSet, start, end, selectedTeam]);
-
-
-    const handleMatchHistoryDisplay = () => {
-        console.log("===handleMatchHistoryDisplay===");
-        console.log();
-    };
-    
 
     const handleStartChange = (event) => {
         setStart(parseInt(event.target.value));
@@ -175,53 +146,35 @@ const HeatmapController = (props) => {
         setSelectedTeam(event.target.value);
     };
 
-    // On mobile, small popup if tapped
-    const handleMobileClick = (move) => {
-        if (hookIsMobile) {
-            setSingleTileSelected(move);
-        }
-    };
 
-    // When Clicking on a Heatmap Tile, you will get the matches where the game happened
+    // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-
-        console.log("=======handleIndividualTileClick======")
-        console.log();
-
-
         const matchHistory = props.matchHistory;
         const arrayMatchId = tile.matches.map((entry) => entry.id);
-
-        function filterMatchHistory(matchHistory, array) {
-            return matchHistory.filter((obj) => array.includes(obj.general.id));
-        }
-
+        const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
         const result = filterMatchHistory(matchHistory, arrayMatchId);
-        // console.log(result)
-
         setPopupMatchHistory(result);
-        setShowPopup(true);
-
-        console.log(popupMatchHistory)
     };
 
-    // const handleIndividualTileClick = (tile) => {
-    //     // Handle click on heatmap tile to show popup
-    //     setSelectedMatch(tile.matches); // Assuming tile.matches holds match details
-    //     setShowPopup(true);
-    //   };
+
+    // Function to render pawn icon with associated number of wins/losses/draws/total
+    // see SingleIcon.js 
+    const renderPieceIcon = (iconType, color) => (
+        <DisplayColumnTitle>
+            <SingleIcon icon={iconType} color={color} size={30} />
+            {/* <p>Moves:</p> */}
+        </DisplayColumnTitle>
+    );
 
     return (
         <>
-
             {!renderFlag && (
-                <p>HeatmapController - renderFlag is flag</p>
+                <p>HeatmapController - renderFlag is false</p>
             )}
 
             {renderFlag && (
-
                 <>
-                    <h2>Winning Moves Heatmap</h2>
+                    <h1 style={{ textAlign: "center" }}>Heatmap</h1>
 
                     <InputContainer>
                         <div>
@@ -240,66 +193,177 @@ const HeatmapController = (props) => {
                         </div>
                     </InputContainer>
 
+
                     <HeatmapContainer>
-                        {Object.entries(pieceMoves).map(([pieceType, moves]) => (
-                            <div key={pieceType} className="piece-section">
-                                <h3>{pieceType.toUpperCase()} Moves</h3>
-
-                                {/* {moves.map((moveObj) => (
-                                <div
-                                key={moveObj.move}
-                                className={`heatmap-item ${getColorClass(moveObj.winpct)}`}
-                                onClick={() => handleMobileClick(moveObj)}
-                                > */}
-
-                                {/* {moves.map((moveObj) => (
-                                <div onClick={() => handleMobileClick(moveObj)}>
-                                <HeatmapTile tileInformation={moveObj} isClicked={singleTileSelected===moveObj} >
-
-                                </HeatmapTile>
-                                </div>
-                                ))} */}
-
-                                {moves.map((moveObj) => (
-                                    <div key={moveObj.move}>
-                                        <HeatmapTile
+                        {!hookIsMobile && (
+                            <>
+                                <DisplayColumn>
+                                    {renderPieceIcon(`${selectedTeam}Pawn`, selectedTeam)}
+                                    {pieceMoves.pawn.map((moveObj) => (
+                                        <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick} // Pass the handler here
+                                            handleButtonClick={handleIndividualTileClick}
                                         />
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`rook`, selectedTeam)}
+                                    {pieceMoves.rook.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`knight`, selectedTeam)}
+                                    {pieceMoves.knight.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`bishop`, selectedTeam)}
+                                    {pieceMoves.bishop.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`queen`, selectedTeam)}
+                                    {pieceMoves.queen.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`king`, selectedTeam)}
+                                    {pieceMoves.king.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    <DisplayColumnTitle>Castling</DisplayColumnTitle>
+                                    {pieceMoves.castling.map((moveObj) => (
+                                        <HeatmapTilePC
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+                            </>
+                        )}
+
+
+                        {hookIsMobile && (
+                            <>
+                                <DisplayColumn>
+                                    {renderPieceIcon(`pawn`, selectedTeam)}
+                                    {pieceMoves.pawn.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`rook`, selectedTeam)}
+                                    {pieceMoves.rook.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`knight`, selectedTeam)}
+                                    {pieceMoves.knight.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`bishop`, selectedTeam)}
+                                    {pieceMoves.bishop.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`queen`, selectedTeam)}
+                                    {pieceMoves.queen.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    {renderPieceIcon(`king`, selectedTeam)}
+                                    {pieceMoves.king.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+
+                                <DisplayColumn>
+                                    <DisplayColumnTitle>Castling</DisplayColumnTitle>
+                                    {pieceMoves.castling.map((moveObj) => (
+                                        <HeatmapTileMobile
+                                            tileInformation={moveObj}
+                                            isClicked={singleTileSelected === moveObj}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+                                    ))}
+                                </DisplayColumn>
+                            </>
+                        )}
+
                     </HeatmapContainer>
 
 
-
-                    {/* Conditionally render MatchHistoryDisplay as popup */}
-                    {/* {showPopup && (
-                        <div className="popup">
-                            <div className="popup-inner">
-                                <button className="close-button" onClick={() => setShowPopup(false)}>
-                                    Close
-                                </button>
-                                <MatchHistoryDisplay matchHistory={popupMatchHistory} />
-                            </div>
-                        </div>
-                    )} */}
-
-
-
-                    {showPopup && (
-                        <PopupOverlay>
-                            <PopupInner>
-                                <CloseButton onClick={() => setShowPopup(false)}>×</CloseButton>
-                                {console.log(popupMatchHistory)}
-                                <MatchHistoryDisplay matchHistory={popupMatchHistory} />
-                            </PopupInner>
-                        </PopupOverlay>
+                    {popupMatchHistory && (
+                        <PopupOverlay matchHistory={popupMatchHistory} />
                     )}
-
-
                 </>
             )}
         </>

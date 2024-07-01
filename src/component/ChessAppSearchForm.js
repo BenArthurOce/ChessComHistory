@@ -31,11 +31,11 @@ const Button = styled.button
 ;
 
 function ChessAppSearchForm(props) {
-    // const [username, setUsername] = useState('');
-    // const [lastNGames, setLastNGames] = useState('');
+    const [username, setUsername] = useState('');
+    const [lastNGames, setLastNGames] = useState('');
 
-    const [username, setUsername] = useState("BenArthurOCE");
-    const [lastNGames, setLastNGames] = useState(50);
+    // const [username, setUsername] = useState("BenArthurOCE");
+    // const [lastNGames, setLastNGames] = useState(50);
 
     function handleSubmit(ev) {
         console.log("button pressed");
@@ -63,8 +63,6 @@ function ChessAppSearchForm(props) {
                 placeholder="No# of Games"
             />
             <Button type="submit">Search</Button>
-            <p>note: may need to refresh to do new search</p>
-            <p>this is better to view in mobile</p>
         </Form>
     );
 }

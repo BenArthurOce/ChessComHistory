@@ -49,7 +49,7 @@ function ChessApp() {
 
             {!renderFlag && (
                 <>
-                    <p>Component: ChessApp: renderFlag is false</p>
+                    <p>Waiting for user to input data...</p>
                 </>
             )}
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Board from "../../board/Board";
@@ -6,94 +6,181 @@ import SingleIcon from "../SingleIcon";
 
 
 // Styled components
+const Container = styled.div
+`
+    //   &.win {
+    //     background-color: lightgreen;
+    //   }
+    //   &.loss {
+    //     background-color: lightcoral;
+    //   }
+    //   &.draw {
+    //     background-color: lightgray;
+    //   }
+`
+;
+
 const SingleMatchComp = styled.div
 `
     display: grid;
-    grid-template-columns: 2% 5% 50% 1fr;
-    width: 100%;
-
+    grid-template-columns: 2% 57% 1fr;
+    grid-template-rows: repeat(8, 1fr);
+    width: 50%;
+    min-width: 700px;
     border: 1px solid #ccc;
     padding: 5px;
+    padding-right: 0;
     margin-top: 10px;
     margin-bottom: 10px;
-    min-height: 200px;
+    min-width: 500px;
+    min-height: 300px;
 
-    font-size: 10px;
+    max-height: 30vh;
 
     background-color: ${(props) => props.colorBackground};
+
+
+    @media (max-width: 768px) {
+        width: 100%;
+        min-width: unset;
+        grid-template-columns: 2% 50% 1fr;
+        padding: 5px;
+        min-height: unset;
+        max-height: 300px
+    }
+
 `
 ;
 
 const ResultBar = styled.span
 `
     grid-column: 1;
+    grid-row: 1;
+
     grid-row-start: 1;
     grid-row-end: 10;
 
     border-radius: 100px;
-    background-color: ${(props) => props.colorBar}; 
+    background-color: ${(props) => props.colorBar};
+
+    
 `
 ;
 
-const BoardContainer = styled.span
+const MatchInfoUrl = styled.span
 `
+    grid-column: 2;
+    grid-row: 1;
+    padding-left: 10px;
+`
+;
+
+const BoardSpan = styled.span
+`
+    // grid-row: span 10;
+
     display: inline-block;
 
     align-items: center;
     justify-content: center;
 
-    grid-column-start: 4;
-    grid-column-end: 4;
+    grid-column-start: 3;
+    grid-column-end: 3;
 
     grid-row-start: 1;
     grid-row-end: 10;
 
-    padding-right:2px;
+
+    @media (max-width: 768px) {
+        border: 1px solid black;
+    }
 `
 ;
 
-const CopyButton = styled.button
+const MatchInfoGeneral = styled.span
 `
     grid-column: 2;
+    grid-row: 2;
 
-    grid-column: 2;
-    cursor: pointer;
-    align-self: center;
-
-    background: none;   /* Removes the button "look" */
-    border: none;       /* Removes the button "look" */
-`
-;
-
-const Title = styled.span
-`
-    grid-column: 2 / span 2;
-    display: flex;
-    padding-left: 5px;
-`
-;
-
-const Icon = styled(SingleIcon)
-`
-    grid-column: 2;
-    align-self: center;
-`
-;
-
-const Row = styled.span
-`
-    grid-column: 3;
     display: flex;
     align-items: center;
+    padding-left: 10px;
+`
+;
+
+const MatchInfoWhite = styled.span
+`
+    grid-column: 2;
+    grid-row: 4;
+
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+`
+;
+
+const MatchInfoBlack = styled.span
+`
+    grid-column: 2;
+    grid-row: 5;
+
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+`
+;
+
+const MatchInfoResult = styled.span
+`
+    grid-column: 2;
+    grid-row: 6;
+
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+`
+;
+
+const MatchInfoOpening = styled.span
+`
+    grid-column: 2;
+    grid-row: 8;
+
+    display: block ruby;
+    // align-items: center;
+    padding-left: 10px;
+`
+;
+
+const MatchInfoMoves = styled.span
+`
+    grid-column: 2;
+    grid-row: 9;
+
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+
+    display: flex;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: inherit;
+`
+;
+
+const CopyButtonStyled = styled.button
+`
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
 `
 ;
 
 
-
-
-
-function SingleMatchMobile(props) {
+const SingleMatchPC = (props) => {
     const { gameInformation } = props;
 
     const [copied, setCopied] = useState(false);
@@ -245,4 +332,4 @@ function SingleMatchMobile(props) {
     );
 }
 
-export default SingleMatchMobile;
+export default SingleMatchPC;

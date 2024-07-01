@@ -10,9 +10,8 @@ import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay
 
 const ButtonContainer = styled.div
 `
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 `
 ;
 

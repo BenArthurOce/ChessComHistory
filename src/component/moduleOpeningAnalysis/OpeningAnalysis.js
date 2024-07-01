@@ -116,6 +116,7 @@ const OpeningAnalysis = (props) => {
 
     return (
       <Section>
+          <h1 style={{ textAlign: "center" }}>Opening Analysis</h1>
           <h3>to do: get the big dictionary of openings in the code. Big job.</h3>
           <br></br>
           <Title>Top 5 Chess Openings</Title>
