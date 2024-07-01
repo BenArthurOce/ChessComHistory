@@ -218,9 +218,10 @@ function SingleMatchMobile(props) {
                     {/* Line - ECO opening and link */}
                     <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
                     <Row>
-                        <a href={gameInformation.opening.url}  target="_blank"  rel="noopener noreferrer">
+                        {/* <a href={gameInformation.opening.url}  target="_blank"  rel="noopener noreferrer">
                           <p>{gameInformation.opening.eco} - {gameInformation.opening.name}</p>
-                        </a>
+                        </a> */}
+                        <p>{gameInformation.replaceopendict.ECO} - {gameInformation.replaceopendict.NAME}</p>
                     </Row>
 
                     {/* Line - String of Moves */}

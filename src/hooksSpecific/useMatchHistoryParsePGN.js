@@ -1,9 +1,11 @@
 // useMatchHistoryAPI.js
 
 import { useState, useEffect } from 'react';
+import JsonFile from '../data/openings.json';
 
 const useMatchHistoryParsePGN = (array, username) => {
     const [parsedMatchObjects, setParsedMatchObjects] = useState([])
+    const openingDictionary = JsonFile;
 
     useEffect(() => {
         if (array === null || array === undefined) {
@@ -133,6 +135,26 @@ const SingleMatchObject = (match, parsedData, username) => {
         return parseInt(gameURL.substring(index + "/live/".length), 10);
     };
 
+
+
+    const findOpeningMatch = (game, openings) => {
+        const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
+        let bestMatch = null;
+        let bestMatchLength = 0;
+    
+        for (const opening in openings) {
+            if (gameMoves.startsWith(opening)) {
+                const openingLength = opening.split(' ').length;
+                if (openingLength > bestMatchLength) {
+                    bestMatch = opening;
+                    bestMatchLength = openingLength;
+                }
+            }
+        }
+    
+        return bestMatch ? openings[bestMatch] : null;
+    };
+
     const moveObject = createMoveObject(parsedData['MoveString']);
     const userPlayed = getUserPlayedColor(match, username);
     const winner = getMatchWinner(match);
@@ -209,6 +231,8 @@ const SingleMatchObject = (match, parsedData, username) => {
           , url:          parsedData.ECOUrl
           , name:         extractOpeningName(parsedData.ECOUrl)
         }
+        ,
+        replaceopendict:     findOpeningMatch(parsedData.MoveString, openingDictionary)
     };
 
 

@@ -14,3 +14,34 @@ root.render(
         </Router>
     </StrictMode>
 );
+
+
+/* 
+Additional APIs to add:
+
+
+1)
+https://api.chess.com/pub/player/BenArthurOCE/stats
+Description: Get ratings, win/loss, and other stats about a player's game play, tactics, lessons and Puzzle Rush score. 
+Includes current rating, best rating and best game
+https://api.chess.com/pub/player/JackSmith_GCC/matches
+
+
+
+2)
+https://api.chess.com/pub/country/AUS/players
+Description: List of usernames for players who identify themselves as being in this country
+
+
+
+
+3) 
+Detailed "about me"
+https://www.chess.com/callback/user/popup/BenArthurOCE
+
+
+
+4) Detailed match information
+https://www.chess.com/game/live/15360860817
+*/
+// 

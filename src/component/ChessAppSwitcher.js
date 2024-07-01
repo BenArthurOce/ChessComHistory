@@ -7,6 +7,8 @@ import HeatmapController from './moduleHeatmapAnalysis/HeatmapController';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
 import OpeningAnalysis from './moduleOpeningAnalysis/OpeningAnalysis';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
+import Debugging from './Debugging';
+
 
 const ButtonContainer = styled.div
 `
@@ -106,6 +108,13 @@ const ChessAppSwitcher = ({ username, lastNGames }) => {
                             onClick={() => handleButtonClick("openingAnalysis")}>
                             Opening Analysis
                         </SwitchButton>
+
+                        <SwitchButton
+                            selected={activeModule === "debugging"}
+                            onClick={() => handleButtonClick("debugging")}>
+                            Debugging
+                        </SwitchButton>
+
                     </ButtonContainer>
 
 
@@ -132,6 +141,11 @@ const ChessAppSwitcher = ({ username, lastNGames }) => {
                     {/* Win/Loss rate per Openings */}
                     {renderFlag && parsedMatchObjects && activeModule === "openingAnalysis" && (
                         <OpeningAnalysis matchHistory={parsedMatchObjects} />
+                    )}
+
+                    {/* Win/Loss rate per Openings */}
+                    {renderFlag && parsedMatchObjects && activeModule === "debugging" && (
+                        <Debugging matchHistory={parsedMatchObjects} />
                     )}
                 </>
             )}
