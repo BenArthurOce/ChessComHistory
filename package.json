@@ -26,8 +26,7 @@
   },
   "scripts": {
     "chess": "react-scripts start",
-    "server": "node server.js",
-    "start": "concurrently \"node server.js\" \"react-scripts start\"",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "eject": "react-scripts eject",

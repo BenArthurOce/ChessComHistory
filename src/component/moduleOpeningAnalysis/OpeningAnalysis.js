@@ -130,11 +130,12 @@ const OpeningAnalysis = (props) => {
         // console.log(ecoListResult)
         // console.log()
 
-
-        const newUniqueCodes = getUniqueEcoNEW(props.matchHistory)
-        console.log(newUniqueCodes)
-
     }, [props.matchHistory, selectedTeam]);
+
+    const filterByEcoFamilyName = (matchArray, fullName) => {
+        if (matchArray.length === 0) {return};
+        return matchArray.filter(match => match.replaceopendict.ECOFAMILY === fullName);
+    };
  
     const filterByEco = (matchArray, ecoCode) => {
         if (matchArray.length === 0) {return};
@@ -160,30 +161,20 @@ const OpeningAnalysis = (props) => {
         );
     };
 
-    const getUniqueEco = (objectArray) => {
+    const getUniqueEcoFamilyNames = (objectArray) => {
         let unique_values = [
-            ...new Set(objectArray.map((element) => element.opening.eco)),
+            ...new Set(objectArray.map((element) => element.replaceopendict.ECOFAMILY)),
         ];
         return unique_values;
     };
-
-
-
-    const getUniqueEcoNEW = (objectArray) => {
-        let unique_values = [
-            ...new Set(objectArray.map((element) => element.replaceopendict.NAME)),
-        ];
-        return unique_values;
-    };
-
 
 
     const getMostFrequentEcoCodes = (matchHistory) => {
         const games_to_focus_on = filterByColour(matchHistory);
-        const uniqueEcoArray = getUniqueEco(games_to_focus_on);
+        const uniqueEcoArray = getUniqueEcoFamilyNames(games_to_focus_on);
     
         const rankedEcoArray = uniqueEcoArray.map((eco, index) => {
-            const matchesForEco = filterByEco(games_to_focus_on, eco);
+            const matchesForEco = filterByEcoFamilyName(games_to_focus_on, eco);
     
             const wins = filterByResult(matchesForEco, "win").length;
             const losses = filterByResult(matchesForEco, "lose").length;
@@ -222,16 +213,14 @@ const OpeningAnalysis = (props) => {
 
     return (
         <Section>
-            <Title>Top 5 Chess Openings</Title>
+            <Title>Top Chess Openings</Title>
 
             <InputContainer>
-                <div>
                     <Label htmlFor="teamSelect">Select Team:</Label>
                     <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
                         <option value="white">White</option>
                         <option value="black">Black</option>
                     </DropDownBox>
-                </div>
             </InputContainer>
 
 
