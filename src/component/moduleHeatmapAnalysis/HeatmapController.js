@@ -95,7 +95,9 @@ const DisplayColumnTitle = styled.div
 
 const DisplayColumn = styled.div
 `
-    width: 100px;
+    min-width: 50px;
+    max-width: 55px;
+
 `
 ;
 
@@ -264,7 +266,8 @@ const HeatmapController = (props) => {
                                 </DisplayColumn>
 
                                 <DisplayColumn>
-                                    <DisplayColumnTitle>Castling</DisplayColumnTitle>
+                                    {renderPieceIcon(`castle`, selectedTeam)}
+                                    {renderPieceIcon(`king`, selectedTeam)}
                                     {pieceMoves.castling.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
@@ -346,7 +349,7 @@ const HeatmapController = (props) => {
                                 </DisplayColumn>
 
                                 <DisplayColumn>
-                                    <DisplayColumnTitle>Castling</DisplayColumnTitle>
+                                    {renderPieceIcon(`exchange`, selectedTeam)}
                                     {pieceMoves.castling.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}

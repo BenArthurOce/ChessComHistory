@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import useOpeningAnalysisGroupOpenings from "../../hooksSpecific/useOpeningAnalysisGroupOpenings";
 
 // Styled components
-
 const InputContainer = styled.div
 `
     display: flex;
@@ -38,7 +38,6 @@ const DropDownBox = styled.select
 `
 ;
 
-
 const Section = styled.section
 `
     padding: 20px;
@@ -54,9 +53,6 @@ const Title = styled.h1
     color: #333;
 `
 ;
-
-
-
 
 const OpeningDiv = styled.div
 `
@@ -104,7 +100,7 @@ const OpeningCount = styled.span
 `
 ;
 
-const OpeningDetails = styled.div
+const VariationDiv = styled.div
 `
     margin-top: 10px;
     padding-top: 10px;
@@ -113,95 +109,37 @@ const OpeningDetails = styled.div
 `
 ;
 
+const Table = styled.table
+`
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+`
+;
 
+const Th = styled.th
+`
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+`
+;
+
+const Td = styled.td
+`
+    border: 1px solid #ddd;
+    padding: 8px;
+`
+;
 
 const OpeningAnalysis = (props) => {
-    const [renderFlag, setRenderFlag] = useState(false);
-    const [ecoList, setEcoList] = useState([]);
+    const { matchHistory } = props;
+
     const [expandedIndex, setExpandedIndex] = useState(null);
-    const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
+    const [selectedTeam, setSelectedTeam] = useState("white");
 
-
-    useEffect(() => {
-        const ecoListResult = getMostFrequentEcoCodes(props.matchHistory);
-        setEcoList(ecoListResult);
-
-        // console.log("===ecoListResult===")
-        // console.log(ecoListResult)
-        // console.log()
-
-    }, [props.matchHistory, selectedTeam]);
-
-    const filterByEcoFamilyName = (matchArray, fullName) => {
-        if (matchArray.length === 0) {return};
-        return matchArray.filter(match => match.replaceopendict.ECOFAMILY === fullName);
-    };
- 
-    const filterByEco = (matchArray, ecoCode) => {
-        if (matchArray.length === 0) {return};
-        return matchArray.filter(match => match.opening.eco === ecoCode);
-    };
-
-    const filterByColour = (matchArray) => {
-        if (matchArray.length === 0) {return};
-        return matchArray.filter(match => match.results.userPlayed === selectedTeam);
-    };
-
-    const filterByResult = (matchArray, result) => {
-        if (matchArray.length === 0) {return};
-        return matchArray.filter(match => match.playerResults.userResult === result);
-    };
-
-
-    const filterByAll = (colour, ecoCode, result) => {
-        return props.matchHistory.filter(match => 
-            match.playerResults.userPlayed === colour &&
-            match.opening.eco === ecoCode &&
-            match.playerResults.userResult === result
-        );
-    };
-
-    const getUniqueEcoFamilyNames = (objectArray) => {
-        let unique_values = [
-            ...new Set(objectArray.map((element) => element.replaceopendict.ECOFAMILY)),
-        ];
-        return unique_values;
-    };
-
-
-    const getMostFrequentEcoCodes = (matchHistory) => {
-        const games_to_focus_on = filterByColour(matchHistory);
-        const uniqueEcoArray = getUniqueEcoFamilyNames(games_to_focus_on);
-    
-        const rankedEcoArray = uniqueEcoArray.map((eco, index) => {
-            const matchesForEco = filterByEcoFamilyName(games_to_focus_on, eco);
-    
-            const wins = filterByResult(matchesForEco, "win").length;
-            const losses = filterByResult(matchesForEco, "lose").length;
-            const draws = filterByResult(matchesForEco, "draw").length;
-    
-            return {
-                eco: eco,
-                count: matchesForEco.length,
-                wins: wins,
-                losses: losses,
-                draws: draws,
-                matches: matchesForEco,
-            };
-        });
-    
-        rankedEcoArray.sort((a, b) => {
-            if (b.count !== a.count) {
-                return b.count - a.count; // Primary sort by count
-            } else {
-                const winRateA = a.wins / a.count;
-                const winRateB = b.wins / b.count;
-                return winRateB - winRateA; // Secondary sort by win rate
-            }
-        });
-    
-        return rankedEcoArray.slice(0, 10); // Return only the top 10
-    };
+    const dataToRender = useOpeningAnalysisGroupOpenings(matchHistory, selectedTeam);
 
     const handleTeamChange = (event) => {
         setSelectedTeam(event.target.value);
@@ -213,44 +151,56 @@ const OpeningAnalysis = (props) => {
 
     return (
         <Section>
-            <Title>Top Chess Openings</Title>
+            {dataToRender && (
+                <>
+                    <Title>Top Chess Openings</Title>
 
-            <InputContainer>
-                    <Label htmlFor="teamSelect">Select Team:</Label>
-                    <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                    </DropDownBox>
-            </InputContainer>
+                    <InputContainer>
+                        <Label htmlFor="teamSelect">Select Team:</Label>
+                        <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </DropDownBox>
+                    </InputContainer>
 
-
-
-            {ecoList.map((opening, index) => (
-                <OpeningDiv key={opening.rank} onClick={() => handleToggle(index)}>
-                    <OpeningHeader>
-                        {/* <OpeningRank>#{opening.rank}</OpeningRank> */}
-                        <OpeningEco>{opening.eco}</OpeningEco>
-                        <OpeningCount>{opening.count} games</OpeningCount>
-                        <div>
-                            Win Rate: {((opening.wins / opening.count) * 100).toFixed(2)}%
-                            {/* &nbsp;|&nbsp;
-                            Loss Rate: {((opening.losses / opening.count) * 100).toFixed(2)}% */}
-                        </div>
-                    </OpeningHeader>
-                    <OpeningDetails expanded={expandedIndex === index}>
-                        <p>Matches:</p>
-                        <ul>
-                            {opening.matches.map((match, i) => (
-                                <li key={i}>
-                                    <a href={match.general.url} target="_blank" rel="noopener noreferrer">
-                                        Match {i + 1}: {match.general.url}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </OpeningDetails>
-                </OpeningDiv>
-            ))}
+                    {dataToRender.map((opening, index) => (
+                        <OpeningDiv key={index} onClick={() => handleToggle(index)}>
+                        <OpeningHeader>
+                            <OpeningRank>{index + 1}</OpeningRank>
+                            <OpeningEco>{opening.familyECO}</OpeningEco>
+                            <OpeningCount>{opening.played} games</OpeningCount>
+                            <p>wins: {opening.wins}</p>
+                            <p>losses: {opening.losses}</p>
+                            <p>draws: {opening.draws}</p>
+                        </OpeningHeader>
+                        <VariationDiv expanded={expandedIndex === index}>
+                            <Table>
+                                <thead>
+                                    <tr>
+                                        <Th>Variation Name</Th>
+                                        <Th>Played</Th>
+                                        <Th>Wins</Th>
+                                        <Th>Losses</Th>
+                                        <Th>Draws</Th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {opening.variations.map((variation, vIndex) => (
+                                        <tr key={vIndex}>
+                                            <Td>{variation.name}</Td>
+                                            <Td>{variation.played}</Td>
+                                            <Td>{variation.wins}</Td>
+                                            <Td>{variation.losses}</Td>
+                                            <Td>{variation.draws}</Td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </VariationDiv>
+                    </OpeningDiv>
+                    ))}
+                </>
+            )}
         </Section>
     );
 };

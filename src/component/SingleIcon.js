@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faInfoCircle, faClock, faSun, faPersonSkiing, faBolt, faGun } from '@fortawesome/free-solid-svg-icons';
 import { faFlag, faSkullCrossbones, faDoorOpen, faRepeat, faHourglassEnd, faEquals, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { faTrophy, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faTrophy, faCalendar, faExchange } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faChessPawn, faChessRook, faChessKnight, faChessBishop, faChessQueen, faChessKing } from '@fortawesome/free-solid-svg-icons';
 
@@ -82,6 +82,8 @@ const getIcon = (string, color, size) => {
             return <StyledIcon icon={faCalendar} color={color} size={size} />;
         case "copy":
             return <StyledIcon icon={faCopy} color={color} size={size} />;
+        case "exchange":
+            return <StyledIcon icon={faExchange} color={color} size={size} />;
         case "whitePawn":
             return <StyledIcon icon={faChessPawn} color={color} size={size} />;
         case "blackPawn":
@@ -100,11 +102,6 @@ const getIcon = (string, color, size) => {
             return <StyledIcon icon={faChessQueen} color={color} size={size} />;
         case "king":
             return <StyledIcon icon={faChessKing} color={color} size={size} />;
-
-
-
-
-
         default:
             return <StyledIcon icon={faQuestionCircle} color={color} size={size} />;
     }

@@ -17,23 +17,15 @@ import { useState, useEffect } from 'react';
 const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam) => {
 
     const [hookOutput, setHookOutput] = useState({})
-    // const [start, setStart] = useState(0); // Default start value
-    // const [end, setEnd] = useState(5); // Default end value
-    // const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
 
 
     useEffect(() => {
-        // if (!hookInput || hookInput.length === 0) {
-        //     return;
-        // }
 
-        // console.log(hookInput)
         if (Object.values(hookInput).length === 0) {return}
-        // console.log("useEffect started - useHeatmapControllerSortData.js")
 
-        console.log("====hookInput====");
-        console.log(hookInput);
-        console.log()
+        // console.log("====hookInput====");
+        // console.log(hookInput);
+        // console.log()
 
         const transformedData = filterAndTransformData(hookInput)
         setHookOutput(transformedData)

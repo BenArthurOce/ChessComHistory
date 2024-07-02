@@ -160,7 +160,6 @@ const SingleMatchObject = (match, parsedData, username) => {
     const winner = getMatchWinner(match);
     const playerResult = getPlayerResult(match, parsedData, username);
 
-    // console.log(moveObject)
 
     return {
 
