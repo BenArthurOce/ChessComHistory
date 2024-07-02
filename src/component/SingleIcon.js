@@ -9,7 +9,9 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faChessPawn, faChessRook, faChessKnight, faChessBishop, faChessQueen, faChessKing } from '@fortawesome/free-solid-svg-icons';
 
 
-// Styled components
+//
+// Styles
+//
 const Container = styled.div
 `
     display: flex;
@@ -28,24 +30,6 @@ const StyledIcon = styled(FontAwesomeIcon)`
     stroke: black; /* Allows white pawns on white backgrounds to be more visual */
     stroke-width: 10px; 
 
-`
-;
-
-const WhitePawn = styled(FontAwesomeIcon)`
-
-    font-size: ${props => props.size}px;
-    color: #ffffff;
-    background-color: inherit;
-    stroke: black; /* Allows white pawns on white backgrounds to be more visual */
-    stroke-width: 10px; 
-    
-`
-;
-
-const BlackPawn = styled(FontAwesomeIcon)`
-    font-size: ${props => props.size}px;
-    color: black;
-    background-color: inherit;
 `
 ;
 

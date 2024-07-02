@@ -3,8 +3,10 @@ import styled from "styled-components";
 import SingleIcon from "../SingleIcon";
 
 
-// Styled component for the outer container
-const MatchHistoryTableContainer = styled.div
+//
+// Styles
+//
+const Container = styled.div
 `
     max-width: 600px;
     padding: 20px;
@@ -18,23 +20,22 @@ const MatchHistoryTableContainer = styled.div
 `
 ;
 
-// Styled component for the heading
-const Heading = styled.h1
+const Title = styled.h1
 `
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 `
 ;
 
-// Styled component for the table container
+
 const TableContainer = styled.div
 `
     margin-top: 20px;
 `
 ;
 
-// Styled component for the table
 const Table = styled.table
 `
     width: 100%;
@@ -54,7 +55,6 @@ const Table = styled.table
 `
 ;
 
-// Styled components for table headers and cells
 const TableHeader = styled.th
 `
     padding: 5px 2px;
@@ -103,15 +103,27 @@ const FirstColumnCell = styled(TableCell)
 // This Component combines all the wins/losses/draws of the ParsedMatchObjects and outputs a table of the win/loss data, by piece colour and by time control
 function MatchHistoryTable(props) {
 
-    const matchHistory = props.matchHistory;
+    //
+    // Props
+    //
+    const {matchHistory} = props
+
+    //
+    // States
+    //
     const [stats, setStats] = useState(null);
 
+    //
+    // Effects
+    //
     useEffect(() => {
         const stats = calculateStats(matchHistory);
         setStats(stats);
     }, [matchHistory]);
 
-
+    //
+    // Helpers
+    //
     const calculateStats = (matchHistory) => {
         const stats = {
             daily: {
@@ -213,10 +225,10 @@ function MatchHistoryTable(props) {
 
 
     return (
-        <MatchHistoryTableContainer>
+        <Container>
+            <Title>Match History Summary</Title>
             {stats && (
                 <TableContainer>
-                    <Heading>Match History Summary</Heading>
                     <Table>
                         <thead>
                             <tr>
@@ -393,7 +405,7 @@ function MatchHistoryTable(props) {
                     </Table>
                 </TableContainer>
             )}
-        </MatchHistoryTableContainer>
+        </Container>
     );
 };
 

@@ -17,6 +17,16 @@ body {
     -moz-osx-font-smoothing: grayscale;
 
     /* background-color: black; */
+
+    /* text-align: center; */
+
+    /* font-weight: bold; */
+
+    /* display: grid;
+    grid-template-rows: 2;
+    grid-template-columns: 4; */
+
+    /* background-color: black; */
     /* padding-right: 0; */
 
     /* grid-column-start: 3;
@@ -36,4 +46,10 @@ body {
   p {
     overflow: hidden; /* Hide overflow content */
     white-space: nowrap; /* Prevent text from wrapping */
+    flex-wrap: wrap;
+
+    /* font-size: 16px; */
+    /* justify-content: space-between */
+    /* text-align: center; */
+    /* text-decoration: line-through; */
   }

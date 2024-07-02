@@ -11,6 +11,24 @@ import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControlle
 import useHeatmapControllerSortData from "../../hooksSpecific/useHeatmapControllerSortData";
 
 
+//
+// Styles
+//
+const Container = styled.div
+`
+    height: 100%;
+    overflow-y: scroll;
+`
+;
+
+const Title = styled.h1
+`
+    text-align: center;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+`
+;
 
 const InputContainer = styled.div
 `
@@ -29,7 +47,6 @@ const InputContainer = styled.div
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 ;
-
 
 const Label = styled.label
 `
@@ -67,14 +84,6 @@ const HeatmapContainer = styled.div
 `
 ;
 
-const PieceSection = styled.div
-`
-    h3 {
-        font-size: 20px;
-    }
-`
-;
-
 
 const DisplayColumnTitle = styled.div
 `
@@ -102,6 +111,15 @@ const DisplayColumn = styled.div
 ;
 
 const HeatmapController = (props) => {
+
+    //
+    // Props
+    //
+    const {matchHistory} = props
+
+    //
+    // States
+    //
     const [pieceMoves, setPieceMoves] = useState({
         pawn: [],
         rook: [],
@@ -112,9 +130,6 @@ const HeatmapController = (props) => {
         castling: [],
     });
 
-    //
-    // States
-    //
     const [renderFlag, setRenderFlag] = useState(false);
     const [start, setStart] = useState(0); // Default start value
     const [end, setEnd] = useState(5); // Default end value
@@ -126,9 +141,12 @@ const HeatmapController = (props) => {
     // Hooks
     //
     const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
-    const hookDataSet = useHeatmapControllerDataset(props.matchHistory);
+    const hookDataSet = useHeatmapControllerDataset(matchHistory);
     const hookSortData = useHeatmapControllerSortData(hookDataSet, start, end, selectedTeam);
 
+    //
+    // Effects
+    //
     useEffect(() => {
         if (Object.values(hookDataSet).length > 0) {
             setPieceMoves(hookSortData);
@@ -136,6 +154,9 @@ const HeatmapController = (props) => {
         }  
     }, [props, hookSortData, hookDataSet, start, end, selectedTeam]);
 
+    //
+    // Handlers
+    //
     const handleStartChange = (event) => {
         setStart(parseInt(event.target.value));
     };
@@ -148,11 +169,19 @@ const HeatmapController = (props) => {
         setSelectedTeam(event.target.value);
     };
 
-
+    //
+    // Helpers
+    //
     // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-        const matchHistory = props.matchHistory;
+        console.log(tile)
+        const myMatchHistory = tile.matches;
+        console.log(myMatchHistory)
         const arrayMatchId = tile.matches.map((entry) => entry.id);
+
+        console.log(arrayMatchId)
+        console.log()
+
         const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
         const result = filterMatchHistory(matchHistory, arrayMatchId);
         setPopupMatchHistory(result);
@@ -164,19 +193,18 @@ const HeatmapController = (props) => {
     const renderPieceIcon = (iconType, color) => (
         <DisplayColumnTitle>
             <SingleIcon icon={iconType} color={color} size={30} />
-            {/* <p>Moves:</p> */}
         </DisplayColumnTitle>
     );
 
     return (
-        <>
+        <Container>
             {!renderFlag && (
                 <p>HeatmapController - renderFlag is false</p>
             )}
 
             {renderFlag && (
                 <>
-                    <h1 style={{ textAlign: "center" }}>Heatmap</h1>
+                    <Title>Heatmap Analysis</Title>
 
                     <InputContainer>
                         <div>
@@ -266,10 +294,9 @@ const HeatmapController = (props) => {
                                 </DisplayColumn>
 
                                 <DisplayColumn>
-                                    {renderPieceIcon(`castle`, selectedTeam)}
-                                    {renderPieceIcon(`king`, selectedTeam)}
+                                    {renderPieceIcon(`exchange`, selectedTeam)}
                                     {pieceMoves.castling.map((moveObj) => (
-                                        <HeatmapTilePC
+                                        <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
                                             handleButtonClick={handleIndividualTileClick}
@@ -369,7 +396,7 @@ const HeatmapController = (props) => {
                     )}
                 </>
             )}
-        </>
+        </Container>
     );
 };
 

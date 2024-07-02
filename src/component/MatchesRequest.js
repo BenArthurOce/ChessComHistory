@@ -60,7 +60,16 @@ Usage:
 */
 }
 
-const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
+const MatchesRequest = (props) => {
+
+    //
+    // Props
+    //
+    const { username, lastNGames, onDataRequest } = props;
+
+    //
+    // States
+    //
     const [renderFlag, setRenderFlag] = useState(false);
 
     const urls = [
@@ -75,10 +84,16 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
         `https://api.chess.com/pub/player/${username}/games/2023/11`,
     ];
 
+    //
+    // Hooks
+    //
     const { data, loading, error } = useFetchMultiple(urls);
     const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
     const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN( hookArrayOfUnparsedMatchObjects, username);
 
+    //
+    // Effects
+    //
     useEffect(() => {
         if (hookArrayOfParsedMatchObjects) {
             onDataRequest(hookArrayOfParsedMatchObjects); // Send parsed data to parent
@@ -88,6 +103,9 @@ const MatchesRequest = ({ username, lastNGames, onDataRequest }) => {
         }
     }, [hookArrayOfParsedMatchObjects, onDataRequest]);
 
+    //
+    // Helpers
+    //
     const checkIfAbleToRender = (array) => {
         if (array === null || array === undefined) {
             return false;

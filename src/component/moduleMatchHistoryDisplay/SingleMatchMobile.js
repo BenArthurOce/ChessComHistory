@@ -4,8 +4,9 @@ import styled from "styled-components";
 import Board from "../../board/Board";
 import SingleIcon from "../SingleIcon";
 
-
-// Styled components
+//
+// Styles
+//
 const SingleMatchComp = styled.div
 `
     display: grid;
@@ -49,6 +50,9 @@ const BoardContainer = styled.span
     grid-row-end: 10;
 
     padding-right:2px;
+
+    padding-top: 10%;
+    padding-bottom: 10%;
 `
 ;
 
@@ -90,21 +94,24 @@ const Row = styled.span
 ;
 
 
-
-
-
 function SingleMatchMobile(props) {
+
+    //
+    // Props
+    //
     const { gameInformation } = props;
 
+    //
+    // States
+    //
     const [copied, setCopied] = useState(false);
-
     const [colorBar, setColorBar] = useState("");
-
     const [colorIcon, setColorIcon] = useState("");
-
     const [colorBackground, setColorBackground] = useState("");
 
-
+    //
+    // Effects
+    //
     useEffect(() => {
         if (gameInformation.results.userResult === "win") {
             setColorBar("#19a335");
@@ -127,11 +134,9 @@ function SingleMatchMobile(props) {
     }, [gameInformation.results.userResult]);
 
 
-    // When the "Copy" button is clicked on the last two rows, handlers will call this method to copy to clipboard
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text);
-    };
-
+    //
+    // Handlers
+    //
     // When the "Copy" icon is clicked, "props.gameInformation.moves.string" is copied to the users clipboard
     const handleCopyPGNButtonClick = (e) => {
         e.stopPropagation();    // If there is an event listener when the entire component is clicked. This line stops that
@@ -146,8 +151,19 @@ function SingleMatchMobile(props) {
 
     // For debugging purposes. When the component is clicked, the ParsedMatchObject is printed to terminal
     const handleComponentClick = () => {
-        console.log(props.gameInformation);
+        console.log(gameInformation);
     };
+
+
+    //
+    // Helpers
+    //
+    // When the "Copy" button is clicked on the last two rows, handlers will call this method to copy to clipboard
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+    };
+
+
 
     return (
         <>
@@ -218,10 +234,7 @@ function SingleMatchMobile(props) {
                     {/* Line - ECO opening and link */}
                     <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
                     <Row>
-                        {/* <a href={gameInformation.opening.url}  target="_blank"  rel="noopener noreferrer">
-                          <p>{gameInformation.opening.eco} - {gameInformation.opening.name}</p>
-                        </a> */}
-                        <p>{gameInformation.replaceopendict.ECO} - {gameInformation.replaceopendict.NAME}</p>
+                        <p>{gameInformation.openingData.ECO} - {gameInformation.openingData.NAME}</p>
                     </Row>
 
                     {/* Line - String of Moves */}

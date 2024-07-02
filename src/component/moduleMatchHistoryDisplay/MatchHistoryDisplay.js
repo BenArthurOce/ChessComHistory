@@ -7,28 +7,56 @@ import SingleMatchMobile from './SingleMatchMobile';
 import useIsMobile from '../../hooks/useIsMobile';
 
 
-// Styled component for the scrollable container
-const ScrollableContainer = styled.div
+//
+// Styles
+//
+const Container = styled.div
 `
-    max-height: 95vh;
-    overflow-y: auto;
+    height: 100%;
+    overflow-y: scroll;
 `
 ;
 
+const Title = styled.h1
+`
+    text-align: center;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+`
+;
+
+
+
 const MatchHistoryDisplay = (props) => {
+
+    //
+    // Props
+    //
     const matchHistory = props.matchHistory
+
+    //
+    // States
+    //
     const [renderFlag, setRenderFlag] = useState(false);
     const [matchesToRender, setMatchesToRender] = useState(0)
 
+    //
+    // Hooks
+    //
     const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
    
-    
+    //
+    // Effects
+    //
     useEffect(() => {
         setMatchesToRender(30) 
         setRenderFlag(checkIfAbleToRender(matchHistory));
     }, [matchHistory]);
 
-
+    //
+    // Helpers
+    //
     const checkIfAbleToRender = (array) => {
         if (array === null || array === undefined) {return false}
         if (array <= 1) {return false}
@@ -37,8 +65,8 @@ const MatchHistoryDisplay = (props) => {
 
 
     return (
-        <ScrollableContainer>
-            <h1 style={{ textAlign: "center" }}>Match History</h1>
+        <Container>
+            <Title>Match History</Title>
             {hookIsMobile ? (
                 <>
                     {matchHistory.map((match, index) => (
@@ -52,7 +80,7 @@ const MatchHistoryDisplay = (props) => {
                     ))}
                 </>
             )}
-        </ScrollableContainer>
+        </Container>
     );
 }
 

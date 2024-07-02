@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 
-const TileMobile = styled.div
+//
+// Styles
+//
+const Tile = styled.div
 `
     position: relative;
     padding: 10px;
@@ -46,16 +49,26 @@ const PopupTextSpan = styled.span
 ;
 
 
-const HeatmapTileMobile = (props) => {
+const HeatmapTile = (props) => {
 
+    //
+    // Props
+    //
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
+
+    //
+    // States
+    //
+
     const [colorBackground, setColorBackground] = useState("");
-    const tileRef = useRef(null);
     const [isDisplayPopup, setIsDisplayPopup] = useState(false);
+    const tileRef = useRef(null);
 
 
-    // Sets the background colour of the tile and the popup
+    //
+    // Effects
+    //
     useEffect(() => {
         if (tile.winpct >= 60) {
             setColorBackground("#4caf50"); // Dark Green (win over 60%)
@@ -87,6 +100,10 @@ const HeatmapTileMobile = (props) => {
         };
     }, [tileRef, tileInformation]);
 
+
+    //
+    // Handles
+    //
     const handleButtonPress = (tile) => {
         handleButtonClick(tileInformation);
     };
@@ -101,7 +118,7 @@ const HeatmapTileMobile = (props) => {
         <>
             {props && (
                 <>
-                    <TileMobile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => setIsDisplayPopup(!isClicked)}>
+                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => setIsDisplayPopup(!isClicked)}>
                         <PopupTextSpan>
                             <p>{tile.move}</p>
                         </PopupTextSpan>
@@ -122,7 +139,7 @@ const HeatmapTileMobile = (props) => {
                                 </PopupTextSpan>
                             </Popup>
                         )}
-                    </TileMobile>
+                    </Tile>
                 </>
             )}
 
@@ -130,4 +147,4 @@ const HeatmapTileMobile = (props) => {
     );
 }
 
-export default HeatmapTileMobile;
+export default HeatmapTile;

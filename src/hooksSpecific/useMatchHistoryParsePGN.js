@@ -225,13 +225,13 @@ const SingleMatchObject = (match, parsedData, username) => {
           , url:          match.black['@id']
         }
         ,
-        opening: {
+        openingMatch: {
             eco:          parsedData.ECO
           , url:          parsedData.ECOUrl
           , name:         extractOpeningName(parsedData.ECOUrl)
         }
         ,
-        replaceopendict:     findOpeningMatch(parsedData.MoveString, openingDictionary)
+        openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
     };
 
 

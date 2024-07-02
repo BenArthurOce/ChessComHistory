@@ -1,69 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
+import useIsMobile from '../hooks/useIsMobile';
+
+//
+// Styles
+//
+const Container = styled.div
+`
+    height: 100%;
+    overflow-y: scroll;
+
+
+`
+;
 
 const Overlay = styled.div
 `
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);     /* Sets transparent background */
-    z-index: 9999;                      /* Must be most front facing forward since its an overlay */ 
-    padding: 5px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-left: ${(props) => (props.isMobile ? '0' : '25%')};
+    padding-right: ${(props) => (props.isMobile ? '0' : '25%')};
+    overflow-y: hidden;
 `
 ;
 
 const Inner = styled.div
 `
-    background: rgba(0, 0, 0, 0.7);     /* Sets transparent background */
-    padding: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
     border-radius: 8px;
-    position: relative;                 /* Allows the close button to be positioned inside this element */
-    width: 100%;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
 `
 ;
 
 const CloseButton = styled.button
 `
-    position: absolute;             /* Position the close button relative to its closest positioned ancestor */
-    top: 2px;                       /* Position it in the top-right corner */
-    right: 2px;                     /* Position it in the top-right corner */
+    position: fixed;
+    top: 20px; 
+    right: 20px;
     cursor: pointer;
-    background-color: #ff0000;       /* Red background color */
-    color: #fff;                     /* White text color */
+    background-color: #ff0000;
+    color: #fff;
     font-size: 20px;
     font-weight: bold;
-    padding: 2px 5px;
+    padding: 5px 10px;
     border: 3px solid black;
     border-radius: 5px;
-    z-index: 9999;                   /* Ensure it's above other elements */
-`
-;
+    z-index: 9999;
+`;
 
-const PopupOverlay = ({ matchHistory }) => {
+const PopupOverlay = (props) => {
+    //
+    // Props
+    //
+    const { matchHistory } = props;
+
+    //
+    // States
+    //
     const [showPopup, setShowPopup] = useState(true);
 
-    const handleClose = () => {
-        setShowPopup(false);
-    };
+    //
+    // Hooks
+    //
+    const isMobile = useIsMobile();
 
+    //
+    // Effects
+    //
     useEffect(() => {
         setShowPopup(true);
     }, [matchHistory]);
 
+    //
+    // Handlers
+    //
+    const handleClose = () => {
+        setShowPopup(false);
+    };
+
     return (
-        <>
+        <Container>
             {showPopup && (
-                <Overlay>
+                <Overlay isMobile={isMobile}>
                     <Inner>
                         <CloseButton onClick={handleClose}>×</CloseButton>
                         <MatchHistoryDisplay matchHistory={matchHistory} />
                     </Inner>
                 </Overlay>
             )}
-        </>
+        </Container>
     );
 };
 

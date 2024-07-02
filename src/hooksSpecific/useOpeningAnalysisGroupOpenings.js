@@ -22,14 +22,14 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam) => {
     // Function to filter matchArray by ECO Family Name
     const filterByEcoFamilyName = (matchArray, fullName) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.replaceopendict.ECOFAMILY === fullName);
+        return matchArray.filter(match => match.openingData.ECOFAMILY === fullName);
     };
 
 
     // Function to filter matchArray by Opening Name
     const filterByName = (matchArray, name) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.replaceopendict.NAME === name);
+        return matchArray.filter(match => match.openingData.NAME === name);
     };
 
 
@@ -56,13 +56,13 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam) => {
 
     // Function to get unique ECO Family Names from objectArray
     const getUniqueEcoFamilyNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.replaceopendict.ECOFAMILY))];
+        return [...new Set(objectArray.map((element) => element.openingData.ECOFAMILY))];
     };
 
 
     // Function to get unique Opening Names from objectArray
     const getUniqueNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.replaceopendict.NAME))];
+        return [...new Set(objectArray.map((element) => element.openingData.NAME))];
     };
 
     
