@@ -73,11 +73,11 @@ function ChessAppSearchForm(props) {
     //
     // States
     //
-    const [username, setUsername] = useState('');
-    const [lastNGames, setLastNGames] = useState('');
+    // const [username, setUsername] = useState('');
+    // const [lastNGames, setLastNGames] = useState('');
 
-    // const [username, setUsername] = useState("BenArthurOCE");
-    // const [lastNGames, setLastNGames] = useState(100);
+    const [username, setUsername] = useState("BenArthurOCE");
+    const [lastNGames, setLastNGames] = useState(100);
 
     //
     // Handlers

@@ -8,15 +8,8 @@ import SingleIcon from "../SingleIcon";
 //
 const Container = styled.div
 `
-    max-width: 600px;
-    padding: 20px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-    @media (max-width: 768px) {
-        padding: 10px;
-    }
+    height: 100%;
+    overflow-y: scroll;
 `
 ;
 

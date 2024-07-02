@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchesRequest from './MatchesRequest';
+import HeatmapOverview from './moduleHeatmapOverview/HeatmapOverview';
 import HeatmapController from './moduleHeatmapAnalysis/HeatmapController';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
@@ -152,6 +153,12 @@ const ChessAppSwitcher = (props) => {
                     Table Summary
                 </SwitchButton>
                 <SwitchButton
+                    selected={activeModule === 'heatMapOverview'}
+                    onClick={() => handleButtonClick('heatMapOverview')}
+                >
+                    Heatmap Overview
+                </SwitchButton>
+                <SwitchButton
                     selected={activeModule === 'heatMapAnalysis'}
                     onClick={() => handleButtonClick('heatMapAnalysis')}
                 >
@@ -163,6 +170,7 @@ const ChessAppSwitcher = (props) => {
                 >
                     Opening Analysis
                 </SwitchButton>
+
                 {/* <SwitchButton
                     selected={activeModule === 'debugging'}
                     onClick={() => handleButtonClick('debugging')}
@@ -192,6 +200,10 @@ const ChessAppSwitcher = (props) => {
 
                         {renderFlag && parsedMatchObjects && activeModule === 'tableSummary' && (
                             <MatchHistoryTable matchHistory={parsedMatchObjects} />
+                        )}
+
+                        {renderFlag && parsedMatchObjects && activeModule === 'heatMapOverview' && (
+                            <HeatmapOverview matchHistory={parsedMatchObjects} />
                         )}
 
                         {renderFlag && parsedMatchObjects && activeModule === 'heatMapAnalysis' && (
