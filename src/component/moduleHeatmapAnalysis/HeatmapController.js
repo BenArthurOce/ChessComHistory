@@ -48,6 +48,13 @@ const InputContainer = styled.div
 `
 ;
 
+const FlexRow = styled.div
+`
+    display: flex;
+    gap: 10px;
+`
+;
+
 const Label = styled.label
 `
     font-weight: bold;
@@ -120,39 +127,20 @@ const HeatmapController = (props) => {
     //
     // States
     //
-    const [pieceMoves, setPieceMoves] = useState({
-        pawn: [],
-        rook: [],
-        knight: [],
-        bishop: [],
-        queen: [],
-        king: [],
-        castling: [],
-    });
-
-    const [renderFlag, setRenderFlag] = useState(false);
     const [start, setStart] = useState(0); // Default start value
     const [end, setEnd] = useState(5); // Default end value
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
+    const [firstMove, setFirstMove] = useState("1.e4"); // Default starting move
+
     const [popupMatchHistory, setPopupMatchHistory] = useState(null); // State to hold selected match details
     const [singleTileSelected, setSingleTileSelected] = useState(null); // for Mobile - Displays Bubble if selected
 
     //
     // Hooks
     //
-    const hookIsMobile = useIsMobile(true); // Custom hook to test if mobile device
+    const hookIsMobile = useIsMobile(); // Custom hook to test if mobile device
     const hookDataSet = useHeatmapControllerDataset(matchHistory);
-    const hookSortData = useHeatmapControllerSortData(hookDataSet, start, end, selectedTeam);
-
-    //
-    // Effects
-    //
-    useEffect(() => {
-        if (Object.values(hookDataSet).length > 0) {
-            setPieceMoves(hookSortData);
-            setRenderFlag(Object.values(hookSortData).length > 0);
-        }  
-    }, [props, hookSortData, hookDataSet, start, end, selectedTeam]);
+    const hookSortData = useHeatmapControllerSortData(hookDataSet, start, end, selectedTeam, firstMove); // Should be renamed
 
     //
     // Handlers
@@ -169,18 +157,22 @@ const HeatmapController = (props) => {
         setSelectedTeam(event.target.value);
     };
 
+    const handleFirstMoveChange = (event) => {
+        setFirstMove(event.target.value);
+    };
+
     //
     // Helpers
     //
     // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-        console.log(tile)
+        // console.log(tile)
         const myMatchHistory = tile.matches;
-        console.log(myMatchHistory)
+        // console.log(myMatchHistory)
         const arrayMatchId = tile.matches.map((entry) => entry.id);
 
-        console.log(arrayMatchId)
-        console.log()
+        // console.log(arrayMatchId)
+        // console.log()
 
         const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
         const result = filterMatchHistory(matchHistory, arrayMatchId);
@@ -198,14 +190,20 @@ const HeatmapController = (props) => {
 
     return (
         <Container>
-            {!renderFlag && (
+            {console.log(Object.keys(hookSortData).length===0)}
+            {console.log(Object.keys(hookSortData).length===0)}
+            {console.log(Object.keys(hookSortData))} 
+            
+            {Object.keys(hookSortData).length === 0 && (
                 <p>HeatmapController - renderFlag is false</p>
             )}
 
-            {renderFlag && (
+            {Object.keys(hookSortData).length > 0 && (
+                
                 <>
+                    {console.log(Object.keys(hookSortData))} 
                     <Title>Heatmap Analysis</Title>
-
+                    
                     <InputContainer>
                         <div>
                             <Label htmlFor="startInput">Start:</Label>
@@ -214,13 +212,24 @@ const HeatmapController = (props) => {
                             <NumberInput id="endInput" value={end} onChange={handleEndChange} />
                         </div>
 
-                        <div>
-                            <Label htmlFor="teamSelect">Select Team:</Label>
-                            <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                                <option value="white">White</option>
-                                <option value="black">Black</option>
-                            </DropDownBox>
-                        </div>
+                        <FlexRow>
+                            <div>
+                                <Label htmlFor="teamSelect">Select Team:</Label>
+                                <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                                    <option value="white">White</option>
+                                    <option value="black">Black</option>
+                                </DropDownBox>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="firstMoveSelect">First Move:</Label>
+                                <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
+                                    <option value="1.e4">1.e4</option>
+                                    <option value="1.d4">1.d4</option>
+                                    <option value="other">Other</option>
+                                </DropDownBox>
+                            </div>
+                        </FlexRow>
                     </InputContainer>
 
 
@@ -229,7 +238,7 @@ const HeatmapController = (props) => {
                             <>
                                 <DisplayColumn>
                                     {renderPieceIcon(`${selectedTeam}Pawn`, selectedTeam)}
-                                    {pieceMoves.pawn.map((moveObj) => (
+                                    {hookSortData.pawn.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -240,7 +249,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`rook`, selectedTeam)}
-                                    {pieceMoves.rook.map((moveObj) => (
+                                    {hookSortData.rook.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -251,7 +260,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`knight`, selectedTeam)}
-                                    {pieceMoves.knight.map((moveObj) => (
+                                    {hookSortData.knight.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -262,7 +271,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`bishop`, selectedTeam)}
-                                    {pieceMoves.bishop.map((moveObj) => (
+                                    {hookSortData.bishop.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -273,7 +282,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`queen`, selectedTeam)}
-                                    {pieceMoves.queen.map((moveObj) => (
+                                    {hookSortData.queen.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -284,7 +293,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`king`, selectedTeam)}
-                                    {pieceMoves.king.map((moveObj) => (
+                                    {hookSortData.king.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -295,7 +304,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`exchange`, selectedTeam)}
-                                    {pieceMoves.castling.map((moveObj) => (
+                                    {hookSortData.castling.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -311,7 +320,7 @@ const HeatmapController = (props) => {
                             <>
                                 <DisplayColumn>
                                     {renderPieceIcon(`pawn`, selectedTeam)}
-                                    {pieceMoves.pawn.map((moveObj) => (
+                                    {hookSortData.pawn.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -322,7 +331,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`rook`, selectedTeam)}
-                                    {pieceMoves.rook.map((moveObj) => (
+                                    {hookSortData.rook.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -333,7 +342,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`knight`, selectedTeam)}
-                                    {pieceMoves.knight.map((moveObj) => (
+                                    {hookSortData.knight.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -344,7 +353,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`bishop`, selectedTeam)}
-                                    {pieceMoves.bishop.map((moveObj) => (
+                                    {hookSortData.bishop.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -355,7 +364,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`queen`, selectedTeam)}
-                                    {pieceMoves.queen.map((moveObj) => (
+                                    {hookSortData.queen.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -366,7 +375,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`king`, selectedTeam)}
-                                    {pieceMoves.king.map((moveObj) => (
+                                    {hookSortData.king.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}
@@ -377,7 +386,7 @@ const HeatmapController = (props) => {
 
                                 <DisplayColumn>
                                     {renderPieceIcon(`exchange`, selectedTeam)}
-                                    {pieceMoves.castling.map((moveObj) => (
+                                    {hookSortData.castling.map((moveObj) => (
                                         <HeatmapTileMobile
                                             tileInformation={moveObj}
                                             isClicked={singleTileSelected === moveObj}

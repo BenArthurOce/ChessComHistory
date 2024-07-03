@@ -14,10 +14,7 @@ Object: {"draw": 0, "lose": 0, "matches": [], "move": -, "nullcount": 0, "piece"
 
 import { useState, useEffect } from 'react';
 
-const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam) => {
-
-
-    
+const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) => {
 
     const [hookOutput, setHookOutput] = useState({})
     // console.log(hookInput)
@@ -28,9 +25,11 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam) => {
         if (Object.values(hookInput).length === 0) {return};
 
 
-        // Reduce the number of Matches by white/black
-        const filteredByTeam = hookInput.filter((obj) => obj.team === selectedTeam)
+        // Reduce the array of Matches by firstMove
+        const filteredByFirstMove = hookInput.filter((obj) => obj.firstMove === firstMove)
 
+        // Reduce the number of Matches by white/black
+        const filteredByTeam = filteredByFirstMove.filter((obj) => obj.team === selectedTeam)
 
         // Filter moves by turn number
         const organizedMoves = organizeMovesByTurn(filteredByTeam)
@@ -49,7 +48,7 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam) => {
         setHookOutput(topPositiveMoves)
 
         
-    }, [hookInput]);
+    }, [hookInput, selectedTeam, firstMove]);
 
 
     const runHook = (dataSet) => {

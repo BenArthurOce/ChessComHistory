@@ -135,6 +135,11 @@ const SingleMatchObject = (match, parsedData, username) => {
         return parseInt(gameURL.substring(index + "/live/".length), 10);
     };
 
+    function getStartingMove(whiteMoves) {
+        if (whiteMoves[0] === "e4") {return "1.e4"};
+        if (whiteMoves[0] === "d4") {return "1.d4"};
+        return "other";
+    };
 
 
     const findOpeningMatch = (game, openings) => {
@@ -182,6 +187,7 @@ const SingleMatchObject = (match, parsedData, username) => {
           , string:           parsedData.MoveString
           , white:            getPlayerMoves(moveObject, "white")
           , black:            getPlayerMoves(moveObject, "black")
+          , first:            getStartingMove( getPlayerMoves(moveObject, "white") )
         }
         ,
         results: {

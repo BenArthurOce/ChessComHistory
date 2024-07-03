@@ -14,13 +14,12 @@ Object: {"draw": 0, "lose": 0, "matches": [], "move": -, "nullcount": 0, "piece"
 
 import { useState, useEffect } from 'react';
 
-const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam) => {
+const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam, firstMove) => {
 
     const [hookOutput, setHookOutput] = useState({})
 
 
     useEffect(() => {
-
         if (Object.values(hookInput).length === 0) {return}
 
         // console.log("====hookInput====");
@@ -29,7 +28,8 @@ const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam) => {
 
         const transformedData = filterAndTransformData(hookInput)
         setHookOutput(transformedData)
-    }, [hookInput, start, end, selectedTeam]);
+        console.log(transformedData)
+    }, [hookInput, start, end, selectedTeam, firstMove]);
 
 
     const filterAndTransformData = (hookInput) => {
@@ -37,12 +37,10 @@ const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam) => {
             (obj) =>
                 obj.team === selectedTeam &&
                 obj.turn >= start &&
-                obj.turn <= end
-        );
+                obj.turn <= end &&
+                obj.firstMove === firstMove
 
-        // console.log("====gameData====");
-        // console.log(gameData);
-        // console.log();
+        );
 
         function performSecondaryFilterPlayed(moveString, data) {
             return data.filter((entry) => entry.move === moveString);

@@ -45,6 +45,13 @@ const InputContainer = styled.div
 `
 ;
 
+const FlexRow = styled.div
+`
+    display: flex;
+    gap: 10px;
+`
+;
+
 const Label = styled.label
 `
     font-weight: bold;
@@ -74,13 +81,14 @@ const OpeningAnalysisController = (props) => {
     // States
     //
     const [selectedTeam, setSelectedTeam] = useState("white");
-    const [expandedIndex, setExpandedIndex] = useState(null);
+    const [firstMove, setFirstMove] = useState("1.e4"); // Default starting move
+    const [expandedIndex, setExpandedIndex] = useState(null);   // Component contains Opening Divs. This holds the index number of the clicked Div so it can be expanded.
 
     //
     // Hooks
     //
     const hookIsMobile = useIsMobile()
-    const hookDataToRender = useOpeningAnalysisGroupOpenings(matchHistory, selectedTeam);
+    const hookDataToRender = useOpeningAnalysisGroupOpenings(matchHistory, selectedTeam, firstMove);
 
     //
     // Handles
@@ -92,6 +100,10 @@ const OpeningAnalysisController = (props) => {
     const handleElementClick = (index) => {
         setExpandedIndex(expandedIndex === index ? null : index);
     };
+
+    const handleFirstMoveChange = (event) => {
+        setFirstMove(event.target.value);
+    };
     
 
     return (
@@ -100,11 +112,24 @@ const OpeningAnalysisController = (props) => {
 
             {/* Input Controls */}
             <InputContainer>
-                <Label htmlFor="teamSelect">Select Team:</Label>
-                <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                    <option value="white">White</option>
-                    <option value="black">Black</option>
-                </DropDownBox>
+                <FlexRow>
+                    <div>
+                        <Label htmlFor="teamSelect">Select Team:</Label>
+                        <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </DropDownBox>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="firstMoveSelect">First Move:</Label>
+                        <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
+                            <option value="1.e4">1.e4</option>
+                            <option value="1.d4">1.d4</option>
+                            <option value="other">Other</option>
+                        </DropDownBox>
+                    </div>
+                </FlexRow>
             </InputContainer>
 
 

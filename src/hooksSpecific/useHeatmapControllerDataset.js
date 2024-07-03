@@ -5,15 +5,19 @@
 
 import { useState, useEffect } from 'react';
 
-const useHeatmapControllerDataset = (array) => {
+const useHeatmapControllerDataset = (hookInput) => {
     // Array is the list of parsed Match Objects
-    const [dataSet, setDataSet] = useState({})
+    const [hookOutput, setHookOutput] = useState({})
 
     useEffect(() => {
-        if (array.length === 0) {return}
-        const sortedMovesArray = createMoveHistoryArray(array)
-        setDataSet(sortedMovesArray);
-    }, []);
+
+        if (!hookInput || hookInput.length < 1) {
+            return;
+        }
+
+        const sortedMovesArray = createMoveHistoryArray(hookInput)
+        setHookOutput(sortedMovesArray);
+    }, [hookInput]);
 
     const createMoveHistoryArray = (matchHistory) => {
         const uniqueMoves = [];
@@ -49,7 +53,7 @@ const useHeatmapControllerDataset = (array) => {
             const id = match.general.id; // Match Id
             const userPlayed = match.playerResults.userPlayed; // White or Black depending on what player played for this match
             const userOutcome = match.playerResults.userResult; // Result for the user (win/lose/draw)
-            const userMoves = match.playerResults.userMoves; // Array of moves
+            const userMoves = match.playerResults.userMoves; // Array of moves    
     
             userMoves.forEach((move, moveIndex) => {
                 const pieceType = classifyMove(move);
@@ -64,6 +68,7 @@ const useHeatmapControllerDataset = (array) => {
                     , "piece": pieceType
                     , "isCapture": isCapture
                     , "isCheck": isCheck
+                    , "firstMove": match.moves.first        // First move that white played
                 };
             
                 // Push the dict object into the array
@@ -74,7 +79,7 @@ const useHeatmapControllerDataset = (array) => {
         return uniqueMoves;
     };
 
-    return dataSet;
+    return hookOutput;
 
 };
 

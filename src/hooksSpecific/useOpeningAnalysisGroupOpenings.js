@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam) => {
+const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => {
     const [hookOutput, setHookOutput] = useState([]);
 
     useEffect(() => {
@@ -9,15 +9,21 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam) => {
         }
 
         // Rank and set the most frequent openings based on the selected team
-        const resultData = rankMostFrequentOpenings(hookInput, selectedTeam);
+        const resultData = rankMostFrequentOpenings(hookInput, selectedTeam, firstMove);
         setHookOutput(resultData);
 
         // console.log("====Hook Result===");
         // console.log(resultData);
         // console.log();
 
-    }, [hookInput, selectedTeam]);
+    }, [hookInput, selectedTeam, firstMove]);
 
+
+    // Function to filter by the first move in the game 
+    const filterByFirstMove = (matchArray, firstMove) => {
+        if (matchArray.length === 0) { return []; }
+        return matchArray.filter(match => match.moves.first === firstMove);
+    };
 
     // Function to filter matchArray by ECO Family Name
     const filterByEcoFamilyName = (matchArray, fullName) => {
@@ -70,16 +76,19 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam) => {
     const rankMostFrequentOpenings = (matchHistory) => {
         const results = [];
 
+        // Filter games based on the starting move
+        const gamesFilteredByStartingMove = filterByFirstMove(matchHistory, firstMove)
+
         // Filter games played by the selected team's color
-        const gamesUserPlayed = filterByColour(matchHistory);
+        const gamesFilteredByColourUsed = filterByColour(gamesFilteredByStartingMove);
         
         // Get unique ECO Family Names from filtered games
-        const uniqueOpeningFamilies = getUniqueEcoFamilyNames(gamesUserPlayed);
+        const arrayOfUniqueOpeningFamilies = getUniqueEcoFamilyNames(gamesFilteredByColourUsed);
 
         // Iterate over each unique ECO Family Name
-        uniqueOpeningFamilies.forEach(ecoFamilyName => {
+        arrayOfUniqueOpeningFamilies.forEach(ecoFamilyName => {
             
-            const filteredEcoFamilyMatches = filterByEcoFamilyName(gamesUserPlayed, ecoFamilyName); // Filter games by current ECO Family Name
+            const filteredEcoFamilyMatches = filterByEcoFamilyName(gamesFilteredByColourUsed, ecoFamilyName); // Filter games by current ECO Family Name
             const uniqueVariationNames = getUniqueNames(filteredEcoFamilyMatches);  // Get unique Variation Names from filtered matches
 
             const variations = uniqueVariationNames.map(variationName => {  // Map unique Variation Names to objects containing statistics
