@@ -86,16 +86,14 @@ const ChessAppSwitcher = (props) => {
     //
     // Props
     //
-    const { username, lastNGames } = props;
+    const { username, lastNGames, activeModule, playerInformation } = props;
 
     //
     // States
     //
-    const [activeModule, setActiveModule] = useState('playerInfo');
     const [renderFlag, setRenderFlag] = useState(false);
     const [gotDataFlag, setGotDataFlag] = useState(false);
     const [parsedMatchObjects, setParsedMatchObjects] = useState(null);
-    const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
 
     //
     // Effects
@@ -116,68 +114,8 @@ const ChessAppSwitcher = (props) => {
         setGotDataFlag(data && data.length > 0);
     };
 
-    const handleButtonClick = (module) => {
-        setActiveModule(module);
-        setSidebarVisible(false);
-    };
-
-    const toggleSidebar = () => {
-        setSidebarVisible(!sidebarVisible);
-    };
-
-    // const handleSwitchButtonClick = () => {
-
-    // };
-
     return (
         <Container>
-            <ToggleButton onClick={toggleSidebar}>☰</ToggleButton>
-
-            <SidebarContainer sidebarVisible={sidebarVisible}>
-                <SwitchButton
-                    selected={activeModule === 'playerInfo'}
-                    onClick={() => handleButtonClick('playerInfo')}
-                >
-                    Player Info
-                </SwitchButton>
-                <SwitchButton
-                    selected={activeModule === 'matchHistory'}
-                    onClick={() => handleButtonClick('matchHistory')}
-                >
-                    Match History
-                </SwitchButton>
-                <SwitchButton
-                    selected={activeModule === 'tableSummary'}
-                    onClick={() => handleButtonClick('tableSummary')}
-                >
-                    Table Summary
-                </SwitchButton>
-                <SwitchButton
-                    selected={activeModule === 'heatMapOverview'}
-                    onClick={() => handleButtonClick('heatMapOverview')}
-                >
-                    Heatmap Overview
-                </SwitchButton>
-                <SwitchButton
-                    selected={activeModule === 'heatMapAnalysis'}
-                    onClick={() => handleButtonClick('heatMapAnalysis')}
-                >
-                    Heatmap Analysis
-                </SwitchButton>
-                <SwitchButton
-                    selected={activeModule === 'openingAnalysis'}
-                    onClick={() => handleButtonClick('openingAnalysis')}
-                >
-                    Opening Analysis
-                </SwitchButton>
-
-                {/* <SwitchButton
-                    selected={activeModule === 'debugging'}
-                    onClick={() => handleButtonClick('debugging')}
-                >
-                    Debugging
-                </SwitchButton> */}
-            </SidebarContainer>
 
             <ContentContainer>
                 <MatchesRequest
@@ -191,7 +129,7 @@ const ChessAppSwitcher = (props) => {
                 {gotDataFlag && (
                     <>
                         {renderFlag && parsedMatchObjects && activeModule === 'playerInfo' && (
-                            <PlayerInformation username={username} />
+                            <PlayerInformation playerInformation={playerInformation} />
                         )}
 
                         {renderFlag && parsedMatchObjects && activeModule === 'matchHistory' && (
