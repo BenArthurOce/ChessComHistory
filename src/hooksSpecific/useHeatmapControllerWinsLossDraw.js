@@ -17,7 +17,7 @@ import { useState, useEffect } from 'react';
 const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) => {
 
     const [hookOutput, setHookOutput] = useState({})
-    // console.log(hookInput)
+    // // console.log(hookInput)
 
 
     useEffect(() => {
@@ -38,11 +38,11 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
         const arrayOfWinrate = runHook(organizedMoves)
 
         const topPositiveMoves = getTopPositiveMoves(arrayOfWinrate);
-        // console.log(topPositiveMoves);
-        // console.log(finalresult)
+        // // console.log(topPositiveMoves);
+        // // console.log(finalresult)
 
         // const organizedData = runHook(filteredByTeam);
-        // console.log(organizedData)
+        // // console.log(organizedData)
 
         // const organizedMoves = organizeMovesByTurn(hookInput);
         setHookOutput(topPositiveMoves)
@@ -64,22 +64,22 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
             return data;
         };
 
-        // console.log(dataSet)
+        // // console.log(dataSet)
 
         for (let key in dataSet) {
             if (dataSet.hasOwnProperty(key)) {
                 let value = dataSet[key];
 
-                // console.log(key, value);
-                // console.log(value)
+                // // console.log(key, value);
+                // // console.log(value)
 
                 for (let key2 in value) {
                     let value2 = value[key2];
 
-                    // console.log(key2, value2);
+                    // // console.log(key2, value2);
 
-                    // console.log(key2)
-                    // console.log(key)
+                    // // console.log(key2)
+                    // // console.log(key)
 
                     const wins = filterResult("win", value2).length;
                     const losses  = filterResult("lose", value2).length;
@@ -162,7 +162,7 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
 
 
     const organizeMovesByTurn = (moves) => {
-        // console.log(moves)
+        // // console.log(moves)
         return moves.reduce((acc, move) => {
             if (!acc[move.turn]) {
                 acc[move.turn] = {};

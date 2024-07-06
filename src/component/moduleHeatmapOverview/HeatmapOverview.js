@@ -134,7 +134,7 @@ const HeatmapOverview = (props) => {
     // Effects
     //
     useEffect(() => {
-        console.log(hookWinLossDraw)
+        // console.log(hookWinLossDraw)
         if (Object.values(hookWinsLossDrawWHITE).length > 0 && Object.values(hookWinsLossDrawBLACK).length > 0) {
             setRenderFlag(true);
         } else {
@@ -155,8 +155,8 @@ const HeatmapOverview = (props) => {
 
     // For debugging purposes. When the component is clicked
     const handleIndividualTileClick = (item) => {
-        // console.log("handleIndividualTileClick")
-        // console.log(item);
+        // // console.log("handleIndividualTileClick")
+        // // console.log(item);
     };
 
 

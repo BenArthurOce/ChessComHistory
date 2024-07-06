@@ -22,13 +22,13 @@ const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam, first
     useEffect(() => {
         if (Object.values(hookInput).length === 0) {return}
 
-        // console.log("====hookInput====");
-        // console.log(hookInput);
-        // console.log()
+        // // console.log("====hookInput====");
+        // // console.log(hookInput);
+        // // console.log()
 
         const transformedData = filterAndTransformData(hookInput)
         setHookOutput(transformedData)
-        console.log(transformedData)
+        // console.log(transformedData)
     }, [hookInput, start, end, selectedTeam, firstMove]);
 
 
@@ -85,9 +85,9 @@ const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam, first
             returnMoveStats(move, gameData)
         );
 
-        // console.log("====uniqueMoves====");
-        // console.log(uniqueMoves);
-        // console.log();
+        // // console.log("====uniqueMoves====");
+        // // console.log(uniqueMoves);
+        // // console.log();
 
         // Sort the moveStats array by the number of games played in descending order
         moveStats.sort((a, b) => b.played - a.played);

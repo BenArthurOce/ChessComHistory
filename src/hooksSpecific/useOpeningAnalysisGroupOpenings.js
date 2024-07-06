@@ -12,9 +12,9 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
         const resultData = rankMostFrequentOpenings(hookInput, selectedTeam, firstMove);
         setHookOutput(resultData);
 
-        // console.log("====Hook Result===");
-        // console.log(resultData);
-        // console.log();
+        // // console.log("====Hook Result===");
+        // // console.log(resultData);
+        // // console.log();
 
     }, [hookInput, selectedTeam, firstMove]);
 

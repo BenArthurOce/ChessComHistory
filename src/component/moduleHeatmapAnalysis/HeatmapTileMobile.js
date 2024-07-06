@@ -108,7 +108,7 @@ const HeatmapTileMobile = (props) => {
     //
     const handleButtonPress = (tile) => {
         handleButtonClick(tileInformation);
-        console.log(tileInformation)
+        // console.log(tileInformation)
     };
 
     // When the user clicks an individual tile - gets small popup of tile information

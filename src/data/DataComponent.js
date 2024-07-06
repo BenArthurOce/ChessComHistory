@@ -53,21 +53,21 @@ const DataComponent = (props) => {
 
     const onButton1Click = () => {
         const sortedArray = matchHistory.sort((a, b) => b.general.id - a.general.id);
-        console.log(sortedArray)
-        // console.log(matchHistory)
-        // console.log("\nbutton 1 clicked\n")
+        // console.log(sortedArray)
+        // // console.log(matchHistory)
+        // // console.log("\nbutton 1 clicked\n")
     };
 
     const onButton2Click = () => {
-        console.log("\nbutton 2 clicked\n")
+        // console.log("\nbutton 2 clicked\n")
     };
 
     const onButton3Click = () => {
-        console.log("\nbutton 3 clicked\n")
+        // console.log("\nbutton 3 clicked\n")
     };
 
     const onButton4Click = () => {
-        console.log("\nbutton 4 clicked\n")
+        // console.log("\nbutton 4 clicked\n")
     };
 
 

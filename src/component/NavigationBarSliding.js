@@ -138,7 +138,7 @@ const NavigationBarSliding = (props) => {
     // Handlers
     //
     const handleNavigationButtonClick = (myModule) => {
-        console.log(myModule);
+        // console.log(myModule);
         setActiveModule(myModule);
         onNavigationButtonClick(myModule);
         setSidebarVisible(false);
