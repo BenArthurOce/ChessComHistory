@@ -18,7 +18,9 @@ const Container = styled.div
 `
     width: 100vw;
     height: 100vh;
-    overflow-y: hidden;
+    overflow: auto;
+    padding: 20px;
+    box-sizing: border-box;
 `
 ;
 
@@ -38,10 +40,6 @@ const InputContainer = styled.div
     gap: 20px;
     margin-top: 10px;
     margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 900;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 8px;
@@ -52,6 +50,7 @@ const InputContainer = styled.div
 const FlexRow = styled.div
 `
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 `
 ;
@@ -72,8 +71,9 @@ const NumberInput = styled.input
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 80px;
+    width: 60px;
     margin-right: 10px;
+    box-sizing: border-box;
 `
 ;
 
@@ -81,11 +81,13 @@ const NumericIncDecContainer = styled.div
 `
     display: flex;
     flex-direction: row;
+    align-items: center;
 `
 
 const IncDecArrow = styled.button
 `
-    width: 50px;
+    width: 30px;
+    height: 30px;
 `
 
 const IncDecArrowContainer = styled.div
@@ -101,6 +103,7 @@ const DropDownBox = styled.select
     border: 1px solid #ccc;
     border-radius: 5px;
     min-width: 120px;
+    box-sizing: border-box;
 `
 ;
 
@@ -109,6 +112,8 @@ const HeatmapContainer = styled.div
     display: flex;
     flex-direction: row;
     gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 `
 ;
 
@@ -127,8 +132,12 @@ const DisplayColumnTitle = styled.div
 
 const DisplayColumn = styled.div
 `
-    min-width: 50px;
-    max-width: 55px;
+    // min-width: 40px;
+    // max-width: 45px;
+
+    // min-width: 60px;
+    // max-width: 65px;
+    flex-grow: 1;
 `
 ;
 
@@ -243,59 +252,49 @@ const HeatmapController = (props) => {
                     {/* {console.log(Object.keys(hookSortData))}  */}
                     <Title>Heatmap Analysis</Title>
                     
-                    <InputContainer>
-                        <FlexRow>
-                            {/* <Label htmlFor="startInput">Start:</Label>
-                            <NumberInput id="startInput" value={start} onChange={handleStartChange} /> */}
+                        <InputContainer>
 
+                            <FlexRow>
+                                <NumericIncDecContainer>
+                                    <Label htmlFor="startInput">Start:</Label>
+                                    <NumberInput id="startInput" value={start} onChange={handleStartChange} />
 
-                            <NumericIncDecContainer>
-                                <Label htmlFor="startInput">Start:</Label>
-                                <NumberInput id="startInput" value={start} onChange={handleStartChange} />
+                                    <IncDecArrowContainer>
+                                        <IncDecArrow onClick={handleStartMoveInc}>&uarr;</IncDecArrow>
+                                        <IncDecArrow onClick={handleStartMoveDec}>&darr;</IncDecArrow>
+                                    </IncDecArrowContainer>
+                                </NumericIncDecContainer>
 
-                                <IncDecArrowContainer>
-                                    <IncDecArrow onClick={handleStartMoveInc}>&uarr;</IncDecArrow>
-                                    <IncDecArrow onClick={handleStartMoveDec}>&darr;</IncDecArrow>
-                                </IncDecArrowContainer>
+                                <NumericIncDecContainer>
+                                    <Label htmlFor="endInput">End:</Label>
+                                    <NumberInput id="endInput" value={end} onChange={handleEndChange} />
 
-                            </NumericIncDecContainer>
+                                    <IncDecArrowContainer>
+                                        <IncDecArrow onClick={handleEndMoveInc}>&uarr;</IncDecArrow>
+                                        <IncDecArrow onClick={handleEndMoveDec}>&darr;</IncDecArrow>
+                                    </IncDecArrowContainer>
+                                </NumericIncDecContainer>
+                            </FlexRow>
 
+                            <FlexRow>
+                                <div>
+                                    <Label htmlFor="teamSelect">Select Team:</Label>
+                                    <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                                        <option value="white">White</option>
+                                        <option value="black">Black</option>
+                                    </DropDownBox>
+                                </div>
 
-
-                            <NumericIncDecContainer>
-                                <Label htmlFor="endInput">End:</Label>
-                                <NumberInput id="endInput" value={end} onChange={handleEndChange} />
-
-                                <IncDecArrowContainer>
-                                    <IncDecArrow onClick={handleEndMoveInc}>&uarr;</IncDecArrow>
-                                    <IncDecArrow onClick={handleEndMoveDec}>&darr;</IncDecArrow>
-                                </IncDecArrowContainer>
-
-                            </NumericIncDecContainer>
-
-
-                            {/* <IncDecArrow></IncDecArrow> */}
-                        </FlexRow>
-
-                        <FlexRow>
-                            <div>
-                                <Label htmlFor="teamSelect">Select Team:</Label>
-                                <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                                    <option value="white">White</option>
-                                    <option value="black">Black</option>
-                                </DropDownBox>
-                            </div>
-
-                            <div>
-                                <Label htmlFor="firstMoveSelect">First Move:</Label>
-                                <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
-                                    <option value="1.e4">1.e4</option>
-                                    <option value="1.d4">1.d4</option>
-                                    <option value="other">Other</option>
-                                </DropDownBox>
-                            </div>
-                        </FlexRow>
-                    </InputContainer>
+                                <div>
+                                    <Label htmlFor="firstMoveSelect">First Move:</Label>
+                                    <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
+                                        <option value="1.e4">1.e4</option>
+                                        <option value="1.d4">1.d4</option>
+                                        <option value="other">Other</option>
+                                    </DropDownBox>
+                                </div>
+                            </FlexRow>
+                        </InputContainer>
 
 
                     <HeatmapContainer>

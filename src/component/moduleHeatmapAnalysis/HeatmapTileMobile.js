@@ -10,8 +10,8 @@ const Tile = styled.div
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: ${(props) => props.colorBackground};
