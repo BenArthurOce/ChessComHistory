@@ -30,19 +30,18 @@ const ToggleButton = styled.button
 const Inner = styled.div
 `
     position: fixed;
-    top: ${(props) => (props.sidebarVisible ? '50%' : '-100%')};
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: ${(props) => (props.isMobile ? '100%' : '90%')};
-    max-width: 520px;
+    top: 0;
+    left: ${(props) => (props.sidebarVisible ? '0' : '-100%')};
+    bottom: 0;
+    width: 100%;
+    max-width: 800px;
     background-color: #f0f0f0;
     padding: 20px;
     z-index: 1000;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    transition: top 0.3s ease-in-out;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease-in-out;
     height: 100vh;
-    overflow-y: auto;
 `
 ;
 

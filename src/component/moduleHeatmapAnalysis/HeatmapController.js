@@ -237,7 +237,7 @@ const HeatmapController = (props) => {
                         {!hookIsMobile && (
                             <>
                                 <DisplayColumn>
-                                    {renderPieceIcon(`${selectedTeam}Pawn`, selectedTeam)}
+                                    {renderPieceIcon(`pawn`, selectedTeam)}
                                     {hookSortData.pawn.map((moveObj) => (
                                         <HeatmapTilePC
                                             tileInformation={moveObj}

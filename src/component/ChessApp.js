@@ -10,8 +10,6 @@ import NavigationBarSliding from "./NavigationBarSliding";
 //
 const Wrapper = styled.div
 `
-    padding-left: ${(props) => (props.isMobile ? '0' : '25%')};
-    padding-right: ${(props) => (props.isMobile ? '0' : '25%')};
     width: 100vw;
     height: 100vh;
     overflow-y: hidden;
@@ -22,6 +20,7 @@ const Inner = styled.div
 `
     height: 100%;
     border: 1px solid #ddd;
+    max-width: 800px
 `
 ;
 

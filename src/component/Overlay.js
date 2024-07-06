@@ -19,14 +19,14 @@ const Overlay = styled.div
     top: 0;
     left: 0;
     height: 100%;
+    width: 100%;
+    max-width: 800px;
     background: rgba(0, 0, 0, 0.7);
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding-left: ${(props) => (props.isMobile ? '0' : '25%')};
-    padding-right: ${(props) => (props.isMobile ? '0' : '25%')};
     overflow-y: hidden;
 `
 ;
