@@ -65,38 +65,41 @@ const Cell = styled.div
 
 const VariationDiv = styled.div
 `
-    background-color: #f0f8ff;
-    border: 1px solid #ccc;
+    display: grid;
+    grid-template-rows: 2;
+    grid-template-columns: 4;
+
+    background-color: #fff;
+    border: 1px solid #ddd;
+
     border-radius: 8px;
+    margin: 10px 0;
     padding: 10px;
-    margin-top: 10px;
-    display: ${(props) => (props.expanded ? "block" : "none")};
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+
+    font-size: 14px;
 `
 ;
 
-const Table = styled.table
+const VariationHeading = styled.div
 `
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-`
-;
-
-const Th = styled.th
-`
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+    grid-row: 1;
+    grid-column: 1 / span 3;
+    margin-bottom: 10px;
+    margin-left: 2%;
 `
 ;
 
-const Td = styled.td
+const VariationWinRate = styled.div
 `
-    border: 1px solid #ddd;
-    min-width: 50px;
-    padding: 8px;
-    text-align: center;
+    grid-row: 1;
+    grid-column: 4
+    margin-bottom: 10px;
+
+    text-align: end;
+    margin-right: 10%;
 `
 ;
 
@@ -111,10 +114,10 @@ const OpeningAnalysisMobile = (props) => {
     return (
         <Container>
 
+            {/* Represents one opening */}
             <OpeningDiv onClick={handleElementClick} expanded={isClicked}>
                 <Heading>{openingInformation.familyECO}</Heading>
                 <WinRate>{(openingInformation.wins / openingInformation.played * 100).toFixed(2)}%</WinRate>
-                {/* <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winpct.toFixed(2)}%</p></PopupTextSpan> */}
                 <Cell>{`Played: \n ${openingInformation.played}`}</Cell>
                 <Cell>{`Won: \n ${openingInformation.wins}`}</Cell>
                 <Cell>{`Loss: \n ${openingInformation.losses}`}</Cell>
@@ -122,31 +125,28 @@ const OpeningAnalysisMobile = (props) => {
             </OpeningDiv>
 
 
+            {/* If OpeningDiv is clicked, it will expand and show the Variations */}
             {isClicked && (
-                <VariationDiv expanded={isClicked}>
-                <Table>
-                    <thead>
-                        <tr>
-                            <Th>Variation Name</Th>
-                            <Th>Played</Th>
-                            <Th>Wins</Th>
-                            <Th>Losses</Th>
-                            <Th>Draws</Th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {openingInformation.variations.map((variation, vIndex) => (
-                            <tr key={vIndex}>
-                                <Td>{variation.name}</Td>
-                                <Td>{variation.played}</Td>
-                                <Td>{variation.wins}</Td>
-                                <Td>{variation.losses}</Td>
-                                <Td>{variation.draws}</Td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </VariationDiv>
+                <>
+
+                    {openingInformation.variations.map((variation, vIndex) => (
+                        <VariationDiv>
+
+                            <VariationHeading>{variation.name}</VariationHeading>
+                            <VariationWinRate>{(variation.wins / variation.played * 100).toFixed(2)}%</VariationWinRate>
+                            {/* <p>{variation.name}</p>
+                            <p>{variation.played}</p> */}
+
+                            {/* <Cell>{`Played: \n ${openingInformation.played}`}</Cell> */}
+                            <Cell>{`Played: \n ${variation.played}`}</Cell>
+                            <Cell>{`Won: \n ${variation.wins}`}</Cell>
+                            <Cell>{`Loss: \n ${variation.losses}`}</Cell>
+                            <Cell>{`Drew: \n ${variation.draws}`}</Cell>
+
+                        </VariationDiv>
+                    ))}
+
+                </>
             )}
 
         </Container>
