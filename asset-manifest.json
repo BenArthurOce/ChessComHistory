@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/ChessComHistory/static/css/main.0b85c5e9.css",
-    "main.js": "/ChessComHistory/static/js/main.668a989f.js",
+    "main.js": "/ChessComHistory/static/js/main.4747d04f.js",
     "index.html": "/ChessComHistory/index.html",
     "main.0b85c5e9.css.map": "/ChessComHistory/static/css/main.0b85c5e9.css.map",
-    "main.668a989f.js.map": "/ChessComHistory/static/js/main.668a989f.js.map"
+    "main.4747d04f.js.map": "/ChessComHistory/static/js/main.4747d04f.js.map"
   },
   "entrypoints": [
     "static/css/main.0b85c5e9.css",
-    "static/js/main.668a989f.js"
+    "static/js/main.4747d04f.js"
   ]
 }
