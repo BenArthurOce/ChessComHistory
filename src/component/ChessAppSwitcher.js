@@ -12,6 +12,9 @@ import Debugging from './Debugging';
 //
 // Styles
 //
+//
+// Styles
+//
 const Container = styled.div
 `
     display: flex;
@@ -21,64 +24,12 @@ const Container = styled.div
 `
 ;
 
-const SidebarContainer = styled.div
-`
-    position: fixed;
-    top: 0;
-    left: ${(props) => (props.sidebarVisible ? '0' : '-400px')}; /* Show sidebar */
-    bottom: 0;
-    width: 400px;
-    background-color: #f0f0f0;
-    padding: 20px;
-    z-index: 1000;
-    border-right: 1px solid #ccc;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s ease-in-out; /* Smooth transition */
-`
-;
 
 const ContentContainer = styled.div
 `
     flex: 1;
     padding: 5px; 
     overflow-y: auto; 
-`
-;
-
-const ToggleButton = styled.button
-`
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1100;
-    background-color: #008cba;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-`
-;
-
-const SwitchButton = styled.button
-`
-    display: block;
-    width: 100%;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    border: none;
-    background-color: transparent;
-    text-align: left;
-    color: ${(props) => (props.selected ? '#333' : '#666')};
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    padding-left: 20%;
-    font-size: 16px;
-
-    &:hover {
-        background-color: #ddd;
-    }
 `
 ;
 

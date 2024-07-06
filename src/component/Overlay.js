@@ -10,8 +10,6 @@ const Container = styled.div
 `
     height: 100%;
     overflow-y: scroll;
-
-
 `
 ;
 
@@ -46,7 +44,7 @@ const Inner = styled.div
 
 const CloseButton = styled.button
 `
-    position: fixed;
+    position: absolute;
     top: 20px; 
     right: 20px;
     cursor: pointer;
@@ -58,7 +56,8 @@ const CloseButton = styled.button
     border: 3px solid black;
     border-radius: 5px;
     z-index: 9999;
-`;
+`
+;
 
 const PopupOverlay = (props) => {
     //
@@ -74,7 +73,7 @@ const PopupOverlay = (props) => {
     //
     // Hooks
     //
-    const isMobile = useIsMobile();
+    const hookIsMobile = useIsMobile();
 
     //
     // Effects
@@ -93,7 +92,7 @@ const PopupOverlay = (props) => {
     return (
         <Container>
             {showPopup && (
-                <Overlay isMobile={isMobile}>
+                <Overlay isMobile={hookIsMobile}>
                     <Inner>
                         <CloseButton onClick={handleClose}>×</CloseButton>
                         <MatchHistoryDisplay matchHistory={matchHistory} />

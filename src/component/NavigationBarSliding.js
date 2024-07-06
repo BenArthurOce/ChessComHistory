@@ -1,46 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import useIsMobile from '../hooks/useIsMobile';
 
 //
 // Styles
 //
-
 const Container = styled.div
 `
     position: relative;
 `
 ;
 
-
 const ToggleButton = styled.button
 `
-    position: fixed;
+    position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 1100;
+    cursor: pointer;
     background-color: #008cba;
     color: white;
+    font-size: 20px;
+    padding: 5px 10px;
     border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
+    border-radius: 5px;
+    z-index: 9999;
 `
 ;
 
-const SidebarContainer = styled.div
+const Inner = styled.div
 `
     position: fixed;
-    top: 0;
-    left: ${(props) => (props.sidebarVisible ? '0' : '-400px')};
-    bottom: 0;
-    width: 400px;
+    top: ${(props) => (props.sidebarVisible ? '50%' : '-100%')};
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: ${(props) => (props.isMobile ? '100%' : '90%')};
+    max-width: 520px;
     background-color: #f0f0f0;
     padding: 20px;
     z-index: 1000;
-    border-right: 1px solid #ccc;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s ease-in-out;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: top 0.3s ease-in-out;
+    height: 100vh;
+    overflow-y: auto;
 `
 ;
 
@@ -55,22 +57,18 @@ const InputContainer = styled.div
     display: flex;
     flex-direction: column;
     gap: 10px;
-
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 ;
 
-
 const InputRow = styled.div
 `
-    margin-left: 10%;
     display: flex;
     align-items: center;
 `
 ;
-
 
 const Label = styled.label
 `
@@ -79,7 +77,6 @@ const Label = styled.label
     flex: 1;
 `
 ;
-
 
 const Input = styled.input
 `
@@ -90,7 +87,6 @@ const Input = styled.input
     border-radius: 4px;
 `
 ;
-
 
 const ButtonSubmit = styled.button
 `
@@ -103,7 +99,6 @@ const ButtonSubmit = styled.button
     width: 100%;
 `
 ;
-
 
 const NavigationButton = styled.button
 `
@@ -121,36 +116,32 @@ const NavigationButton = styled.button
 `
 ;
 
-const NavigationBarSliding = ({ onFormSubmit, onNavigationButtonClick, userFound }) => {
+const NavigationBarSliding = (props) => {
     //
     // Props
     //
+    const { onFormSubmit, onNavigationButtonClick, userFound } = props;
 
     //
     // States
     //
     const [username, setUsername] = useState("BenArthurOCE");
     const [lastNGames, setLastNGames] = useState(100);
-
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
 
     //
     // Hooks
     //
-    const isMobile = useIsMobile();
-
-    //
-    // Effects
-    //
+    const hookIsMobile = useIsMobile();
 
     //
     // Handlers
     //
     const handleNavigationButtonClick = (myModule) => {
-        console.log(myModule)
+        console.log(myModule);
         setActiveModule(myModule);
-        onNavigationButtonClick(myModule)
+        onNavigationButtonClick(myModule);
         setSidebarVisible(false);
     };
 
@@ -169,72 +160,70 @@ const NavigationBarSliding = ({ onFormSubmit, onNavigationButtonClick, userFound
 
     return (
         <Container>
-
             <ToggleButton onClick={toggleSidebar}>☰</ToggleButton>
+            <Inner sidebarVisible={sidebarVisible} isMobile={hookIsMobile}>
+                <Form onSubmit={handleSubmit}>
+                    <InputContainer>
 
-            <SidebarContainer sidebarVisible={sidebarVisible}> 
+                        <InputRow>
+                            <Label htmlFor="usernameInput">Username:</Label>
+                            <Input
+                                id="usernameInput"
+                                value={username}
+                                onChange={(ev) => setUsername(ev.target.value)}
+                                placeholder="Player name..."
+                            />
+                        </InputRow>
 
+                        <InputRow>
+                            <Label htmlFor="lastngamesInput"># of Games:</Label>
+                            <Input
+                                id="lastngamesInput"
+                                value={lastNGames}
+                                onChange={(ev) => setLastNGames(ev.target.value)}
+                                placeholder="No# of Games"
+                            />
+                        </InputRow>
 
-            <Form onSubmit={handleSubmit}>
-                <InputContainer>
-                    <InputRow>
-                        <Label htmlFor="usernameInput">Username:</Label>
-                        <Input id="usernameInput" value={username} onChange={(ev) => setUsername(ev.target.value)} placeholder="Player name..." />
-                    </InputRow>
+                        <ButtonSubmit type="submit">Search</ButtonSubmit>
+                    </InputContainer>
+                </Form>
 
-                    <InputRow>
-                        <Label htmlFor="lastngamesInput"># of Games:</Label>
-                        <Input id="usernameInput" value={lastNGames} onChange={(ev) => setLastNGames(ev.target.value)} placeholder="No# of Games" />
-                    </InputRow>
-
-                    <ButtonSubmit type="submit">Search</ButtonSubmit>
-                </InputContainer>
-            </Form>
-
-            {/* "userFound" in props */}
-            {userFound && (
+                {userFound && (
                 <>
-                    <NavigationButton
-                        selected={activeModule === 'playerInfo'}
-                        onClick={() => handleNavigationButtonClick('playerInfo')}
-                    >
+                    <NavigationButton selected={activeModule === 'playerInfo'} onClick={() => handleNavigationButtonClick('playerInfo')}>
                         Player Info
                     </NavigationButton>
-                    <NavigationButton
-                        selected={activeModule === 'matchHistory'}
-                        onClick={() => handleNavigationButtonClick('matchHistory')}
-                    >
+
+                    <NavigationButton selected={activeModule === 'matchHistory'} onClick={() => handleNavigationButtonClick('matchHistory')}>
                         Match History
                     </NavigationButton>
-                    <NavigationButton
-                        selected={activeModule === 'tableSummary'}
-                        onClick={() => handleNavigationButtonClick('tableSummary')}
-                    >
+
+                    <NavigationButton selected={activeModule === 'tableSummary'} onClick={() => handleNavigationButtonClick('tableSummary')}>
                         Table Summary
                     </NavigationButton>
-                    <NavigationButton
-                        selected={activeModule === 'heatMapOverview'}
-                        onClick={() => handleNavigationButtonClick('heatMapOverview')}
-                    >
+
+                    <NavigationButton selected={activeModule === 'heatMapOverview'} onClick={() => handleNavigationButtonClick('heatMapOverview')}>
                         Heatmap Overview
                     </NavigationButton>
-                    <NavigationButton
-                        selected={activeModule === 'heatMapAnalysis'}
-                        onClick={() => handleNavigationButtonClick('heatMapAnalysis')}
-                    >
+
+                    <NavigationButton selected={activeModule === 'heatMapAnalysis'} onClick={() => handleNavigationButtonClick('heatMapAnalysis')}>
                         Heatmap Analysis
                     </NavigationButton>
-                    <NavigationButton
-                        selected={activeModule === 'openingAnalysis'}
-                        onClick={() => handleNavigationButtonClick('openingAnalysis')}
-                    >
+
+                    <NavigationButton selected={activeModule === 'openingAnalysis'} onClick={() => handleNavigationButtonClick('openingAnalysis')}>
                         Opening Analysis
                     </NavigationButton>
+
+                    <NavigationButton selected={activeModule === 'debugging'} onClick={() => handleNavigationButtonClick('debugging')}>
+                        Debugging
+                    </NavigationButton>
                 </>
-                )}
-            </SidebarContainer>
+            )}
+            </Inner>
         </Container>
     );
+
 };
 
 export default NavigationBarSliding;

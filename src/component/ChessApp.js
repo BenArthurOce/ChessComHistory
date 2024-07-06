@@ -8,25 +8,31 @@ import NavigationBarSliding from "./NavigationBarSliding";
 //
 // Styles
 //
-const Wrapper = styled.div`
+const Wrapper = styled.div
+`
     padding-left: ${(props) => (props.isMobile ? '0' : '25%')};
     padding-right: ${(props) => (props.isMobile ? '0' : '25%')};
     width: 100vw;
     height: 100vh;
     overflow-y: hidden;
-`;
+`
+;
 
-const Inner = styled.div`
+const Inner = styled.div
+`
     height: 100%;
     border: 1px solid #ddd;
-`;
+`
+;
 
-const Title = styled.h1`
+const Title = styled.h1
+`
     text-align: center;
     padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ddd;
-`;
+`
+;
 
 function ChessApp() {
     //
