@@ -35,7 +35,7 @@ const InputContainer = styled.div
 `
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
     margin-top: 10px;
     margin-bottom: 20px;
     position: sticky;
@@ -43,7 +43,7 @@ const InputContainer = styled.div
     left: 0;
     z-index: 900;
     background-color: #f0f0f0;
-    padding: 10px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
@@ -58,12 +58,15 @@ const FlexRow = styled.div
 
 const Label = styled.label
 `
+    display: flex;
     font-weight: bold;
     margin-right: 10px;
+    align-items: center;
+    justify-content: center;
 `
 ;
 
-const NumberInput = styled.input.attrs({ type: 'number' })
+const NumberInput = styled.input
 `
     padding: 8px;
     font-size: 16px;
@@ -73,6 +76,23 @@ const NumberInput = styled.input.attrs({ type: 'number' })
     margin-right: 10px;
 `
 ;
+
+const NumericIncDecContainer = styled.div
+`
+    display: flex;
+    flex-direction: row;
+`
+
+const IncDecArrow = styled.button
+`
+    width: 50px;
+`
+
+const IncDecArrowContainer = styled.div
+`
+    display: flex;
+    flex-direction: column;
+`
 
 const DropDownBox = styled.select
 `
@@ -109,7 +129,6 @@ const DisplayColumn = styled.div
 `
     min-width: 50px;
     max-width: 55px;
-
 `
 ;
 
@@ -157,6 +176,30 @@ const HeatmapController = (props) => {
         setFirstMove(event.target.value);
     };
 
+    const handleStartMoveInc = () => {
+        if (start < end) {
+            setStart(prev => prev + 1);
+        }
+    };
+    
+    const handleStartMoveDec = () => {
+        if (start > 0) {
+            setStart(prev => prev - 1);
+        }
+    };
+    
+    const handleEndMoveInc = () => {
+        if (end > start) {
+            setEnd(prev => prev + 1);
+        }
+    };
+    
+    const handleEndMoveDec = () => {
+        if (end > start + 1) {
+            setEnd(prev => prev - 1);
+        }
+    };
+
     //
     // Helpers
     //
@@ -201,12 +244,38 @@ const HeatmapController = (props) => {
                     <Title>Heatmap Analysis</Title>
                     
                     <InputContainer>
-                        <div>
-                            <Label htmlFor="startInput">Start:</Label>
-                            <NumberInput id="startInput" value={start} onChange={handleStartChange} />
-                            <Label htmlFor="endInput">End:</Label>
-                            <NumberInput id="endInput" value={end} onChange={handleEndChange} />
-                        </div>
+                        <FlexRow>
+                            {/* <Label htmlFor="startInput">Start:</Label>
+                            <NumberInput id="startInput" value={start} onChange={handleStartChange} /> */}
+
+
+                            <NumericIncDecContainer>
+                                <Label htmlFor="startInput">Start:</Label>
+                                <NumberInput id="startInput" value={start} onChange={handleStartChange} />
+
+                                <IncDecArrowContainer>
+                                    <IncDecArrow onClick={handleStartMoveInc}>&uarr;</IncDecArrow>
+                                    <IncDecArrow onClick={handleStartMoveDec}>&darr;</IncDecArrow>
+                                </IncDecArrowContainer>
+
+                            </NumericIncDecContainer>
+
+
+
+                            <NumericIncDecContainer>
+                                <Label htmlFor="endInput">End:</Label>
+                                <NumberInput id="endInput" value={end} onChange={handleEndChange} />
+
+                                <IncDecArrowContainer>
+                                    <IncDecArrow onClick={handleEndMoveInc}>&uarr;</IncDecArrow>
+                                    <IncDecArrow onClick={handleEndMoveDec}>&darr;</IncDecArrow>
+                                </IncDecArrowContainer>
+
+                            </NumericIncDecContainer>
+
+
+                            {/* <IncDecArrow></IncDecArrow> */}
+                        </FlexRow>
 
                         <FlexRow>
                             <div>

@@ -7,18 +7,6 @@ import styled from "styled-components";
 //
 const Tile = styled.div
 `
-    // position: relative;
-    // padding: 10px;
-    // border-radius: 5px;
-    // margin-bottom: 10px;
-    // text-align: center;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // cursor: pointer;
-    // background-color: ${(props) => props.colorBackground};
-    // border: ${(props) => (props.isClicked ? "3px solid #000" : "1px solid #ccc")};
-
     display: flex;
     align-items: center;
     justify-content: center;
