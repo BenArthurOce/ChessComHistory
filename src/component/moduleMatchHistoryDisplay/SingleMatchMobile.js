@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-import Board from "../../board/Board";
+import Board from "./Board";
 import SingleIcon from "../SingleIcon";
 
 //
@@ -188,7 +188,7 @@ function SingleMatchMobile(props) {
 
                     {/* Chessboard Display. "Board" is a seperate component in a different file */}
                     <BoardContainer>
-                        <Board position={gameInformation.results.fen} />
+                        <Board fen={gameInformation.results.fen} />
                     </BoardContainer>
 
                     {/* Line - General Match Info */}

@@ -68,10 +68,6 @@ const getIcon = (string, color, size) => {
             return <StyledIcon icon={faCopy} color={color} size={size} />;
         case "exchange":
             return <StyledIcon icon={faExchange} color={color} size={size} />;
-        case "whitePawn":
-            return <StyledIcon icon={faChessPawn} color={color} size={size} />;
-        case "blackPawn":
-            return <StyledIcon icon={faChessPawn} color={color} size={size} />;
         case "trophy":
             return <StyledIcon icon={faTrophy} color={color} size={size} />;
         case "pawn":
