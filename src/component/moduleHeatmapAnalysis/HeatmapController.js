@@ -16,8 +16,9 @@ import useHeatmapControllerSortData from "../../hooksSpecific/useHeatmapControll
 //
 const Container = styled.div
 `
-    height: 100%;
-    overflow-y: scroll;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: hidden;
 `
 ;
 
@@ -100,11 +101,6 @@ const DisplayColumnTitle = styled.div
     align-items: center;
     justify-content: center;
     padding-bottom: 10px;
-    // position: sticky;
-    // top: calc(160px - 20px); /* Adjust based on InputContainer height and margin */
-    // left: 0;
-    // z-index: 900;
-    // background-color: lightgrey;
 `
 ;
 
@@ -190,9 +186,9 @@ const HeatmapController = (props) => {
 
     return (
         <Container>
+            {/* {console.log(Object.keys(hookSortData).length===0)}
             {console.log(Object.keys(hookSortData).length===0)}
-            {console.log(Object.keys(hookSortData).length===0)}
-            {console.log(Object.keys(hookSortData))} 
+            {console.log(Object.keys(hookSortData))}  */}
             
             {Object.keys(hookSortData).length === 0 && (
                 <p>HeatmapController - renderFlag is false</p>
@@ -201,7 +197,7 @@ const HeatmapController = (props) => {
             {Object.keys(hookSortData).length > 0 && (
                 
                 <>
-                    {console.log(Object.keys(hookSortData))} 
+                    {/* {console.log(Object.keys(hookSortData))}  */}
                     <Title>Heatmap Analysis</Title>
                     
                     <InputContainer>

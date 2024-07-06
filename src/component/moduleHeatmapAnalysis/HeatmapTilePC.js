@@ -106,19 +106,19 @@ const HeatmapTilePC = (props) => {
     //
     const handleButtonPress = (tile) => {
         handleButtonClick(tileInformation);
+        console.log(tileInformation)
     };
 
-    // Handles click event of the tile
-    const handleSingleTileClick = () => {
-        setIsDisplayPopup(true);
-        handleButtonClick(tileInformation);
-    };
+    // When the user clicks an individual tile - gets small popup of tile information
+    const handleHeatmapTileClicked = () => {
+        setIsDisplayPopup(!isClicked);
+    }
 
     return (
         <>
             {props && (
                 <>
-                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => setIsDisplayPopup(!isClicked)}>
+                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => handleHeatmapTileClicked()}>
                         <PopupTextSpan>
                             <p>{tile.move}</p>
                         </PopupTextSpan>

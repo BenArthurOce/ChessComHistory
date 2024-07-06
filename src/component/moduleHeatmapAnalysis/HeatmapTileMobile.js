@@ -7,17 +7,29 @@ import styled from "styled-components";
 //
 const Tile = styled.div
 `
-    position: relative;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    text-align: center;
+    // position: relative;
+    // padding: 10px;
+    // border-radius: 5px;
+    // margin-bottom: 10px;
+    // text-align: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // cursor: pointer;
+    // background-color: ${(props) => props.colorBackground};
+    // border: ${(props) => (props.isClicked ? "3px solid #000" : "1px solid #ccc")};
+
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     background-color: ${(props) => props.colorBackground};
-    border: ${(props) => (props.isClicked ? "3px solid #000" : "1px solid #ccc")};
+    margin: 10px 0px;
+
+    position: relative;
 `
 ;
 
@@ -49,13 +61,15 @@ const PopupTextSpan = styled.span
 ;
 
 
-const HeatmapTile = (props) => {
+const HeatmapTileMobile = (props) => {
 
     //
     // Props
     //
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
+
+    
 
     //
     // States
@@ -106,19 +120,19 @@ const HeatmapTile = (props) => {
     //
     const handleButtonPress = (tile) => {
         handleButtonClick(tileInformation);
+        console.log(tileInformation)
     };
 
-    // Handles click event of the tile
-    const handleSingleTileClick = () => {
-        setIsDisplayPopup(true);
-        handleButtonClick(tileInformation);
-    };
+    // When the user clicks an individual tile - gets small popup of tile information
+    const handleHeatmapTileClicked = () => {
+        setIsDisplayPopup(!isClicked);
+    }
 
     return (
         <>
             {props && (
                 <>
-                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => setIsDisplayPopup(!isClicked)}>
+                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => handleHeatmapTileClicked()}>
                         <PopupTextSpan>
                             <p>{tile.move}</p>
                         </PopupTextSpan>
@@ -147,4 +161,4 @@ const HeatmapTile = (props) => {
     );
 }
 
-export default HeatmapTile;
+export default HeatmapTileMobile;

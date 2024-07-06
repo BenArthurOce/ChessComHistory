@@ -6,6 +6,9 @@ import useIsMobile from "../../hooks/useIsMobile";
 import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControllerDataset";
 import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapControllerWinsLossDraw";
 
+import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
+import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
+
 //
 // Styles
 //
@@ -47,6 +50,7 @@ const FlexRow = styled.div
 `
     display: flex;
     gap: 10px;
+
 `
 ;
 
@@ -78,12 +82,15 @@ const Row = styled.div
     display: flex;
     align-items: center;
     gap: 10px;
+    min-height: 60px;
 `
 ;
 
 const TurnNumber = styled.div
 `
+    padding-left: 5px;
     font-weight: bold;
+    min-width: 20%;
 `
 ;
 
@@ -95,17 +102,6 @@ const MovesContainer = styled.div
 `
 ;
 
-const Tile = styled.div
-`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-`
-;
 
 const HeatmapOverview = (props) => {
 
@@ -157,12 +153,18 @@ const HeatmapOverview = (props) => {
         setFirstMove(event.target.value);
     };
 
+    // For debugging purposes. When the component is clicked
+    const handleIndividualTileClick = (item) => {
+        // console.log("handleIndividualTileClick")
+        // console.log(item);
+    };
+
+
+
     return (
         <Container>
             <Title>Heatmap Overview</Title>
-
-
-                <div>
+                <>
                     <InputContainer>
                         <FlexRow>
                             <div>
@@ -188,22 +190,45 @@ const HeatmapOverview = (props) => {
                     <TileContainer>
                         {Object.values(hookWinLossDraw).map((array, index) => (
                             <Row key={`row-${index}`}>
-                                <TurnNumber>Turn: {index}</TurnNumber>
+                                <TurnNumber>Turn: {index + 1}</TurnNumber> {/* Add 1 to index */}
                                 <MovesContainer>
                                     {array.map((item, innerIndex) => (
-                                        <Tile key={`tile-${index}-${innerIndex}`}>
-                                            <p>{item.move}</p>
-                                        </Tile>
+
+
+                                        <HeatmapTileMobile
+                                            tileInformation={item}
+                                            isClicked={singleTileSelected === item}
+                                            handleButtonClick={handleIndividualTileClick}
+                                        />
+
+                                        // <Tile key={`tile-${index}-${innerIndex}`} onClick={() => handleComponentClick(item)}>
+                                        //     <p>{item.move}</p>
+                                        // </Tile>
                                     ))}
                                 </MovesContainer>
                             </Row>
                         ))}
                     </TileContainer>
-                </div>
-
+                </>
         </Container>
     );
 
 
 };
 export default HeatmapOverview;
+
+// {hookSortData.king.map((moveObj) => (
+//     <HeatmapTileMobile
+//         tileInformation={moveObj}
+//         isClicked={singleTileSelected === moveObj}
+//         handleButtonClick={handleIndividualTileClick}
+//     />
+// ))}
+
+// {hookSortData.king.map((moveObj) => (
+//     <HeatmapTileMobile
+//         tileInformation={moveObj}
+//         isClicked={singleTileSelected === moveObj}
+//         handleButtonClick={handleIndividualTileClick}
+//     />
+// ))}

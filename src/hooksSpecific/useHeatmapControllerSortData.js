@@ -65,15 +65,15 @@ const useHeatmapControllerSortData = (hookInput, start, end, selectedTeam, first
 
         function returnMoveStats(move, data) {
             const test = {
-                move: move,
-                win: performSecondaryFilterResult(move, "win", data).length,
-                lose: performSecondaryFilterResult(move, "lose", data).length,
-                draw: performSecondaryFilterResult(move, "draw", data).length,
-                played: performSecondaryFilterPlayed(move, data).length,
-                piece: classifyMove(move),
-                nullcount: 0,
-                winpct: 0,
-                matches: performSecondaryFilterPlayed(move, data),
+                  move: move
+                , played: performSecondaryFilterPlayed(move, data).length
+                , win: performSecondaryFilterResult(move, "win", data).length
+                , lose: performSecondaryFilterResult(move, "lose", data).length
+                , draw: performSecondaryFilterResult(move, "draw", data).length
+                , winpct: 0
+                , piece: classifyMove(move)
+                , nullcount: 0
+                , matches: performSecondaryFilterPlayed(move, data)
             };
 
             test["winpct"] = (test["win"] / test["played"]) * 100;

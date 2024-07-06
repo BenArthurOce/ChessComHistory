@@ -86,17 +86,12 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
                     const draws  = filterResult("draw", value2).length;
                     const played = wins + losses + draws;
 
-
-                    // console.log(key2)
-                    // console.log(wins.length)
-                    // console.log(losses.length)
-                    // console.log(draws.length)
-
-                    const winrate = ((wins / played) * 100).toFixed(2)
+                    const winpct = (wins / played)
+                    const winrate = ((wins / played) * 100)
                     const score = winrate * played  // Tries to get games over 1 played - 100%
                     const isPositive = winrate >= 50
 
-                    const objectSample = {"turn": key, "move": key2, "played": played, "wins": wins, "losses": losses, "draws": draws, "winrate": winrate, "score": score, "isPositive": isPositive}
+                    const objectSample = {"turn": key, "move": key2, "played": played, "win": wins, "lose": losses, "draw": draws, "winpct": winrate, "score": score, "isPositive": isPositive, "matches": []}
 
                     result.push(objectSample)
 
@@ -120,12 +115,18 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
         // Filter and sort moves within each turn
         const topMovesPerTurn = Object.keys(movesByTurn).reduce((result, turn) => {
             const moves = movesByTurn[turn];
+
             // Filter moves where isPositive is true
             const positiveMoves = moves.filter(move => move.isPositive);
+
+            // Filter moves where played is greater than 1
+            const moreThanOneMove = positiveMoves.filter(move => move.played > 1);
+
             // Sort positiveMoves by score in descending order
-            positiveMoves.sort((a, b) => b.score - a.score);
-            // Take top 3 moves for this turn
-            result[turn] = positiveMoves.slice(0, 3);
+            moreThanOneMove.sort((a, b) => b.score - a.score);
+
+            // Take top 4 moves for this turn
+            result[turn] = moreThanOneMove.slice(0, 4);
             return result;
         }, {});
 
