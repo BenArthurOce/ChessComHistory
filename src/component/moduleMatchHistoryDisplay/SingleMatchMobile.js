@@ -210,7 +210,7 @@ function SingleMatchMobile(props) {
                     </Row>
 
                     {/* Line - White Details */}
-                    <Icon icon={"whitePawn"} color={"White"} size={13} ></Icon>
+                    <Icon icon={"pawn"} color={"white"} size={13} ></Icon>
                     <Row>
                         <p>{gameInformation.white.username}</p>
                         &nbsp;
@@ -218,7 +218,7 @@ function SingleMatchMobile(props) {
                     </Row>
 
                     {/* Line - Black Details */}
-                    <Icon icon={"blackPawn"} color={"Black"} size={13} ></Icon>
+                    <Icon icon={"pawn"} color={"black"} size={13} ></Icon>
                     <Row>
                         <p>{gameInformation.black.username}</p>
                         &nbsp;

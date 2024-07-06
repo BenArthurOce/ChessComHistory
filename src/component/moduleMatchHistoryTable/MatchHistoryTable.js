@@ -238,26 +238,26 @@ function MatchHistoryTable(props) {
                             <tr>
                                 <FirstColumnCell>Daily</FirstColumnCell>
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.daily.wins.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.daily.wins.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.daily.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.daily.wins.black.length)}
                                     <CellTotal> <b>Total: {stats.daily.wins.white.length + stats.daily.wins.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.daily.losses.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.daily.losses.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.daily.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.daily.losses.black.length)}
                                     <CellTotal> <b>Total: {stats.daily.losses.white.length + stats.daily.losses.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.daily.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.daily.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.daily.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.daily.draws.black.length)}
                                     <CellTotal> <b>Total: {stats.daily.draws.white.length + stats.daily.draws.black.length}</b> </CellTotal>
                                 </TableCell>
                                 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.daily.wins.white.length + stats.daily.losses.white.length + stats.daily.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.daily.wins.black.length + stats.daily.losses.black.length + stats.daily.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.daily.wins.white.length + stats.daily.losses.white.length + stats.daily.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.daily.wins.black.length + stats.daily.losses.black.length + stats.daily.draws.black.length)}
                                     <CellTotal>
                                         <b>Total: {stats.daily.wins.white.length + stats.daily.losses.white.length + stats.daily.draws.white.length +
                                                    stats.daily.wins.black.length + stats.daily.losses.black.length + stats.daily.draws.black.length}
@@ -270,26 +270,26 @@ function MatchHistoryTable(props) {
                             <tr>
                                 <FirstColumnCell>Rapid</FirstColumnCell>
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.rapid.wins.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.rapid.wins.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.rapid.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.rapid.wins.black.length)}
                                     <CellTotal> <b>Total: {stats.rapid.wins.white.length + stats.rapid.wins.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.rapid.losses.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.rapid.losses.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.rapid.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.rapid.losses.black.length)}
                                     <CellTotal> <b>Total: {stats.rapid.losses.white.length + stats.rapid.losses.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.rapid.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.rapid.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.rapid.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.rapid.draws.black.length)}
                                     <CellTotal> <b>Total: {stats.rapid.draws.white.length + stats.rapid.draws.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.rapid.wins.white.length + stats.rapid.losses.white.length + stats.rapid.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.rapid.wins.black.length + stats.rapid.losses.black.length + stats.rapid.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.rapid.wins.white.length + stats.rapid.losses.white.length + stats.rapid.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.rapid.wins.black.length + stats.rapid.losses.black.length + stats.rapid.draws.black.length)}
                                     <CellTotal>
                                         <b>Total: {stats.rapid.wins.white.length + stats.rapid.losses.white.length + stats.rapid.draws.white.length +
                                                    stats.rapid.wins.black.length + stats.rapid.losses.black.length + stats.rapid.draws.black.length}
@@ -302,27 +302,27 @@ function MatchHistoryTable(props) {
                             <tr>
                                 <FirstColumnCell>Blitz</FirstColumnCell>
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.blitz.wins.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.blitz.wins.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.blitz.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.blitz.wins.black.length)}
                                     <CellTotal> <b>Total: {stats.blitz.wins.white.length + stats.blitz.wins.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.blitz.losses.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.blitz.losses.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.blitz.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.blitz.losses.black.length)}
                                     <CellTotal> <b>Total: {stats.blitz.losses.white.length + stats.blitz.losses.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.blitz.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.blitz.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.blitz.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.blitz.draws.black.length)}
                                     <CellTotal> <b>Total: {stats.blitz.draws.white.length + stats.blitz.draws.black.length}</b> </CellTotal>
                                 </TableCell>
 
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.blitz.wins.white.length + stats.blitz.losses.white.length + stats.blitz.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.blitz.wins.black.length + stats.blitz.losses.black.length + stats.blitz.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.blitz.wins.white.length + stats.blitz.losses.white.length + stats.blitz.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.blitz.wins.black.length + stats.blitz.losses.black.length + stats.blitz.draws.black.length)}
                                     <CellTotal>
                                         <b>Total: {stats.blitz.wins.white.length + stats.blitz.losses.white.length + stats.blitz.draws.white.length +
                                                    stats.blitz.wins.black.length + stats.blitz.losses.black.length + stats.blitz.draws.black.length}
@@ -335,26 +335,26 @@ function MatchHistoryTable(props) {
                             <tr>
                                 <FirstColumnCell>Bullet</FirstColumnCell>
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.bullet.wins.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.bullet.wins.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.bullet.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.bullet.wins.black.length)}
                                     <CellTotal> <b>Total: {stats.bullet.wins.white.length + stats.bullet.wins.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.bullet.losses.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.bullet.losses.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.bullet.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.bullet.losses.black.length)}
                                     <CellTotal> <b>Total: {stats.bullet.losses.white.length + stats.bullet.losses.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.bullet.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.bullet.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.bullet.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.bullet.draws.black.length)}
                                     <CellTotal> <b>Total: {stats.bullet.draws.white.length + stats.bullet.draws.black.length}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.bullet.wins.white.length + stats.bullet.losses.white.length + stats.bullet.draws.white.length)}
-                                    {renderPawnIcon("blackPawn", "black", stats.bullet.wins.black.length + stats.bullet.losses.black.length + stats.bullet.draws.black.length)}
+                                    {renderPawnIcon("pawn", "white", stats.bullet.wins.white.length + stats.bullet.losses.white.length + stats.bullet.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.bullet.wins.black.length + stats.bullet.losses.black.length + stats.bullet.draws.black.length)}
                                     <CellTotal>
                                         <b>Total: {stats.bullet.wins.white.length + stats.bullet.losses.white.length + stats.bullet.draws.white.length +
                                                    stats.bullet.wins.black.length + stats.bullet.losses.black.length + stats.bullet.draws.black.length}
@@ -367,26 +367,26 @@ function MatchHistoryTable(props) {
                             <tr>
                                 <FirstColumnCell>Total</FirstColumnCell>
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.total.wins.white)}
-                                    {renderPawnIcon("blackPawn", "black", stats.total.wins.black)}
+                                    {renderPawnIcon("pawn", "white", stats.total.wins.white)}
+                                    {renderPawnIcon("pawn", "black", stats.total.wins.black)}
                                     <CellTotal> <b>Total: {stats.total.wins.white + stats.total.wins.black}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.total.losses.white)}
-                                    {renderPawnIcon("blackPawn", "black", stats.total.losses.black)}
+                                    {renderPawnIcon("pawn", "white", stats.total.losses.white)}
+                                    {renderPawnIcon("pawn", "black", stats.total.losses.black)}
                                     <CellTotal> <b>Total: {stats.total.losses.white + stats.total.losses.black}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.total.draws.white)}
-                                    {renderPawnIcon("blackPawn", "black", stats.total.draws.black)}
+                                    {renderPawnIcon("pawn", "white", stats.total.draws.white)}
+                                    {renderPawnIcon("pawn", "black", stats.total.draws.black)}
                                     <CellTotal> <b>Total: {stats.total.draws.white + stats.total.draws.black}</b> </CellTotal>
                                 </TableCell>
 
                                 <TableCell>
-                                    {renderPawnIcon("whitePawn", "white", stats.total.wins.white + stats.total.losses.white + stats.total.draws.white)}
-                                    {renderPawnIcon("blackPawn", "black", stats.total.wins.black + stats.total.losses.black + stats.total.draws.black)}
+                                    {renderPawnIcon("pawn", "white", stats.total.wins.white + stats.total.losses.white + stats.total.draws.white)}
+                                    {renderPawnIcon("pawn", "black", stats.total.wins.black + stats.total.losses.black + stats.total.draws.black)}
                                     <CellTotal>
                                         <b>Total: {stats.total.wins.white + stats.total.losses.white + stats.total.draws.white +
                                                    stats.total.wins.black + stats.total.losses.black + stats.total.draws.black}
