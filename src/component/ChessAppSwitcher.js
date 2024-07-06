@@ -9,9 +9,8 @@ import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisCo
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import Debugging from './Debugging';
 
-//
-// Styles
-//
+import LoadingScreen from './LoadingScreen';
+
 //
 // Styles
 //
@@ -23,7 +22,6 @@ const Container = styled.div
     overflow-y: hidden; /* Prevent double scrollbars */
 `
 ;
-
 
 const ContentContainer = styled.div
 `
@@ -75,7 +73,7 @@ const ChessAppSwitcher = (props) => {
                     onDataRequest={handleChildData}
                 />
 
-                {!gotDataFlag && <p>Component: ChessAppSwitcher: gotDataFlag is false</p>}
+                {!gotDataFlag && <LoadingScreen />}
 
                 {gotDataFlag && (
                     <>
