@@ -10,21 +10,21 @@ import useSingleMatchObjects from "./useSingleMatchObjects";
 const useBuildMatchesLichess = (hookInput, username) => {
     const [hookOutput, setHookOutput] = useState('')
 
-    // const hookUseParsePGN = useParsePGN(hookInput);
-    // const hookUseSingleMatchObjects = useSingleMatchObjects(hookInput, hookUseParsePGN, username, "chesscom");
+    const hookUseParsePGN = useParsePGN(hookInput);
+    const hookUseSingleMatchObjects = useSingleMatchObjects(hookInput, hookUseParsePGN, username, "lichess");
 
 
 
-    // useEffect(() => {
-    //     if (!hookInput || hookInput.length === 0) { return}
-    //     if (!username || username.length === 0) { return}
-    //     runHook()
-    // }, [username, hookUseParsePGN, hookUseSingleMatchObjects]);
+    useEffect(() => {
+        if (!hookInput || hookInput.length === 0) { return}
+        if (!username || username.length === 0) { return}
+        runHook()
+    }, [username, hookUseParsePGN, hookUseSingleMatchObjects]);
 
 
-    // const runHook = () => {
-    //     setHookOutput(hookUseSingleMatchObjects)
-    // };
+    const runHook = () => {
+        setHookOutput(hookUseSingleMatchObjects)
+    };
 
     return hookOutput;
 };

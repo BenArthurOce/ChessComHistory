@@ -7,7 +7,7 @@ import React, {
 } from "react";
 
 import useAPILichess from "../hooksSpecific/useAPILichess";
-import useParseLichess from "../hooksSpecific/useParseLichess";
+import useBuildMatchesLichess from "../hooksSpecific/useBuildMatchesLichess";
 
 
 
@@ -16,75 +16,27 @@ const RequestLichess = (props) => {
     //
     // Props
     //
-    const { username, lastNGames, onDataRequest } = props
-
-    // console.log(props)
-
-    //
-    // States
-    //
-
-    //
-    // States
-    //
-    const [renderFlag, setRenderFlag] = useState(false);
-
-
-    // const {games, loading, error} = useLichessAPI("BenArthurOCE", lastNGames)
-    // const matches = useParseLichess(games, username)
-
-    // console.log(username)
-    // console.log("---")
-
+    const { username, lastNGames, onDataRequest } = props;
 
     //
     // Hooks
     //
-
-    const { games, loading, error } = useAPILichess(username, lastNGames);
-    const matches = useParseLichess(games, username);
-
-
-
+    const url = `https://lichess.org/api/games/user/${username}?pgnInJson=true&max=${lastNGames}&accuracy=true&opening=true&evals=true&lastFen=true`
+    const hookData = useAPILichess(url, lastNGames);
+    const hookParsedMatches = useBuildMatchesLichess(hookData, username)
 
     //
     // Effects
     //
     useEffect(() => {
-        if (matches) {
-            onDataRequest(matches); // Send parsed data to parent
-            setRenderFlag(checkIfAbleToRender(matches));
-        } else {
-            setRenderFlag(false);
-        }
-    }, [matches, onDataRequest]);
-
-
-    //
-    // Helpers
-    //
-    const checkIfAbleToRender = (array) => {
-        if (array === null || array === undefined) {
-            return false;
-        }
-        if (array <= 1) {
-            return false;
-        }
-        return true;
-    };
+        if (!hookData || hookData.length === 0) {return}
+        if (!hookParsedMatches || hookParsedMatches.length === 0) {return}
+        onDataRequest(hookParsedMatches)    // Sends the data to "ChessAppSwitcher"
+    }, [hookData, hookParsedMatches]);
 
 
     return (
         <>
-            {/* {data && renderFlag ? (
-                <>
-                
-                </>
-            ) : (
-                <>
-                    <p>MatchesRequest - Loading...</p>
-                </>
-            )} */}
         </>
     );
 };

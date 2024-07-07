@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
-import RequestChessCom from './RequestChessCom';
 import HeatmapOverview from './moduleHeatmapOverview/HeatmapOverview';
 import HeatmapController from './moduleHeatmapAnalysis/HeatmapController';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
@@ -10,6 +9,11 @@ import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay
 import Debugging from './Debugging';
 
 import LoadingScreen from './LoadingScreen';
+
+
+import RequestChessCom from './RequestChessCom';
+import RequestLichess from './RequestLichess';
+
 
 //
 // Styles
@@ -64,12 +68,20 @@ const ChessAppSwitcher = (props) => {
 
             {/* "gotDataFlag" = false means we still need to fetch the data. "handleChildData" will change the flag */}
             {props && !gotDataFlag && (
+                // <>
+                //     <RequestChessCom
+                //         username={username}
+                //         lastNGames={lastNGames}
+                //         onDataRequest={handleChildData}
+                //     />
+                // </>
+
                 <>
-                    <RequestChessCom
-                        username={username}
-                        lastNGames={lastNGames}
-                        onDataRequest={handleChildData}
-                    />
+                <RequestLichess
+                    username={username}
+                    lastNGames={lastNGames}
+                    onDataRequest={handleChildData}
+                />
                 </>
             )}
 

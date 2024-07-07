@@ -135,7 +135,8 @@ const NavigationBarSliding = (props) => {
     // States
     //
     const [username, setUsername] = useState("BenArthurOCE");
-    const [lastNGames, setLastNGames] = useState(100);
+    // const [lastNGames, setLastNGames] = useState(100);
+    const [lastNGames, setLastNGames] = useState(14);
     const [website, setWebsite] = useState('chesscom');
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
