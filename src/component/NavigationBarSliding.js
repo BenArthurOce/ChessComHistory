@@ -130,13 +130,13 @@ const NavigationBarSliding = (props) => {
     // Props
     //
     const { onFormSubmit, onNavigationButtonClick, userFound } = props;
+    // console.log(props)
 
     //
     // States
     //
     const [username, setUsername] = useState("BenArthurOCE");
-    // const [lastNGames, setLastNGames] = useState(100);
-    const [lastNGames, setLastNGames] = useState(14);
+    const [lastNGames, setLastNGames] = useState(0);
     const [website, setWebsite] = useState('chesscom');
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
@@ -157,7 +157,7 @@ const NavigationBarSliding = (props) => {
 
     const handleSubmit = (ev) => {
         ev.preventDefault();
-        onFormSubmit({ username, lastNGames });
+        onFormSubmit({ username, lastNGames, website });
         setSidebarVisible(false);
     };
 
@@ -177,7 +177,7 @@ const NavigationBarSliding = (props) => {
     // Effects
     //
     useEffect(() => {
-        console.log(website);
+        // console.log(website);
     }, [website]);
 
     //
@@ -201,9 +201,8 @@ const NavigationBarSliding = (props) => {
                             value={website}
                             onChange={handleWebsiteChange}
                             >
-                            <option value="chesscom">Chess.com</option>
-                            <option value="lichess">Lichess</option>
-                            <option value="both">Both</option>
+                                <option value="chesscom">Chess.com</option>
+                                <option value="lichess">Lichess</option>
                             </DropDownBox>
                         </InputRow>
 

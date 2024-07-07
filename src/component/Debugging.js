@@ -55,8 +55,8 @@ const Debugging = (props) => {
         const game3 = "1.d4 d5 2.Bf4 c6 3.Nf3 Bf5 4.c3 f6 5.e3 e6 6.Bd3 Bxd3 7.Qxd3 Bd6 8.Bg3 Ne7 9.Nbd2 O-O 10.e4 e5 11.dxe5 dxe4 12.Nxe4 Bxe5 13.Qxd8 Rxd8 14.Nxe5 fxe5 15.Bxe5 Nd7 16.Bg3 Nf6 17.Nxf6+ gxf6 18.O-O Rd2 19.Rab1 Rad8 20.Bf4 Rc2 21.Rfc1 Rxc1+ 22.Rxc1 Ng6 23.Bg3 f5 24.f4 Rd2 25.Rb1 Kf7 26.a3 Ke6 27.h4 Kd5 28.h5 Ne7 29.Bh4 Nc8 30.Be1 Rc2 31.b4 Ke4 32.g3 Kf3 33.Rd1 Ke2 34.Rd8 Nb6 35.Rb8 Kxe1 36.Rxb7 Rxc3 37.Rxh7 Rxg3+ 38.Kh2 Rg4 39.Rf7 Kf2 40.Kh3 Rg3+ 41.Kh4 Kf3 42.Rxf5 Nc4 43.h6 Ne3 44.Rf7 Ng4 45.h7 Rg2 46.h8=Q Rh2+ 47.Kg5 Rxh8 48.f5 Rg8+ 49.Kh4 Kf4 50.Kh3 Nf2+ 51.Kh2 Kf3 52.Rh7 Kf4 53.f6 Ng4+ 54.Kh3 Nxf6 55.Rf7 Rg6 56.Rxa7 Ke5 57.Ra5+ Kd6 58.Rc5 Nd5 59.Rc4 Rg5 60.a4 Rg8 61.b5 cxb5 62.axb5 Nb6 63.Rc6+ Kd5 64.Rxb6 Kc5 65.Rb7 Rc8 66.b6 Kc6 67.Rh7 Kxb6 68.Rh6+ Kb7 69.Rh4 Rc7 70.Rb4+ Kc8 71.Rb6 Kd8 72.Rb8+ Rc8 73.Rb1 Kc7 74.Rc1+ Kd8 75.Rg1 Rc7 76.Rg8+ Kd7 77.Rg7+ Kc6 78.Rg2 Kb7 79.Ra2 Kc8 80.Ra8+ Kd7 81.Rh8 Kd6 82.Rh4 Kd7 83.Rd4+ Kc8 84.Ra4 Kb7 85.Rb4+ Kc6 86.Rh4 Kb7 87.Rh8 Kc6 88.Rh4 Kb7 1/2-1/2"
         
         const a = findOpeningMatch(game3, openingDictionary)
-        // console.log(a)
-        // console.log()
+        // // console.log(a)
+        // // console.log()
 
     }, [matchHistory]);
 
@@ -67,21 +67,21 @@ const Debugging = (props) => {
 
     const onButton1Click = () => {
         const sortedArray = matchHistory.sort((a, b) => b.general.id - a.general.id);
-        // console.log(sortedArray)
-        // // console.log(matchHistory)
-        // // console.log("\nbutton 1 clicked\n")
+        // // console.log(sortedArray)
+        // // // console.log(matchHistory)
+        // // // console.log("\nbutton 1 clicked\n")
     };
 
     const onButton2Click = () => {
-        // console.log("\nbutton 2 clicked\n")
+        // // console.log("\nbutton 2 clicked\n")
     };
 
     const onButton3Click = () => {
-        // console.log("\nbutton 3 clicked\n")
+        // // console.log("\nbutton 3 clicked\n")
     };
 
     const onButton4Click = () => {
-        // console.log("\nbutton 4 clicked\n")
+        // // console.log("\nbutton 4 clicked\n")
     };
 
 

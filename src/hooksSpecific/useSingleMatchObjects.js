@@ -152,8 +152,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         const winner = getMatchWinner(match);
         const playerResult = getPlayerResult(match, parsedData, username);
     
-        console.log(match)
-        console.log(parsedData)
+        // console.log(match)
+        // console.log(parsedData)
     
         if (website === "chesscom") {
             return {

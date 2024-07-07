@@ -132,6 +132,7 @@ function ChessApp() {
                         lastNGames={formData.lastNGames}
                         activeModule="playerInfo"
                         playerInformation={data}
+                        website={formData.website}
                     />
                 )}
 
@@ -142,6 +143,7 @@ function ChessApp() {
                         lastNGames={formData.lastNGames}
                         activeModule={activeModule}
                         playerInformation={data}
+                        website={formData.website}
                     />
                 )}
             </Inner>

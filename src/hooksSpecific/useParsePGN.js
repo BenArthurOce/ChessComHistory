@@ -5,11 +5,11 @@ const useParseFEN = (hookInput) => {
 
 
     useEffect(() => {
-        // console.log(`hookInput: ${hookInput}`)
+        // // console.log(`hookInput: ${hookInput}`)
         if (!hookInput || hookInput.length === 0) { return}
 
         runHook(hookInput)
-        // console.log(hookInput)
+        // // console.log(hookInput)
 
     }, [hookInput]);
 

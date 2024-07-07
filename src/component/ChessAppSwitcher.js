@@ -39,7 +39,8 @@ const ChessAppSwitcher = (props) => {
     //
     // Props
     //
-    const { username, lastNGames, activeModule, playerInformation } = props;
+    const { username, lastNGames, activeModule, playerInformation, website } = props;
+    // console.log(props)
 
     //
     // States
@@ -53,9 +54,9 @@ const ChessAppSwitcher = (props) => {
     //
     const handleChildData = (data) => {
         if (!data) {return}
-        console.log("handleChildData")
-        console.log(data)
-        console.log()
+        // console.log("handleChildData")
+        // console.log(data)
+        // console.log()
 
         
 
@@ -68,20 +69,23 @@ const ChessAppSwitcher = (props) => {
 
             {/* "gotDataFlag" = false means we still need to fetch the data. "handleChildData" will change the flag */}
             {props && !gotDataFlag && (
-                // <>
-                //     <RequestChessCom
-                //         username={username}
-                //         lastNGames={lastNGames}
-                //         onDataRequest={handleChildData}
-                //     />
-                // </>
 
                 <>
-                <RequestLichess
-                    username={username}
-                    lastNGames={lastNGames}
-                    onDataRequest={handleChildData}
-                />
+                    {website === "chesscom" && (
+                        <RequestChessCom
+                            username={username}
+                            lastNGames={lastNGames}
+                            onDataRequest={handleChildData}
+                        />
+                    )}
+
+                    {website === "lichess" && (
+                        <RequestLichess
+                            username={username}
+                            lastNGames={lastNGames}
+                            onDataRequest={handleChildData}
+                        />
+                    )}   
                 </>
             )}
 

@@ -19,7 +19,7 @@ const useChessComAPI = (urls, lastNGames) => {
 
         while (currentIndex <= urls.length && arrayOfMatches.length <= lastNGames) {
             
-            console.log(`while ${currentIndex} <= ${urls.length}  &&  ${arrayOfMatches.length}  <=  ${lastNGames} `)
+            // console.log(`while ${currentIndex} <= ${urls.length}  &&  ${arrayOfMatches.length}  <=  ${lastNGames} `)
         
             try {
                 const result = await getData(urls[currentIndex]);
