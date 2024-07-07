@@ -7,10 +7,6 @@ import React, {
 } from "react";
 
 // Hooks
-import useFetchMultiple from "../hooks/useFetchMultiple";
-import useMatchHistoryAPI from "../hooksSpecific/useMatchHistoryAPI";
-import useMatchHistoryParsePGN from "../hooksSpecific/useMatchHistoryParsePGN";
-
 import useChessComAPI from "../hooksSpecific/useChessComAPI";
 import useChessComBuildMatchObjects from "../hooksSpecific/useChessComBuildMatchObjects";
 
@@ -70,11 +66,6 @@ const MatchesRequest = (props) => {
     //
     const { username, lastNGames, onDataRequest } = props;
 
-    //
-    // States
-    //
-    const [renderFlag, setRenderFlag] = useState(false);
-
     const urls = [
         `https://api.chess.com/pub/player/${username}/games/2024/07`,
         `https://api.chess.com/pub/player/${username}/games/2024/06`,
@@ -90,51 +81,22 @@ const MatchesRequest = (props) => {
     //
     // Hooks
     //
-    // const { data, loading, error } = useChessComAPI(urls, 500);
-
-    const hookData = useChessComAPI(urls, 500);
-
-
-
+    const hookData = useChessComAPI(urls, lastNGames);
     const hookParsedMatches = useChessComBuildMatchObjects(hookData, username)
-    // console.log(data)
 
-    // const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
-    // const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN( hookArrayOfUnparsedMatchObjects, username);
 
     //
     // Effects
     //
-    // useEffect(() => {
-    //     if (hookArrayOfParsedMatchObjects) {
-    //         onDataRequest(hookArrayOfParsedMatchObjects); // Send parsed data to parent
-    //         setRenderFlag(checkIfAbleToRender(hookArrayOfParsedMatchObjects));
-    //     } else {
-    //         setRenderFlag(false);
-    //     }
-    // }, [hookArrayOfParsedMatchObjects, onDataRequest]);
-
     useEffect(() => {
         if (!hookData || hookData.length === 0) {return}
-        console.log(hookData)
-    }, [hookData]);
-
-    //
-    // Helpers
-    //
+        if (!hookParsedMatches || hookParsedMatches.length === 0) {return}
+        onDataRequest(hookParsedMatches)    // Sends the data to "ChessAppSwitcher"
+    }, [hookData, hookParsedMatches]);
 
 
     return (
         <>
-            {hookData && renderFlag ? (
-                <>
-                
-                </>
-            ) : (
-                <>
-                    <p>MatchesRequest - Loading...</p>
-                </>
-            )}
         </>
     );
 }

@@ -2,21 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 
 // The amount of games we need (will be passed as an argument)
 const useChessComAPI = (urls, lastNGames) => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
     const [outputArray, setOutputArray] = useState([]);          // This will hold all the unparsed match objects from the API
 
 
 
     useEffect(() => {
-        if (!urls || urls.length === 0) {
-            return;
-        }
-        if (!lastNGames || lastNGames === 0) {
-            return;
-        }
+        if (!urls || urls.length === 0) {return;}
+        if (!lastNGames || lastNGames === 0) {return;}
         runHook();
     }, [lastNGames]);
 
@@ -27,15 +19,16 @@ const useChessComAPI = (urls, lastNGames) => {
 
         while (currentIndex <= urls.length && arrayOfMatches.length <= lastNGames) {
             
-            // console.log(`while ${currentIndex} <= ${urls.length}  &&  ${arrayOfMatches.length}  <=  ${lastNGames} `)
+            console.log(`while ${currentIndex} <= ${urls.length}  &&  ${arrayOfMatches.length}  <=  ${lastNGames} `)
         
             try {
                 const result = await getData(urls[currentIndex]);
-                arrayOfMatches.push(...result.games)    // Get the result of the games, and add them to the local function array
+                const reversed = result.games.reverse();
+                arrayOfMatches.push(...reversed)    // Get the result of the games, and add them to the local function array
+                
             } catch (error) {
-                setError(error.message);
+                console.error(error.message);
             } finally  {
-                setLoading(false);
                 currentIndex += 1
             }
         }
@@ -48,9 +41,6 @@ const useChessComAPI = (urls, lastNGames) => {
     async function getData(url) {
 
         if (!url) {return};
-
-        setLoading(true);
-        setError(null);
 
         try {
             const response = await fetch(url);

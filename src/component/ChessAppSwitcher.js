@@ -40,73 +40,85 @@ const ChessAppSwitcher = (props) => {
     //
     // States
     //
-    const [renderFlag, setRenderFlag] = useState(false);
+    const [matchData, setMatchData] = useState(false);
     const [gotDataFlag, setGotDataFlag] = useState(false);
-    const [parsedMatchObjects, setParsedMatchObjects] = useState(null);
 
-    //
-    // Effects
-    //
-    useEffect(() => {
-        if (parsedMatchObjects && parsedMatchObjects.length > 0) {
-            setRenderFlag(true);
-        } else {
-            setRenderFlag(false);
-        }
-    }, [parsedMatchObjects]);
 
     //
     // Handlers
     //
     const handleChildData = (data) => {
-        setParsedMatchObjects(data);
+        if (!data) {return}
+        console.log("handleChildData")
+        console.log(data)
+        console.log()
+
+        
+
+        setMatchData(data);
         setGotDataFlag(data && data.length > 0);
     };
 
     return (
         <Container>
 
-            <ContentContainer>
-                <MatchesRequest
-                    username={username}
-                    lastNGames={lastNGames}
-                    onDataRequest={handleChildData}
-                />
+            {/* "gotDataFlag" = false means we still need to fetch the data. "handleChildData" will change the flag */}
+            {props && !gotDataFlag && (
+                <>
+                    <MatchesRequest
+                        username={username}
+                        lastNGames={lastNGames}
+                        onDataRequest={handleChildData}
+                    />
+                </>
+            )}
 
-                {!gotDataFlag && <LoadingScreen />}
 
-                {gotDataFlag && (
-                    <>
-                        {renderFlag && parsedMatchObjects && activeModule === 'playerInfo' && (
-                            <PlayerInformation playerInformation={playerInformation} />
-                        )}
+            {props && (
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'matchHistory' && (
-                            <MatchHistoryDisplay matchHistory={parsedMatchObjects} />
-                        )}
+                <>
+                <ContentContainer>
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'tableSummary' && (
-                            <MatchHistoryTable matchHistory={parsedMatchObjects} />
-                        )}
+                    {/* Loading screen when we have submitted props but are waiting for data */}
+                    {!gotDataFlag && <LoadingScreen />}
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'heatMapOverview' && (
-                            <HeatmapOverview matchHistory={parsedMatchObjects} />
-                        )}
+                    {/* Data successfully received*/}
+                    {gotDataFlag && (
+                        <>
+                            {matchData && activeModule === 'playerInfo' && (
+                                <PlayerInformation playerInformation={playerInformation} />
+                            )}
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'heatMapAnalysis' && (
-                            <HeatmapController matchHistory={parsedMatchObjects} />
-                        )}
+                            {matchData && activeModule === 'matchHistory' && (
+                                <MatchHistoryDisplay matchHistory={matchData} />
+                            )}
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'openingAnalysis' && (
-                            <OpeningAnalysisController matchHistory={parsedMatchObjects} />
-                        )}
+                            {matchData && activeModule === 'tableSummary' && (
+                                <MatchHistoryTable matchHistory={matchData} />
+                            )}
 
-                        {renderFlag && parsedMatchObjects && activeModule === 'debugging' && (
-                            <Debugging matchHistory={parsedMatchObjects} />
-                        )}
-                    </>
-                )}
-            </ContentContainer>
+                            {matchData && activeModule === 'heatMapOverview' && (
+                                <HeatmapOverview matchHistory={matchData} />
+                            )}
+
+                            {matchData && activeModule === 'heatMapAnalysis' && (
+                                <HeatmapController matchHistory={matchData} />
+                            )}
+
+                            {matchData && activeModule === 'openingAnalysis' && (
+                                <OpeningAnalysisController matchHistory={matchData} />
+                            )}
+
+                            {matchData && activeModule === 'debugging' && (
+                                <Debugging matchHistory={matchData} />
+                            )}
+                        </>
+                    )}
+                </ContentContainer>
+                </>
+            )}
+
+
         </Container>
     );
 };
