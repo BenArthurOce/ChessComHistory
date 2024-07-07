@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useIsMobile from '../hooks/useIsMobile';
 
@@ -115,6 +115,16 @@ const NavigationButton = styled.button
 `
 ;
 
+const DropDownBox = styled.select
+`
+    flex: 2;
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+`
+;
+
 const NavigationBarSliding = (props) => {
     //
     // Props
@@ -126,6 +136,7 @@ const NavigationBarSliding = (props) => {
     //
     const [username, setUsername] = useState("BenArthurOCE");
     const [lastNGames, setLastNGames] = useState(100);
+    const [website, setWebsite] = useState('chesscom');
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
 
@@ -138,7 +149,6 @@ const NavigationBarSliding = (props) => {
     // Handlers
     //
     const handleNavigationButtonClick = (myModule) => {
-        // console.log(myModule);
         setActiveModule(myModule);
         onNavigationButtonClick(myModule);
         setSidebarVisible(false);
@@ -149,6 +159,25 @@ const NavigationBarSliding = (props) => {
         onFormSubmit({ username, lastNGames });
         setSidebarVisible(false);
     };
+
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
+    };
+
+    const handleLastNGamesChange = (event) => {
+        setLastNGames(event.target.value);
+    };
+
+    const handleWebsiteChange = (event) => {
+        setWebsite(event.target.value);
+    };
+
+    //
+    // Effects
+    //
+    useEffect(() => {
+        console.log(website);
+    }, [website]);
 
     //
     // Helpers
@@ -165,11 +194,24 @@ const NavigationBarSliding = (props) => {
                     <InputContainer>
 
                         <InputRow>
+                            <Label htmlFor="websiteSelect">First Move:</Label>
+                            <DropDownBox
+                            id="websiteSelect"
+                            value={website}
+                            onChange={handleWebsiteChange}
+                            >
+                            <option value="chesscom">Chess.com</option>
+                            <option value="lichess">Lichess</option>
+                            <option value="both">Both</option>
+                            </DropDownBox>
+                        </InputRow>
+
+                        <InputRow>
                             <Label htmlFor="usernameInput">Username:</Label>
                             <Input
                                 id="usernameInput"
                                 value={username}
-                                onChange={(ev) => setUsername(ev.target.value)}
+                                onChange={(ev) => handleUsernameChange(ev)}
                                 placeholder="Player name..."
                             />
                         </InputRow>
@@ -179,7 +221,7 @@ const NavigationBarSliding = (props) => {
                             <Input
                                 id="lastngamesInput"
                                 value={lastNGames}
-                                onChange={(ev) => setLastNGames(ev.target.value)}
+                                onChange={(ev) => handleLastNGamesChange(ev)}
                                 placeholder="No# of Games"
                             />
                         </InputRow>

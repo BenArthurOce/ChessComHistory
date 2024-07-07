@@ -7,12 +7,12 @@ import React, {
 } from "react";
 
 // Hooks
-import useChessComAPI from "../hooksSpecific/useChessComAPI";
-import useChessComBuildMatchObjects from "../hooksSpecific/useChessComBuildMatchObjects";
+import useAPIChessCom from "../hooksSpecific/useAPIChessCom";
+import useBuildMatchesChessCom from "../hooksSpecific/useBuildMatchesChessCom";
 
 {
     /*
-==== MatchesRequest Component===
+==== RequestChessCom Component===
 
 This is a child component that is tasked with obtaining the match history API, sorting it into ParsedMatchObjects and returning it to the parent component
 
@@ -59,7 +59,7 @@ Usage:
 */
 }
 
-const MatchesRequest = (props) => {
+const RequestChessCom = (props) => {
 
     //
     // Props
@@ -81,8 +81,8 @@ const MatchesRequest = (props) => {
     //
     // Hooks
     //
-    const hookData = useChessComAPI(urls, lastNGames);
-    const hookParsedMatches = useChessComBuildMatchObjects(hookData, username)
+    const hookData = useAPIChessCom(urls, lastNGames);
+    const hookParsedMatches = useBuildMatchesChessCom(hookData, username)
 
 
     //
@@ -101,24 +101,4 @@ const MatchesRequest = (props) => {
     );
 }
 
-export default MatchesRequest;
-
-
-// return (
-//     <>
-//         {hookIsMobile ? (
-//             <>
-//                 {matchHistory.map((match, index) => (
-//                     index < matchesToRender && <SingleMatchMobile key={index} gameInformation={match} />
-//                 ))}
-//             </>
-//         ) : (
-//             <>
-//                 {matchHistory.map((match, index) => (
-//                     index < matchesToRender && <SingleMatchPC key={index} gameInformation={match} />
-//                 ))}
-//             </>
-//         )}
-//     </>
-// );
-// }
+export default RequestChessCom;

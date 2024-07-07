@@ -7,7 +7,7 @@ import useSingleMatchObjects from "./useSingleMatchObjects";
 //
 // "HookInput" is each match object array obtained from the API
 
-const useChessComBuildMatchObjects = (hookInput, username) => {
+const useBuildMatchesChessCom = (hookInput, username) => {
     const [hookOutput, setHookOutput] = useState('')
 
     const hookUseParsePGN = useParsePGN(hookInput);
@@ -29,4 +29,4 @@ const useChessComBuildMatchObjects = (hookInput, username) => {
     return hookOutput;
 };
 
-export default useChessComBuildMatchObjects;
+export default useBuildMatchesChessCom;
