@@ -11,9 +11,6 @@ import useFetchMultiple from "../hooks/useFetchMultiple";
 import useMatchHistoryAPI from "../hooksSpecific/useMatchHistoryAPI";
 import useMatchHistoryParsePGN from "../hooksSpecific/useMatchHistoryParsePGN";
 
-import useChessComAPI from "../hooksSpecific/useChessComAPI";
-import useChessComBuildMatchObjects from "../hooksSpecific/useChessComBuildMatchObjects";
-
 {
     /*
 ==== MatchesRequest Component===
@@ -90,43 +87,38 @@ const MatchesRequest = (props) => {
     //
     // Hooks
     //
-    // const { data, loading, error } = useChessComAPI(urls, 500);
-
-    const hookData = useChessComAPI(urls, 500);
-
-
-
-    const hookParsedMatches = useChessComBuildMatchObjects(hookData, username)
-    // console.log(data)
-
-    // const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
-    // const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN( hookArrayOfUnparsedMatchObjects, username);
+    const { data, loading, error } = useFetchMultiple(urls);
+    const hookArrayOfUnparsedMatchObjects = useMatchHistoryAPI(data, lastNGames);
+    const hookArrayOfParsedMatchObjects = useMatchHistoryParsePGN( hookArrayOfUnparsedMatchObjects, username);
 
     //
     // Effects
     //
-    // useEffect(() => {
-    //     if (hookArrayOfParsedMatchObjects) {
-    //         onDataRequest(hookArrayOfParsedMatchObjects); // Send parsed data to parent
-    //         setRenderFlag(checkIfAbleToRender(hookArrayOfParsedMatchObjects));
-    //     } else {
-    //         setRenderFlag(false);
-    //     }
-    // }, [hookArrayOfParsedMatchObjects, onDataRequest]);
-
     useEffect(() => {
-        if (!hookData || hookData.length === 0) {return}
-        console.log(hookData)
-    }, [hookData]);
+        if (hookArrayOfParsedMatchObjects) {
+            onDataRequest(hookArrayOfParsedMatchObjects); // Send parsed data to parent
+            setRenderFlag(checkIfAbleToRender(hookArrayOfParsedMatchObjects));
+        } else {
+            setRenderFlag(false);
+        }
+    }, [hookArrayOfParsedMatchObjects, onDataRequest]);
 
     //
     // Helpers
     //
-
+    const checkIfAbleToRender = (array) => {
+        if (array === null || array === undefined) {
+            return false;
+        }
+        if (array <= 1) {
+            return false;
+        }
+        return true;
+    };
 
     return (
         <>
-            {hookData && renderFlag ? (
+            {data && renderFlag ? (
                 <>
                 
                 </>
