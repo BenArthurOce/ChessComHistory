@@ -103,7 +103,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     
         function getPlayerMoves(movesObject, player) {
             const isWhite = player.toLowerCase() === 'white';
-            return Object.values(movesObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
+            return Object.values(movesObject.MoveObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
         };
     
     

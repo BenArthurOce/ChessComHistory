@@ -11,6 +11,8 @@ const useHeatmapControllerDataset = (hookInput) => {
 
     useEffect(() => {
 
+        console.log(hookInput)
+
         if (!hookInput || hookInput.length < 1) {
             return;
         }
