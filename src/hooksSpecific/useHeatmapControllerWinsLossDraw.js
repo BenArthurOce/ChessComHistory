@@ -175,6 +175,7 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
         }, {});
     };
 
+    console.log(hookOutput)
     return hookOutput;
 
 };

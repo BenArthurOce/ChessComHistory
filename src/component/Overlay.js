@@ -13,7 +13,7 @@ const Container = styled.div
 `
 ;
 
-const Overlay = styled.div
+const InnerOne = styled.div
 `
     position: fixed;
     top: 0;
@@ -31,7 +31,7 @@ const Overlay = styled.div
 `
 ;
 
-const Inner = styled.div
+const InnerTwo = styled.div
 `
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
@@ -64,6 +64,7 @@ const PopupOverlay = (props) => {
     // Props
     //
     const { matchHistory } = props;
+    console.log(matchHistory)
 
     //
     // States
@@ -92,12 +93,12 @@ const PopupOverlay = (props) => {
     return (
         <Container>
             {showPopup && (
-                <Overlay isMobile={hookIsMobile}>
-                    <Inner>
+                <InnerOne isMobile={hookIsMobile}>
+                    <InnerTwo>
                         <CloseButton onClick={handleClose}>×</CloseButton>
                         <MatchHistoryDisplay matchHistory={matchHistory} />
-                    </Inner>
-                </Overlay>
+                    </InnerTwo>
+                </InnerOne>
             )}
         </Container>
     );

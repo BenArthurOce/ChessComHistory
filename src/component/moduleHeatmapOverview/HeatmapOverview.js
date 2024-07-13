@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-// Import your components and hooks
+import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
+import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
+import PopupOverlay from "../Overlay";
+import SingleIcon from "../SingleIcon";
+
+
 import useIsMobile from "../../hooks/useIsMobile";
 import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControllerDataset";
 import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapControllerWinsLossDraw";
 
-import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
-import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
+
+
 
 //
 // Styles
@@ -109,6 +114,7 @@ const HeatmapOverview = (props) => {
     // Props
     //
     const { matchHistory } = props;
+    // console.log(matchHistory)
 
     //
     // States
@@ -129,6 +135,9 @@ const HeatmapOverview = (props) => {
     const hookWinsLossDrawBLACK = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove);
 
     const hookWinLossDraw = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove)
+
+
+    // console.log(testHook)
 
     //
     // Effects
@@ -153,13 +162,24 @@ const HeatmapOverview = (props) => {
         setFirstMove(event.target.value);
     };
 
-    // For debugging purposes. When the component is clicked
-    const handleIndividualTileClick = (item) => {
-        // // // console.log("handleIndividualTileClick")
-        // // // console.log(item);
+
+    //
+    // Helpers
+    //
+    // Method when a user clicks on the "ViewGames" button on a single tile
+    const handleIndividualTileClick = (tile) => {
+        console.log(tile)
+        const myMatchHistory = tile.matches;
+        console.log(myMatchHistory)
+        const arrayMatchId = tile.matches.map((entry) => entry.id);
+
+        // // // console.log(arrayMatchId)
+        // // // console.log()
+
+        const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
+        const result = filterMatchHistory(matchHistory, arrayMatchId);
+        setPopupMatchHistory(result);
     };
-
-
 
     return (
         <Container>
@@ -209,6 +229,10 @@ const HeatmapOverview = (props) => {
                             </Row>
                         ))}
                     </TileContainer>
+
+                    {popupMatchHistory && (
+                        <PopupOverlay matchHistory={popupMatchHistory} />
+                    )}
                 </>
         </Container>
     );

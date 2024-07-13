@@ -10,16 +10,19 @@ const useHeatmapControllerDataset = (hookInput) => {
     const [hookOutput, setHookOutput] = useState({})
 
     useEffect(() => {
+        if (!hookInput || hookInput.length === 0) { return};
 
-        console.log(hookInput)
+        runHook()
 
-        if (!hookInput || hookInput.length < 1) {
-            return;
-        }
 
         const sortedMovesArray = createMoveHistoryArray(hookInput)
         setHookOutput(sortedMovesArray);
     }, [hookInput]);
+
+
+    function runHook() {
+        
+    }
 
     const createMoveHistoryArray = (matchHistory) => {
         const uniqueMoves = [];
@@ -80,6 +83,8 @@ const useHeatmapControllerDataset = (hookInput) => {
         });
         return uniqueMoves;
     };
+
+    console.log(hookOutput)
 
     return hookOutput;
 

@@ -5,6 +5,7 @@ import useIsMobile from '../hooks/useIsMobile';
 //
 // Styles
 //
+
 const Container = styled.div
 `
     position: relative;
@@ -122,7 +123,6 @@ const DropDownBox = styled.select
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-
 `
 ;
 
@@ -243,6 +243,10 @@ const NavigationBarSliding = (props) => {
 
                     <NavigationButton selected={activeModule === 'tableSummary'} onClick={() => handleNavigationButtonClick('tableSummary')}>
                         Table Summary
+                    </NavigationButton>
+
+                    <NavigationButton selected={activeModule === 'heatMapMaster'} onClick={() => handleNavigationButtonClick('heatMapMaster')}>
+                        Heatmap Master
                     </NavigationButton>
 
                     <NavigationButton selected={activeModule === 'heatMapOverview'} onClick={() => handleNavigationButtonClick('heatMapOverview')}>

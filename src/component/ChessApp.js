@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+
+import { Inner, Title } from "./styles";
+
 import useIsMobile from "../hooks/useIsMobile";
 
 import ChessAppSwitcher from "./ChessAppSwitcher";
@@ -16,24 +19,8 @@ const Wrapper = styled.div
 `
 ;
 
-const Inner = styled.div
-`
-    height: 100%;
-    border: 1px solid #ddd;
-    max-width: 800px
-`
-;
-
-const Title = styled.h1
-`
-    text-align: center;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-`
-;
-
 function ChessApp() {
+
     //
     // States
     //
@@ -96,7 +83,6 @@ function ChessApp() {
                     userFound={data ? true : false}
                 />
 
-                {/* Display loading state */}
                 {loading && (
                     <>
                         <Title>Chess Match History</Title>
@@ -104,7 +90,6 @@ function ChessApp() {
                     </>
                 )}
 
-                {/* Display error state */}
                 {error && (
                     <>
                         <Title>Chess Match History</Title>
@@ -112,7 +97,6 @@ function ChessApp() {
                     </>
                 )}
 
-                {/* Display when waiting for user input */}
                 {!formData && !loading && !error && (
                     <>
                         <Title>Chess Match History</Title>
@@ -120,8 +104,6 @@ function ChessApp() {
                     </>
                 )}
 
-
-                {/* Display ChessAppSwitcher when form data and active module are available */}
                 {formData && activeModule && !loading && (
                     <ChessAppSwitcher
                         username={formData.username}
