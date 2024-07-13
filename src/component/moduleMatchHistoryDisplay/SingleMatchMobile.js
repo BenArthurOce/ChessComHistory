@@ -151,7 +151,7 @@ function SingleMatchMobile(props) {
 
     // For debugging purposes. When the component is clicked, the ParsedMatchObject is printed to terminal
     const handleComponentClick = () => {
-        // // console.log(gameInformation);
+        console.log(gameInformation);
     };
 
 

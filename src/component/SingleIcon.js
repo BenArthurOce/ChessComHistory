@@ -46,17 +46,27 @@ const getIcon = (string, color, size) => {
             return <StyledIcon icon={faGun} color={color} size={size} />;
         case "resignation":
             return <StyledIcon icon={faFlag} color={color} size={size} />;
+        case "resign":
+            return <StyledIcon icon={faFlag} color={color} size={size} />;
         case "checkmate":
+            return <StyledIcon icon={faSkullCrossbones} color={color} size={size} />;
+        case "mate":
             return <StyledIcon icon={faSkullCrossbones} color={color} size={size} />;
         case "abandoned":
             return <StyledIcon icon={faDoorOpen} color={color} size={size} />;
+        case "timeout":
+            return <StyledIcon icon={faHourglassEnd} color={color} size={size} />;
         case "time":
+            return <StyledIcon icon={faHourglassEnd} color={color} size={size} />;
+        case "outoftime":
             return <StyledIcon icon={faHourglassEnd} color={color} size={size} />;
         case "repetition":
             return <StyledIcon icon={faRepeat} color={color} size={size} />;
         case "stalemate":
             return <StyledIcon icon={faEquals} color={color} size={size} />;
         case "material":
+            return <StyledIcon icon={faEquals} color={color} size={size} />;
+        case "draw":
             return <StyledIcon icon={faEquals} color={color} size={size} />;
         case "agreement":
             return <StyledIcon icon={faHandshake} color={color} size={size} />;

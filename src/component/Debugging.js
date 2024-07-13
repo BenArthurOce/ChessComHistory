@@ -73,10 +73,17 @@ const Debugging = (props) => {
     };
 
     const onButton2Click = () => {
+        const everyOpening = matchHistory.map((match) => match.openingMatch.name);
+        console.log(everyOpening);
+
+        // console.log(matchHistory)
         // // console.log("\nbutton 2 clicked\n")
     };
 
     const onButton3Click = () => {
+        const everyTermination = matchHistory.map((match) => match.results.terminationWord);
+        const everyUniqueTermination = new Set(everyTermination)
+        console.log(everyUniqueTermination);
         // // console.log("\nbutton 3 clicked\n")
     };
 

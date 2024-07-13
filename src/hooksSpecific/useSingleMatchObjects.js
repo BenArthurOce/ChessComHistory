@@ -18,123 +18,211 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     }, [matchObjects, pgnObjects, username, website]);
 
 
-    // Needs improvement. Use promise all
     async function runHook() {
-        
-        // matchObjects = array with 748 objects with many key/value arrays
-        // pgnObjects = a different array with 748 objects with many key/value arrays
-        const result = []
-        let index = -1
+        try {
+            const result = await Promise.all(matchObjects.map(async (match, index) => {
+                const pgn = pgnObjects[index];
+                return createSingleMatchObject(match, pgn, username, website);
+            }));
+            setHookOutput(result);
+        } catch (err) {
+            console.error("Error in runHook:", err);
+        }
+    };
 
-        matchObjects.forEach(entry => {
-            index += 1
+    const adaptMatchInformation = (match, parsedData, username, website) => { 
 
-            const match = matchObjects[index]
-            const pgn = pgnObjects[index]
+        function getGameURL() {
+            try {
+                if (website === "chesscom") {return parsedData.Link};
+                if (website === "lichess") {return parsedData.Site};
+                return "[getGameURL] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getGameURL] TRY/CATCH ERROR";
+            };
+        };
 
+        // currently doesnt really work
+        function getOpeningName() {
+            try {
+                if (website === "chesscom") {
+                    const a = parsedData["ECOUrl"].split("/openings/")[1].replace(/-/g, ' ')
+                    return a.split("...")[0]
+                };
+                if (website === "lichess") {return parsedData.Opening};
+            }
+            catch (err) {
+                return ""; // chesscom might error on this. We'll leave it alone
+            };
+        };
 
-            const object = createSingleMatchObject(match, pgn, username, website)
-            result.push(object)
+        function getWebsite() {
+            try {
+                if (website === "chesscom") {return "ChessCom"};
+                if (website === "lichess") {return "Lichess"};
+                return "[getWebsite] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getWebsite] TRY/CATCH ERROR";
+            };
+        };
 
+        function getUserPlayedColor() {
+            try {
 
-        });
-        setHookOutput(result)
+                if (parsedData.White.toLowerCase() === username.toLowerCase()) return "white";
+                if (parsedData.Black.toLowerCase() === username.toLowerCase()) return "black";
+                return "[getUserPlayedColor] NOT FOUND";
+            }
+            catch (err) {
+                return "[getUserPlayedColor] TRY/CATCH ERROR";
+            };
+        };
 
+        function getMatchWinner() {
+            try {
+                if (parsedData.Result === "1/2-1/2") {return "draw"}
+                if (parsedData.Result === "1-0") {return "white"}
+                if (parsedData.Result === "0-1") {return "black"}
+                return "[getMatchWinner] NOT FOUND";
+            }
+            catch (err) {
+                return "[getMatchWinner] TRY/CATCH ERROR";
+            };
+        };
 
-        // Code to use:
-        // const matchObjects = await Promise.all(allGames.map(async (match) => {
+        function getUserResult() {
+            try {
+                const userPlayed = getUserPlayedColor();
+                const matchWinner = getMatchWinner();
 
-        // const parsedData = createSingleMatchObject(match);
-        //     return parsedData
-        // }));
+                if (parsedData.Result === "1/2-1/2") return "draw";
+                if (userPlayed === matchWinner) return "win";
+                if (userPlayed !== matchWinner) return "lose";
+                return "[getUserResult] ERROR NOT FOUND";
+            }
+            catch (err) {
+                return "[getUserResult] TRY/CATCH ERROR";
+            };
+        };
 
-        // setHookOutput(matchObjects)
+        function getEndingPosition() {
+            try {
+                if (website === "chesscom") {return parsedData.CurrentPosition};
+                if (website === "lichess") {return match.lastFen};
+                return "[getEndingPosition] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getEndingPosition] TRY/CATCH ERROR";
+            };
+        };
+
+        function getTimeClassType() {
+            try {
+                if (website === "chesscom") {return match.time_class};
+                if (website === "lichess") {return match.perf};
+                return "[getTimeClassType] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getTimeClassType] TRY/CATCH ERROR";
+            };
+        };
+
+        function getTerminationWord() {
+            try {
+                if (website === "chesscom") {return parsedData.Termination.split(' ').pop()};
+                if (website === "lichess") {return match.status};
+                return "[getTerminationWord] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getTerminationWord] TRY/CATCH ERROR";
+            };
+        };
+
+        function getGameID() {
+            try {
+                if (website === "chesscom") {
+                    const index = parsedData.Link.indexOf("/live/");
+                    return parseInt(parsedData.Link.substring(index + "/live/".length), 10);
+                }
+                if (website === "lichess") {return match.id};
+                return "[getGameID] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getGameID] TRY/CATCH ERROR";
+            };
+        };
+
+        function getIsRated() {
+            try {
+                if (website === "chesscom") {return match.rated}
+                if (website === "lichess") {return match.rated};
+                return "[getIsRated] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getIsRated] TRY/CATCH ERROR";
+            };
+        };
+
+        function getGameType() {
+            try {
+                if (website === "chesscom") {return parsedData["Event"]}
+                if (website === "lichess") {return match.variant.charAt(0).toUpperCase() + match.variant.slice(1);};
+                return "[getGameType] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getGameType] TRY/CATCH ERROR";
+            };
+        };
+
+        return {
+
+              "game_website":           getWebsite()
+            , "game_url":               getGameURL()
+            , "game_id":                getGameID()
+            , "game_isRated":           getIsRated()
+            , "game_type":              "to be added (standard/ what variant?"
+            , "game_date":              parsedData["Date"]
+            , "game_type":              getGameType()
+
+            , "move_string":            parsedData["MoveString"]
+            , "move_object":            parsedData["MoveObject"]
+
+            , "opening_eco":            parsedData["ECO"]
+            , "opening_name":           getOpeningName()
+
+            , "player_white_name":      parsedData["White"]
+            , "player_white_elo":       parsedData["WhiteElo"]
+            , "player_black_name":      parsedData["Black"]
+            , "player_black_elo":       parsedData["BlackElo"]
+
+            , "results_winner":         getMatchWinner()
+            , "results_userPlayed":     getUserPlayedColor()
+            , "results_userResult":     getUserResult()
+            , "results_termination":    getTerminationWord()
+            , "results_fen":            getEndingPosition()
+
+            , "time_control":           parsedData["TimeControl"] 
+            , "time_class":             getTimeClassType()
+        }
 
     };
 
 
     const createSingleMatchObject = (match, parsedData, username, website) => {
 
-        /* 
-            "match" is an object returned from the array of games fetched in the api. it includes "match.pgn" which is a single long string
-            "parsedData" is match.pgn, but has now been parsed into an object with its own key/value pairs
-        */
-        
-        function getUserPlayedColor(match, username) {
-            if (website === "chesscom") {
-                if (match.white.username.toLowerCase() === username.toLowerCase()) return "white";
-                if (match.black.username.toLowerCase() === username.toLowerCase()) return "black";
-            }
-            if (website === "lichess") {
-                if (match.players.white.user.name.toLowerCase() === username.toLowerCase()) return "white";
-                if (match.players.black.user.name.toLowerCase() === username.toLowerCase()) return "black";               
-            }
-            return "";
-        };
-    
-        function getMatchWinner(match) {
-            if (website === "chesscom") {
-                if (match.white.result.toLowerCase() === "win") return "white";
-                if (match.black.result.toLowerCase() === "win") return "black";
-                return "draw";
-            }
-            if (website === "lichess") {
-                return match.winner
-            }
-            return "";
-        };
-    
-        function getPlayerResult(match, parsedData, username) {
-            if (website === "chesscom") {
-                if (match.white.result === "win" && match.white.username.toLowerCase() === username.toLowerCase()) return "win";
-                if (match.black.result === "win" && match.black.username.toLowerCase() === username.toLowerCase()) return "win";
-                if (parsedData.Result === "1/2-1/2") return "draw";
-                return "lose";
-            }
-            if (website === "lichess") {
-                if (parsedData.Result === "1/2-1/2") {return "draw"}
-                if (parsedData.Result === "1-0" && match.players.white.user.name === "BenArthurOCE") {return "win"}
-                if (parsedData.Result === "0-1" && match.players.black.user.name === "BenArthurOCE") {return "lose"}
-                return "lose"
-            }
-            return "";
-        };
-    
-    
         function getPlayerMoves(movesObject, player) {
             const isWhite = player.toLowerCase() === 'white';
-            return Object.values(movesObject.MoveObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
+            return Object.values(movesObject).map(move => isWhite ? move[0] : move[1]).filter(Boolean);
         };
     
-    
-        function extractOpeningName(openingURL) {
-            try {
-                const index = openingURL.indexOf("/openings/");
-                return openingURL.substring(index + "/openings/".length).replace(/-/g, ' ');
-            }
-            catch {
-                return ""
-            };
-        };
-    
-    
-        function extractGameId(gameURL) {
-            if (website === "chesscom") {
-                const index = gameURL.indexOf("/live/");
-                return parseInt(gameURL.substring(index + "/live/".length), 10);
-            }
-            if (website === "lichess") {
-                return ""
-            }
-        };
-    
-        function getStartingMove(whiteMoves) {
-            if (whiteMoves[0] === "e4") {return "1.e4"};
-            if (whiteMoves[0] === "d4") {return "1.d4"};
+        function getStartingMove(move) {
+            if (move === "e4") {return "1.e4"};
+            if (move === "d4") {return "1.d4"};
             return "other";
         };
-    
-    
+
         const findOpeningMatch = (game, openings) => {
             const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
             let bestMatch = null;
@@ -152,194 +240,77 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         
             return bestMatch ? openings[bestMatch] : null;
         };
+
+
+        // Match information from ChessCom / Lichess moved into a uniform state
+        const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
     
-        const userPlayed = getUserPlayedColor(match, username);
-        const winner = getMatchWinner(match);
-        const playerResult = getPlayerResult(match, parsedData, username);
-    
-        // console.log(match)
-        // console.log(parsedData)
-    
-        if (website === "chesscom") {
-            return {
+        return {
 
-                // zzOriginal:         match
-                // ,
-                general : {
-                      url:            match.url
-                    , site:           parsedData.Site
-                    , event:          parsedData.Event
-                    , rules:          match.rules
-                    , rated:          match.rated ? "Rated" : "Casual"
-                    , id:             extractGameId(parsedData.Link)
-                    , date:           parsedData.Date
-                    , link:           parsedData.Link
-                    , userPlayed:     userPlayed    
-                }
-                ,
-                moves: {
-                      full:             parsedData
-                    , string:           parsedData.MoveString
-                    , white:            getPlayerMoves(parsedData, "white")
-                    , black:            getPlayerMoves(parsedData, "black")
-                    , first:            getStartingMove( getPlayerMoves(parsedData, "white") )
-                }
-                ,
-                results: {
-                      white:            match.white.result === "win" ? "win" : match.white.result === "draw" ? "draw" : "lose"
-                    , black:            match.black.result === "win" ? "win" : match.black.result === "draw" ? "draw" : "lose"
-                    , fen:              parsedData.CurrentPosition
-                    , terminationFull:  parsedData.Termination
-                    , terminationWord:  parsedData.Termination.split(' ').pop()             
-                    , userPlayed:       userPlayed
-                    , userResult:       playerResult
-                    , winner:           winner
-                }
-                ,
-                playerResults: {
-                      name:             username
-                    , userPlayed:       userPlayed
-                    , userResult:       playerResult
-                    , userMoves:        getPlayerMoves(parsedData, userPlayed)
-                }
-                ,
-                time: {
-                      class:          match.time_class
-                    , control:        match.time_control
-                    , base:           match.time_control.split('+')[0]
-                    , increment:      match.time_control.split('+')[1] || 0
-                    , bonus:          "not in use"
-                    , start:          match.start_time
-                    , end:            match.end_time
-                    , minutes:        (match.time_control.split('+')[0]) / 60
-                }
-                ,
-                white: {
-                      username:     match.white.username
-                    , elo:          match.white.rating
-                    , url:          match.white['@id']
-                }
-                ,
-                black: {
-                      username:     match.black.username
-                    , elo:          match.black.rating
-                    , url:          match.black['@id']
-                }
-                ,
-                openingMatch: {
-                      eco:          parsedData.ECO
-                    , url:          parsedData.ECOUrl
-                    , name:         extractOpeningName(parsedData.ECOUrl)
-                }
-                ,
-                openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
-            };
-        };
-
-        if (website === "lichess") {
-            return {
-                // zzOriginal:         match
-                // ,
-                general : {
-                      url:            parsedData.Site
-                    , site:           "Lichess"
-                    , event:          parsedData.Event
-                    , rules:          match.variant
-                    , rated:          match.rated ? "Rated" : "Casual"
-                    , id:             match.id
-                    , date:           parsedData.Date
-                    , link:           parsedData.Site
-                    , userPlayed:     userPlayed    
-                }
-                ,
-                moves: {
-                      full:             parsedData
-                    , string:           parsedData.MoveString
-                    , white:            getPlayerMoves(parsedData, "white")
-                    , black:            getPlayerMoves(parsedData, "black")
-                    , first:            getStartingMove( getPlayerMoves(parsedData, "white") )
-                }
-                ,
-                results: {
-                      white:            match.winner === "white" ? "win" : match.winner === "draw" ? "draw" : "lose"
-                    , black:            match.winner === "black" ? "win" : match.winner === "draw" ? "draw" : "lose"
-                    , fen:              match.lastFen
-                    //   , terminationFull:  parsedData.Termination
-                    //   , terminationWord:  parsedData.Termination    
-                    , terminationWord:  match.status      
-                    , userPlayed:       userPlayed
-                    , userResult:       playerResult
-                    , winner:           match.winner
-                }
-                ,
-                playerResults: {
-                      name:             username
-                    , userPlayed:       userPlayed
-                    , userResult:       playerResult
-                    , userMoves:        getPlayerMoves(parsedData, userPlayed)
-                }
-                ,
-                time: {
-                      class:          match.perf
-                    , control:        match.speed
-                    , base:           match.clock.initial
-                    , increment:      match.clock.increment
-                    , bonus:          "not in use"
-                    //   , start:          match.start_time
-                    //   , end:            match.end_time
-                    , minutes:        match.clock.initial / 60
-                }
-                ,
-                white: {
-                      username:     match.players.white.user.name
-                    , elo:          match.players.white.rating
-                //   , url:          match.white['@id']
-                }
-                ,
-                black: {
-                      username:     match.players.black.user.name
-                    , elo:          match.players.black.rating
-                //   , url:          match.black['@id']
-                }
-                ,
-                openingMatch: {
-                      eco:          match.opening.eco
-                      //   , url:          parsedData.ECOUrl
-                    , name:         match.opening.name
-
-                }
-                ,
-                openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
-            }; 
-        };
-    };
-
-    // return hookOutput;
-
-
-
-    const validateData = (data) => {
-        console.log("validateData")
-        console.log("validateData")
-        if (!Array.isArray(data) || data.length === 0) {
-            console.error("Validation Error: Data is not an array or is empty.");
-            return false;
-        }
-
-        for (let item of data) {
-            if (typeof item !== 'object' || item === null) {
-                console.error("Validation Error: Each item in data must be a non-null object.");
-                return false;
+            // zzOriginal:         match
+            // ,
+            general : {
+                  url:            adaptedInformation["game_url"]
+                , site:           adaptedInformation["game_website"]
+                , event:          adaptedInformation["game_type"]
+                , rated:          adaptedInformation["game_isRated"] ? "Rated" : "Casual"
+                , id:             adaptedInformation["game_id"]
+                , date:           adaptedInformation["game_date"] 
             }
-        }
-        return true;
+            ,
+            moves: {
+                  string:           adaptedInformation["move_string"]
+                , object:           adaptedInformation["move_object"]
+                , white:            getPlayerMoves(adaptedInformation["move_object"], "white")
+                , black:            getPlayerMoves(adaptedInformation["move_object"], "black")
+                , first:            getStartingMove(adaptedInformation["move_object"]["1"][0]) //getStartingMove( getPlayerMoves(parsedData, "white") )
+            }
+            ,
+            results: {
+                  fen:              adaptedInformation["results_fen"]
+                , terminationFull:  ""
+                , terminationWord:  adaptedInformation["results_termination"]           
+                , userPlayed:       adaptedInformation["results_userPlayed"]
+                , userResult:       adaptedInformation["results_userResult"]
+                , winner:           adaptedInformation["results_winner"]
+            }
+            ,
+            playerResults: {
+                  name:             username
+                , userPlayed:       adaptedInformation["results_userPlayed"]
+                , userResult:       adaptedInformation["results_userResult"]
+                , userMoves:        getPlayerMoves(adaptedInformation["move_object"], adaptedInformation["results_userPlayed"])
+            }
+            ,
+            time: {
+                  class:            adaptedInformation["time_class"]
+                , control:          adaptedInformation["time_control"].split('+')[0] 
+                , base:             adaptedInformation["time_control"].split('+')[0] 
+                , increment:        adaptedInformation["time_control"].split('+')[1] || 0 
+                , bonus:            "" // not in use
+                , start:            "" // not in use
+                , end:              "" // not in use
+                , minutes:          (adaptedInformation["time_control"].split('+')[0] ) / 60
+            }
+            ,
+            white: {
+                  username:     adaptedInformation["player_white_name"]
+                , elo:          adaptedInformation["player_white_elo"]
+            }
+            ,
+            black: {
+                  username:     adaptedInformation["player_black_name"]
+                , elo:          adaptedInformation["player_black_elo"]
+            }
+            ,
+            openingMatch: {
+                  eco:          adaptedInformation["opening_eco"]
+                , name:         adaptedInformation["opening_name"]
+            }
+            ,
+            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
+        };
     };
-
-    useEffect(() => {
-        if (hookOutput && !validateData(hookOutput)) {
-            console.error("Error: Hook output validation failed.");
-        }
-    }, [hookOutput]);
 
     return hookOutput;
 };
