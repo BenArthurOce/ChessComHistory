@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useIsMobile from '../hooks/useIsMobile';
 
+import { DropDownBox } from './styles';
+
 //
 // Styles
 //
@@ -116,15 +118,15 @@ const NavigationButton = styled.button
 `
 ;
 
-const DropDownBox = styled.select
-`
-    flex: 2;
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-`
-;
+// const DropDownBox = styled.select
+// `
+//     flex: 2;
+//     padding: 8px;
+//     margin-right: 10px;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+// `
+// ;
 
 const NavigationBarSliding = (props) => {
     //

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Container, Title, FlexRow } from "../styles3";
 
 import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
 import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
@@ -16,20 +17,6 @@ import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapCont
 //
 // Styles
 //
-const Container = styled.div`
-    width: 100vw;
-    height: 100vh;
-    overflow: auto;
-    padding: 20px;
-    box-sizing: border-box;
-`;
-
-const Title = styled.h1`
-    text-align: center;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-`;
 
 const InputContainer = styled.div`
     display: flex;
@@ -43,11 +30,7 @@ const InputContainer = styled.div`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const FlexRow = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-`;
+
 
 const Label = styled.label`
     display: flex;

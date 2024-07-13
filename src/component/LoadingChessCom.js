@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Container, Inner } from './styles3';
 
 const spin = keyframes
 `
@@ -30,11 +31,17 @@ const Spinner = styled.div
 ;
 
 const LoadingChessCom = ({ progress, total, gamesremaining }) => (
-    <LoadingContainer>
-        <Spinner />
-        <p>{`${progress}/${total} endpoints completed`}</p>
-        <p>{`${gamesremaining} games remaining`}</p>
-    </LoadingContainer>
+    <Container>
+        <Inner>
+            <LoadingContainer>
+                
+                <Spinner />
+                <p>{`${progress}/${total} endpoints completed`}</p>
+                <p>{`${gamesremaining} games remaining`}</p>
+
+            </LoadingContainer>
+        </Inner>
+    </Container>
 );
 
 export default LoadingChessCom;

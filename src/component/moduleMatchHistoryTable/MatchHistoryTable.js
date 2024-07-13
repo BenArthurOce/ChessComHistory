@@ -2,25 +2,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import SingleIcon from "../SingleIcon";
 
+import { Container, Title } from "../styles3";
 
 //
 // Styles
 //
-const Container = styled.div
-`
-    height: 100%;
-    overflow-y: scroll;
-`
-;
-
-const Title = styled.h1
-`
-    text-align: center;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-`
-;
 
 
 const TableContainer = styled.div

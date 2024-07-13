@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Container, Title, FlexRow } from "../styles3";
 
 import OpeningAnalysisPC from "./OpeningAnalysisPC";
 import OpeningAnalysisMobile from "./OpeningAnalysisMobile";
@@ -11,21 +12,6 @@ import useIsMobile from "../../hooks/useIsMobile";
 //
 // Styles
 //
-
-const Container = styled.div
-`
-    height: 100%;
-    overflow-y: scroll;
-`
-
-const Title = styled.h1
-`
-    text-align: center;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-`
-;
 
 const InputContainer = styled.div
 `
@@ -45,12 +31,6 @@ const InputContainer = styled.div
 `
 ;
 
-const FlexRow = styled.div
-`
-    display: flex;
-    gap: 10px;
-`
-;
 
 const Label = styled.label
 `

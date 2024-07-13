@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { Inner, Title } from "./styles";
+import { Inner } from "./styles";
+import { Container, Title } from "./styles3";
 
 import useIsMobile from "../hooks/useIsMobile";
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+import { Container, Title, Inner } from './styles3';
+
 // Modules
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
@@ -16,24 +18,24 @@ import RequestChessCom from './RequestChessCom';
 import RequestLichess from './RequestLichess';
 
 
-const Container = styled.div
-`
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-`
-;
+// const Container = styled.div
+// `
+//     display: flex;
+//     flex-direction: column;
+//     position: relative;
+//     height: 100vh;
+//     width: 100vw;
+//     overflow: hidden;
+// `
+// ;
 
-const ContentContainer = styled.div
-`
-    flex: 1;
-    padding: 5px;
-    overflow-y: auto;
-`
-;
+// const ContentContainer = styled.div
+// `
+//     // flex: 1;
+//     // padding: 5px;
+//     // overflow-y: auto;
+// `
+// ;
 
 const ChessAppSwitcher = (props) => {
     const { username, lastNGames, activeModule, playerInformation, website } = props;
@@ -69,7 +71,7 @@ const ChessAppSwitcher = (props) => {
             )}
 
             {gotDataFlag && (
-                <ContentContainer>
+                <Inner>
                     {matchData && activeModule === 'playerInfo' && (
                         <PlayerInformation playerInformation={playerInformation} />
                     )}
@@ -101,7 +103,7 @@ const ChessAppSwitcher = (props) => {
                     {matchData && activeModule === 'debugging' && (
                         <Debugging matchHistory={matchData} />
                     )}
-                </ContentContainer>
+                </Inner>
             )}
         </Container>
     );

@@ -1,30 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 
+import { Container, Title } from "../styles3";
+
 import SingleMatchPC from './SingleMatchPC';
 import SingleMatchMobile from './SingleMatchMobile';
 
 import useIsMobile from '../../hooks/useIsMobile';
 
 
-//
-// Styles
-//
-const Container = styled.div
-`
-    height: 100%;
-    overflow-y: scroll;
-`
-;
-
-const Title = styled.h1
-`
-    text-align: center;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-`
-;
 
 
 
