@@ -39,19 +39,14 @@ function ChessApp() {
     //
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const [formData, setFormData] = useState(null);
-    const [activeModule, setActiveModule] = useState(false);
+    const [activeModule, setActiveModule] = useState("playerInfo");
 
     //
     // Hooks
     //
     const isMobile = useIsMobile();
-
-    //
-    // Effects
-    //
-
 
     //
     // Handlers
@@ -125,16 +120,6 @@ function ChessApp() {
                     </>
                 )}
 
-                {/* Display ChessAppSwitcher when form data is available */}
-                {formData && !activeModule && !loading && (
-                    <ChessAppSwitcher
-                        username={formData.username}
-                        lastNGames={formData.lastNGames}
-                        activeModule="playerInfo"
-                        playerInformation={data}
-                        website={formData.website}
-                    />
-                )}
 
                 {/* Display ChessAppSwitcher when form data and active module are available */}
                 {formData && activeModule && !loading && (

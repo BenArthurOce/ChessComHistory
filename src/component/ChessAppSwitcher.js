@@ -12,47 +12,25 @@ import Debugging from './Debugging';
 import RequestChessCom from './RequestChessCom';
 import RequestLichess from './RequestLichess';
 
-const Container = styled.div`
+const Container = styled.div
+`
     display: flex;
     flex-direction: column;
     position: relative;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-`;
+`
+;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div
+`
     flex: 1;
     padding: 5px;
     overflow-y: auto;
-`;
+`
+;
 
-const CenteredLoadingContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    // background: rgba(255, 255, 255, 0.8);
-    z-index: 10;
-`;
-
-const ErrorContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(255, 0, 0, 0.1);
-    color: red;
-    z-index: 10;
-`;
 
 const ChessAppSwitcher = (props) => {
     const { username, lastNGames, activeModule, playerInformation, website } = props;
@@ -69,11 +47,6 @@ const ChessAppSwitcher = (props) => {
 
     return (
         <Container>
-            {!gotDataFlag && (
-                <CenteredLoadingContainer>
-                    {/* <LoadingScreen2 progress={0} total={lastNGames} gamesremaining={lastNGames} /> */}
-                </CenteredLoadingContainer>
-            )}
 
             {props && !gotDataFlag && (
                 <>
