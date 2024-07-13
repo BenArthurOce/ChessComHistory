@@ -1,48 +1,43 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
-// The amount of games we need (will be passed as an argument)
 const useChessComAPI = (urls, lastNGames) => {
-    const [outputArray, setOutputArray] = useState([]);          // This will hold all the unparsed match objects from the API
-
-
+    const [outputArray, setOutputArray] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [progress, setProgress] = useState(0);
+    const [totalEndpoints, setTotalEndpoints] = useState(urls.length);
 
     useEffect(() => {
-        if (!urls || urls.length === 0) {return;}
-        if (!lastNGames || lastNGames === 0) {return;}
+        if (!urls || urls.length === 0) return;
+        if (!lastNGames || lastNGames === 0) return;
         runHook();
     }, [lastNGames]);
 
-
     async function runHook() {
-        const arrayOfMatches = []
-        let currentIndex = -1
+        const arrayOfMatches = [];
+        let currentIndex = -1;
 
         while (currentIndex <= urls.length && arrayOfMatches.length <= lastNGames) {
-            
             console.log(`while ${currentIndex} <= ${urls.length}  &&  ${arrayOfMatches.length}  <=  ${lastNGames} `);
-            console.log(`url: ${urls[currentIndex]}`)
-        
+            console.log(`url: ${urls[currentIndex]}`);
+
             try {
                 const result = await getData(urls[currentIndex]);
                 const reversed = result.games.reverse();
-                arrayOfMatches.push(...reversed)    // Get the result of the games, and add them to the local function array
-                
+                arrayOfMatches.push(...reversed); 
             } catch (error) {
                 console.error(error.message);
-            } finally  {
-                currentIndex += 1
+            } finally {
+                currentIndex += 1;
+                setProgress((prev) => prev + 1);
             }
         }
 
-        // Only get first n games
         setOutputArray(arrayOfMatches.slice(0, lastNGames));
+        setLoading(false);
     }
 
-
-
     async function getData(url) {
-
-        if (!url) {return};
+        if (!url) return;
 
         try {
             const response = await fetch(url);
@@ -57,7 +52,7 @@ const useChessComAPI = (urls, lastNGames) => {
         }
     }
 
-    return outputArray;
+    return { outputArray, loading, progress, totalEndpoints };
 };
 
 export default useChessComAPI;

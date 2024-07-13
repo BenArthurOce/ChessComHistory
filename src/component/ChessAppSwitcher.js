@@ -8,57 +8,60 @@ import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisCo
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import Debugging from './Debugging';
 
-import LoadingScreen from './LoadingScreen';
-
 
 import RequestChessCom from './RequestChessCom';
 import RequestLichess from './RequestLichess';
 
-
-//
-// Styles
-//
-const Container = styled.div
-`
+const Container = styled.div`
     display: flex;
+    flex-direction: column;
     position: relative;
-    height: 100%;
-    overflow-y: hidden; /* Prevent double scrollbars */
-`
-;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+`;
 
-const ContentContainer = styled.div
-`
+const ContentContainer = styled.div`
     flex: 1;
-    padding: 5px; 
-    overflow-y: auto; 
-`
-;
+    padding: 5px;
+    overflow-y: auto;
+`;
+
+const CenteredLoadingContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    // background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+`;
+
+const ErrorContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 0, 0, 0.1);
+    color: red;
+    z-index: 10;
+`;
 
 const ChessAppSwitcher = (props) => {
-    //
-    // Props
-    //
     const { username, lastNGames, activeModule, playerInformation, website } = props;
-    // console.log(props)
 
-    //
-    // States
-    //
     const [matchData, setMatchData] = useState(false);
     const [gotDataFlag, setGotDataFlag] = useState(false);
 
-
-    //
-    // Handlers
-    //
     const handleChildData = (data) => {
-        if (!data) {return}
-        // console.log("handleChildData")
-        // console.log(data)
-        // console.log()
-
-        
+        if (!data) return;
 
         setMatchData(data);
         setGotDataFlag(data && data.length > 0);
@@ -66,10 +69,13 @@ const ChessAppSwitcher = (props) => {
 
     return (
         <Container>
+            {!gotDataFlag && (
+                <CenteredLoadingContainer>
+                    {/* <LoadingScreen2 progress={0} total={lastNGames} gamesremaining={lastNGames} /> */}
+                </CenteredLoadingContainer>
+            )}
 
-            {/* "gotDataFlag" = false means we still need to fetch the data. "handleChildData" will change the flag */}
             {props && !gotDataFlag && (
-
                 <>
                     {website === "chesscom" && (
                         <RequestChessCom
@@ -85,20 +91,12 @@ const ChessAppSwitcher = (props) => {
                             lastNGames={lastNGames}
                             onDataRequest={handleChildData}
                         />
-                    )}   
+                    )}
                 </>
             )}
 
-
             {props && (
-
-                <>
                 <ContentContainer>
-
-                    {/* Loading screen when we have submitted props but are waiting for data */}
-                    {!gotDataFlag && <LoadingScreen />}
-
-                    {/* Data successfully received*/}
                     {gotDataFlag && (
                         <>
                             {matchData && activeModule === 'playerInfo' && (
@@ -131,10 +129,7 @@ const ChessAppSwitcher = (props) => {
                         </>
                     )}
                 </ContentContainer>
-                </>
             )}
-
-
         </Container>
     );
 };

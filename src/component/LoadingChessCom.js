@@ -14,6 +14,7 @@ const LoadingContainer = styled.div
     justify-content: center;
     align-items: center;
     height: 100%;
+    flex-direction: column;
 `
 ;
 
@@ -28,7 +29,7 @@ const Spinner = styled.div
 `
 ;
 
-const LoadingScreen2 = ({ progress, total, gamesremaining }) => (
+const LoadingChessCom = ({ progress, total, gamesremaining }) => (
     <LoadingContainer>
         <Spinner />
         <p>{`${progress}/${total} endpoints completed`}</p>
@@ -36,4 +37,4 @@ const LoadingScreen2 = ({ progress, total, gamesremaining }) => (
     </LoadingContainer>
 );
 
-export default LoadingScreen2;
+export default LoadingChessCom;
