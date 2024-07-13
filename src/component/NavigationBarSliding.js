@@ -122,6 +122,7 @@ const DropDownBox = styled.select
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+
 `
 ;
 
@@ -136,7 +137,7 @@ const NavigationBarSliding = (props) => {
     // States
     //
     const [username, setUsername] = useState("BenArthurOCE");
-    const [lastNGames, setLastNGames] = useState(0);
+    const [lastNGames, setLastNGames] = useState(150);
     const [website, setWebsite] = useState('chesscom');
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
@@ -195,7 +196,7 @@ const NavigationBarSliding = (props) => {
                     <InputContainer>
 
                         <InputRow>
-                            <Label htmlFor="websiteSelect">First Move:</Label>
+                            <Label htmlFor="websiteSelect">Website:</Label>
                             <DropDownBox
                             id="websiteSelect"
                             value={website}

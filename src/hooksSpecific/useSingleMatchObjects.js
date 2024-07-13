@@ -108,8 +108,13 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     
     
         function extractOpeningName(openingURL) {
-            const index = openingURL.indexOf("/openings/");
-            return openingURL.substring(index + "/openings/".length).replace(/-/g, ' ');
+            try {
+                const index = openingURL.indexOf("/openings/");
+                return openingURL.substring(index + "/openings/".length).replace(/-/g, ' ');
+            }
+            catch {
+                return ""
+            };
         };
     
     
@@ -309,7 +314,37 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
     };
 
+    // return hookOutput;
+
+
+
+    const validateData = (data) => {
+        console.log("validateData")
+        console.log("validateData")
+        if (!Array.isArray(data) || data.length === 0) {
+            console.error("Validation Error: Data is not an array or is empty.");
+            return false;
+        }
+
+        for (let item of data) {
+            if (typeof item !== 'object' || item === null) {
+                console.error("Validation Error: Each item in data must be a non-null object.");
+                return false;
+            }
+        }
+        return true;
+    };
+
+    useEffect(() => {
+        if (hookOutput && !validateData(hookOutput)) {
+            console.error("Error: Hook output validation failed.");
+        }
+    }, [hookOutput]);
+
     return hookOutput;
 };
+
+
+
 
 export default useSingleMatchObjects;
