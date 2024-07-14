@@ -79,7 +79,7 @@ const HeatmapOverview = (props) => {
     // Props
     //
     const { matchHistory } = props;
-    // console.log(matchHistory)
+    // // console.log(matchHistory)
 
     //
     // States
@@ -101,14 +101,18 @@ const HeatmapOverview = (props) => {
 
     const hookWinLossDraw = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove)
 
+    console.log("hookWinsLossDrawWHITE")
+    console.log(hookWinsLossDrawWHITE)
+    console.log()
 
-    // console.log(testHook)
+
+    // // console.log(testHook)
 
     //
     // Effects
     //
     useEffect(() => {
-        // // console.log(hookWinLossDraw)
+        // // // console.log(hookWinLossDraw)
         if (Object.values(hookWinsLossDrawWHITE).length > 0 && Object.values(hookWinsLossDrawBLACK).length > 0) {
             setRenderFlag(true);
         } else {
@@ -133,13 +137,13 @@ const HeatmapOverview = (props) => {
     //
     // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-        console.log(tile)
+        // console.log(tile)
         const myMatchHistory = tile.matches;
-        console.log(myMatchHistory)
+        // console.log(myMatchHistory)
         const arrayMatchId = tile.matches.map((entry) => entry.id);
 
-        // // // console.log(arrayMatchId)
-        // // // console.log()
+        // // // // console.log(arrayMatchId)
+        // // // // console.log()
 
         const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
         const result = filterMatchHistory(matchHistory, arrayMatchId);
@@ -172,7 +176,7 @@ const HeatmapOverview = (props) => {
                             <option value="other">Other</option>
                         </FlexDropDown>
                     </FlexRow>
-                    
+
                 </ContainerUserInput>
 
 

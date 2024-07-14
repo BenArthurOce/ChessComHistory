@@ -7,7 +7,8 @@ import { Container, Title, Inner } from './styles3';
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
-import HeatmapMasterTwo from './moduleHeatmap/HeatmapMasterTwo';
+import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
+// import HeatmapMasterTwo from './moduleHeatmap/HeatmapMasterTwo';
 import HeatmapOverview from './moduleHeatmapOverview/HeatmapOverview';
 import HeatmapController from './moduleHeatmapAnalysis/HeatmapController';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
@@ -85,7 +86,7 @@ const ChessAppSwitcher = (props) => {
                     )}
 
                     {matchData && activeModule === 'heatMapMaster' && (
-                        <HeatmapMasterTwo matchHistory={matchData} />
+                        <HeatmapMaster matchHistory={matchData} />
                     )}
 
                     {matchData && activeModule === 'heatMapOverview' && (

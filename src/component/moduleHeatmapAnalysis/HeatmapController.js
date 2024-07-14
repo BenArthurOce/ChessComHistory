@@ -119,6 +119,11 @@ const HeatmapController = (props) => {
     const hookDataSet = useHeatmapControllerDataset(matchHistory);
     const hookSortData = useHeatmapControllerSortData(hookDataSet, start, end, selectedTeam, firstMove); // Should be renamed
 
+
+    console.log("hookSortData")
+    console.log(hookSortData)
+    console.log()
+
     //
     // Handlers
     //
@@ -167,13 +172,13 @@ const HeatmapController = (props) => {
     //
     // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-        // // // console.log(tile)
+        // // // // console.log(tile)
         const myMatchHistory = tile.matches;
-        // // // console.log(myMatchHistory)
+        // // // // console.log(myMatchHistory)
         const arrayMatchId = tile.matches.map((entry) => entry.id);
 
-        // // // console.log(arrayMatchId)
-        // // // console.log()
+        // // // // console.log(arrayMatchId)
+        // // // // console.log()
 
         const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
         const result = filterMatchHistory(matchHistory, arrayMatchId);
@@ -191,9 +196,9 @@ const HeatmapController = (props) => {
 
     return (
         <Container>
-            {/* {// // console.log(Object.keys(hookSortData).length===0)}
-            {// // console.log(Object.keys(hookSortData).length===0)}
-            {// // console.log(Object.keys(hookSortData))}  */}
+            {/* {// // // console.log(Object.keys(hookSortData).length===0)}
+            {// // // console.log(Object.keys(hookSortData).length===0)}
+            {// // // console.log(Object.keys(hookSortData))}  */}
             
             {Object.keys(hookSortData).length === 0 && (
                 <p>HeatmapController - renderFlag is false</p>
@@ -202,7 +207,7 @@ const HeatmapController = (props) => {
             {Object.keys(hookSortData).length > 0 && (
                 
                 <>
-                    {/* {// // console.log(Object.keys(hookSortData))}  */}
+                    {/* {// // // console.log(Object.keys(hookSortData))}  */}
                     <Title>Heatmap Analysis</Title>
                     
 
