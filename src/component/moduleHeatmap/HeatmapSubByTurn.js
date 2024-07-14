@@ -3,15 +3,22 @@ import styled from "styled-components";
 // import { Container, Title, FlexRow } from "../styles3";
 import { Container, Title, Inner, ContainerUserInput, FlexRow, FlexLabel, FlexDropDown} from "../styles3";
 
-import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
-import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
+
+import HeatmapTilePC from "./HeatmapTilePC";
+import HeatmapTileMobile from "./HeatmapTileMobile";
+
 import PopupOverlay from "../Overlay";
 import SingleIcon from "../SingleIcon";
 
-
 import useIsMobile from "../../hooks/useIsMobile";
-import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControllerDataset";
-import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapControllerWinsLossDraw";
+// import useHeatmapSubByPieceDataset
+
+// import useIsMobile from "../../hooks/useIsMobile";
+import useHeatmapControllerDataset from '../../hooksSpecific/useHeatmapControllerDataset';
+import useHeatmapControllerSortData from '../../hooksSpecific/useHeatmapControllerSortData';
+import useHeatmapControllerWinsLossDraw from '../../hooksSpecific/useHeatmapControllerWinsLossDraw';
+
+
 
 
 
@@ -21,24 +28,6 @@ import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapCont
 //
 
 
-
-
-
-// const Label = styled.label
-// `
-//     font-weight: bold;
-//     margin-right: 10px;
-// `
-
-// const DropDownBox = styled.select
-// `
-//     padding: 8px;
-//     font-size: 16px;
-//     border: 1px solid #ccc;
-//     border-radius: 5px;
-//     min-width: 120px;
-// `
-// ;
 
 const TileContainer = styled.div
 `
@@ -73,7 +62,7 @@ const MovesContainer = styled.div
 ;
 
 
-const HeatmapOverview = (props) => {
+const HeatmapSubByTurn = (props) => {
 
     //
     // Props
@@ -106,6 +95,7 @@ const HeatmapOverview = (props) => {
     console.log()
 
 
+    
     // // console.log(testHook)
 
     //
@@ -214,7 +204,7 @@ const HeatmapOverview = (props) => {
 
 
 };
-export default HeatmapOverview;
+export default HeatmapSubByTurn;
 
 // {hookSortData.king.map((moveObj) => (
 //     <HeatmapTileMobile

@@ -9,8 +9,9 @@ import PopupOverlay from "../Overlay";
 import SingleIcon from "../SingleIcon";
 
 import useIsMobile from "../../hooks/useIsMobile";
-import useHeatmapControllerDataset from "../../hooksSpecific/useHeatmapControllerDataset";
-import useHeatmapControllerSortData from "../../hooksSpecific/useHeatmapControllerSortData";
+import useHeatmapControllerDataset from '../../hooksSpecific/useHeatmapControllerDataset';
+import useHeatmapControllerSortData from '../../hooksSpecific/useHeatmapControllerSortData';
+import useHeatmapControllerWinsLossDraw from '../../hooksSpecific/useHeatmapControllerWinsLossDraw';
 
 
 //
@@ -94,7 +95,7 @@ const DisplayColumn = styled.div
 `
 ;
 
-const HeatmapController = (props) => {
+const HeatmapSubByPiece = (props) => {
 
     //
     // Props
@@ -123,6 +124,7 @@ const HeatmapController = (props) => {
     console.log("hookSortData")
     console.log(hookSortData)
     console.log()
+
 
     //
     // Handlers
@@ -201,7 +203,7 @@ const HeatmapController = (props) => {
             {// // // console.log(Object.keys(hookSortData))}  */}
             
             {Object.keys(hookSortData).length === 0 && (
-                <p>HeatmapController - renderFlag is false</p>
+                <p>HeatmapSubByPiece - renderFlag is false</p>
             )}
 
             {Object.keys(hookSortData).length > 0 && (
@@ -439,4 +441,4 @@ const HeatmapController = (props) => {
     );
 };
 
-export default HeatmapController;
+export default HeatmapSubByPiece;

@@ -8,9 +8,13 @@ import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
 import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
+
+import HeatmapSubByPiece from './moduleHeatmap/HeatmapSubByPiece';
+import HeatmapSubByTurn from './moduleHeatmap/HeatmapSubByTurn';
 // import HeatmapMasterTwo from './moduleHeatmap/HeatmapMasterTwo';
-import HeatmapOverview from './moduleHeatmapOverview/HeatmapOverview';
-import HeatmapController from './moduleHeatmapAnalysis/HeatmapController';
+// import HeatmapSubByTurn from './moduleHeatmap/HeatmapSubByTurn';
+// import HeatmapSubByPiece from './moduleHeatmapAnalysis/HeatmapSubByPiece';
+// import HeatmapSubByPiece from './moduleHeatmap/HeatmapSubByPiece';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
 import Debugging from './Debugging';
 
@@ -90,11 +94,11 @@ const ChessAppSwitcher = (props) => {
                     )}
 
                     {matchData && activeModule === 'heatMapOverview' && (
-                        <HeatmapOverview matchHistory={matchData} />
+                        <HeatmapSubByTurn matchHistory={matchData} />
                     )}
 
                     {matchData && activeModule === 'heatMapAnalysis' && (
-                        <HeatmapController matchHistory={matchData} />
+                        <HeatmapSubByPiece matchHistory={matchData} />
                     )}
 
                     {matchData && activeModule === 'openingAnalysis' && (

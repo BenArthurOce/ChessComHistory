@@ -4,7 +4,7 @@ import { Container, Title } from '../styles3';
 
 
 //Custom Hooks
-import useHeatmapControllerDataset from '../../hooksSpecific/useHeatmapControllerDataset';
+// import useHeatmapSubByPieceDataset from '../../hooksSpecific/useHeatmapSubByPieceDataset';
 import useHeatMasterData from '../../hooksSpecific/useHeatMasterData';
 
 
@@ -58,8 +58,6 @@ const HeatmapMaster = (props) => {
     //
     // Hooks
     //
-    // const hookDataSet = useHeatmapControllerDataset(matchHistory)
-
     const hookMasterData = useHeatMasterData(matchHistory)
     
 
