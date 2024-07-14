@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Container, Title, FlexRow } from "../styles3";
+// import { Container, Title, FlexRow } from "../styles3";
+import { Container, Title, Inner, ContainerUserInput, FlexRow, FlexLabel, FlexDropDown} from "../styles3";
 
 import HeatmapTileMobile from "../moduleHeatmapAnalysis/HeatmapTileMobile";
 import HeatmapTilePC from "../moduleHeatmapAnalysis/HeatmapTilePC";
@@ -20,40 +21,24 @@ import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapCont
 //
 
 
-const InputContainer = styled.div
-`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 900;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`
-;
 
 
-const Label = styled.label
-`
-    font-weight: bold;
-    margin-right: 10px;
-`
 
-const DropDownBox = styled.select
-`
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    min-width: 120px;
-`
-;
+// const Label = styled.label
+// `
+//     font-weight: bold;
+//     margin-right: 10px;
+// `
+
+// const DropDownBox = styled.select
+// `
+//     padding: 8px;
+//     font-size: 16px;
+//     border: 1px solid #ccc;
+//     border-radius: 5px;
+//     min-width: 120px;
+// `
+// ;
 
 const TileContainer = styled.div
 `
@@ -165,26 +150,32 @@ const HeatmapOverview = (props) => {
         <Container>
             <Title>Heatmap Overview</Title>
                 <>
-                    <InputContainer>
-                        <FlexRow>
-                            <div>
-                                <Label htmlFor="teamSelect">Select Team:</Label>
-                                    <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                                    <option value="white">White</option>
-                                    <option value="black">Black</option>
-                                </DropDownBox>
-                            </div>
 
-                            <div>
-                                <Label htmlFor="firstMoveSelect">First Move:</Label>
-                                <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
-                                    <option value="1.e4">1.e4</option>
-                                    <option value="1.d4">1.d4</option>
-                                    <option value="other">Other</option>
-                                </DropDownBox>
-                            </div>
-                        </FlexRow>
-                    </InputContainer>
+
+                <ContainerUserInput>
+
+                    {/* Input: Select Team */}
+                    <FlexRow>
+                        <FlexLabel htmlFor="teamSelect">Select Team:</FlexLabel>
+                        <FlexDropDown id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </FlexDropDown>
+                    </FlexRow>
+
+                    {/* Input: Select First Move */}
+                    <FlexRow>
+                        <FlexLabel htmlFor="firstMoveSelect">First Move:</FlexLabel>
+                        <FlexDropDown id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
+                            <option value="1.e4">1.e4</option>
+                            <option value="1.d4">1.d4</option>
+                            <option value="other">Other</option>
+                        </FlexDropDown>
+                    </FlexRow>
+                    
+                </ContainerUserInput>
+
+
 
 
                     <TileContainer>

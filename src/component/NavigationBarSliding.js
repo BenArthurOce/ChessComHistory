@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useIsMobile from '../hooks/useIsMobile';
 
-import { DropDownBox } from './styles';
+import { FlexRow, FlexLabel, FlexInput, FlexDropDown } from './styles3';
 
 //
 // Styles
@@ -54,7 +54,7 @@ const Form = styled.form
 `
 ;
 
-const InputContainer = styled.div
+const ContainerUserInput = styled.div
 `
     display: flex;
     flex-direction: column;
@@ -65,30 +65,6 @@ const InputContainer = styled.div
 `
 ;
 
-const InputRow = styled.div
-`
-    display: flex;
-    align-items: center;
-`
-;
-
-const Label = styled.label
-`
-    font-weight: bold;
-    margin-right: 10px;
-    flex: 1;
-`
-;
-
-const Input = styled.input
-`
-    flex: 2;
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-`
-;
 
 const ButtonSubmit = styled.button
 `
@@ -118,15 +94,6 @@ const NavigationButton = styled.button
 `
 ;
 
-// const DropDownBox = styled.select
-// `
-//     flex: 2;
-//     padding: 8px;
-//     margin-right: 10px;
-//     border: 1px solid #ccc;
-//     border-radius: 4px;
-// `
-// ;
 
 const NavigationBarSliding = (props) => {
     //
@@ -192,45 +159,46 @@ const NavigationBarSliding = (props) => {
 
     return (
         <Container>
+
             <ToggleButton onClick={toggleSidebar}>☰</ToggleButton>
+
             <Inner sidebarVisible={sidebarVisible} isMobile={hookIsMobile}>
+
                 <Form onSubmit={handleSubmit}>
-                    <InputContainer>
+                    <ContainerUserInput>
+                            <FlexRow>
+                                <FlexLabel htmlFor="websiteSelect">Website:</FlexLabel>
+                                <FlexDropDown
+                                    id="websiteSelect"
+                                    value={website}
+                                    onChange={handleWebsiteChange}
+                                >
+                                    <option value="chesscom">Chess.com</option>
+                                    <option value="lichess">Lichess</option>
+                                </FlexDropDown>
+                            </FlexRow>
 
-                        <InputRow>
-                            <Label htmlFor="websiteSelect">Website:</Label>
-                            <DropDownBox
-                            id="websiteSelect"
-                            value={website}
-                            onChange={handleWebsiteChange}
-                            >
-                                <option value="chesscom">Chess.com</option>
-                                <option value="lichess">Lichess</option>
-                            </DropDownBox>
-                        </InputRow>
+                            <FlexRow>
+                                <FlexLabel htmlFor="usernameInput">Username:</FlexLabel>
+                                    <FlexInput
+                                        id="usernameInput"
+                                        value={username}
+                                        onChange={(ev) => handleUsernameChange(ev)}
+                                        placeholder="Player name..."
+                                    />
+                            </FlexRow>
 
-                        <InputRow>
-                            <Label htmlFor="usernameInput">Username:</Label>
-                            <Input
-                                id="usernameInput"
-                                value={username}
-                                onChange={(ev) => handleUsernameChange(ev)}
-                                placeholder="Player name..."
-                            />
-                        </InputRow>
-
-                        <InputRow>
-                            <Label htmlFor="lastngamesInput"># of Games:</Label>
-                            <Input
-                                id="lastngamesInput"
-                                value={lastNGames}
-                                onChange={(ev) => handleLastNGamesChange(ev)}
-                                placeholder="No# of Games"
-                            />
-                        </InputRow>
-
-                        <ButtonSubmit type="submit">Search</ButtonSubmit>
-                    </InputContainer>
+                            <FlexRow>
+                            <FlexLabel htmlFor="lastngamesInput"># of Games:</FlexLabel>
+                                    <FlexInput
+                                        id="lastngamesInput"
+                                        value={lastNGames}
+                                        onChange={(ev) => handleLastNGamesChange(ev)}
+                                        placeholder="No# of Games"
+                                    />
+                            </FlexRow>
+                            <ButtonSubmit type="submit">Search</ButtonSubmit>
+                    </ContainerUserInput>
                 </Form>
 
                 {userFound && (

@@ -18,7 +18,7 @@ import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/useHeatmapCont
 // Styles
 //
 
-const InputContainer = styled.div`
+const ContainerUserInput = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -224,7 +224,7 @@ const HeatmapMaster = (props) => {
             {Object.keys(hookSortData).length > 0 && (
                 <>
                     <Title>Heatmap Analysis</Title>
-                    <InputContainer>
+                    <ContainerUserInput>
                         <FlexRow>
                             <NumericIncDecContainer>
                                 <Label htmlFor="startInput">Start:</Label>
@@ -260,7 +260,7 @@ const HeatmapMaster = (props) => {
                                 </DropDownBox>
                             </div>
                         </FlexRow>
-                    </InputContainer>
+                    </ContainerUserInput>
                     <HeatmapContainer>
                         {!hookIsMobile &&
                             ["pawn", "rook", "knight", "bishop", "queen", "king", "castling"].map((piece, index) => (
