@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 const useHeatMasterData = (hookInput) => {
@@ -10,17 +9,15 @@ const useHeatMasterData = (hookInput) => {
         runHook();
     }, [hookInput]);
 
-
     function runHook() {
-        // First, aquire an Array of Objects
-        // structure: {firstmove, id, iscapture, piece, result, team, turn}
+        // First, acquire an Array of Objects
+        // structure: {firstMove, id, isCapture, piece, result, team, turn}
         const dataLineObjects = createMoveHistoryArray(hookInput)
 
         // Now we need to group them into white/black, and turn number, AND unique move
-        const sortedMoveData = groupDataByTeamAndTurn(dataLineObjects)
+        const sortedMoveData = groupDataByFirstMoveAndTurn(dataLineObjects)
         setHookOutput(sortedMoveData);
     };
-
 
     //
     // HOOK PART ONE OF TWO - GET DATA LINES
@@ -55,12 +52,23 @@ const useHeatMasterData = (hookInput) => {
             return move.includes("+");
         };
 
-        matchHistory.forEach((match, matchIndex) => {
+        const classifyFirstMove = (firstMove) => {
+            if (firstMove === "1.e4") {
+                return "1.e4";
+            } else if (firstMove === "1.d4") {
+                return "1.d4";
+            } else {
+                return "other";
+            }
+        };
+
+        matchHistory.forEach((match) => {
             const id = match.general.id; // Match Id
             const userPlayed = match.playerResults.userPlayed; // White or Black depending on what player played for this match
             const userOutcome = match.playerResults.userResult; // Result for the user (win/lose/draw)
             const userMoves = match.playerResults.userMoves; // Array of moves    
-    
+            const firstMove = classifyFirstMove(match.moves.first); // Classify the first move
+
             userMoves.forEach((move, moveIndex) => {
                 const pieceType = classifyMove(move);
                 const isCapture = hasCapture(move);
@@ -74,7 +82,7 @@ const useHeatMasterData = (hookInput) => {
                     , "piece": pieceType
                     , "isCapture": isCapture
                     , "isCheck": isCheck
-                    , "firstMove": match.moves.first        // First move that white played
+                    , "firstMove": firstMove // First move that white played
                 };
             
                 // Push the dict object into the array
@@ -85,13 +93,10 @@ const useHeatMasterData = (hookInput) => {
         return uniqueMoves;
     };
 
-
-
-
     //
-    // HOOK PART ONE OF TWO - ORGANIZE DATA LINES
+    // HOOK PART TWO OF TWO - ORGANIZE DATA LINES
     //
-    const groupDataByTeamAndTurn = (moveData) => {
+    const groupDataByFirstMoveAndTurn = (moveData) => {
 
         const getTurnNumberArray = (moveData) => {
             const turnNumbers = (moveData.map((line) => line.turn)).sort()
@@ -106,6 +111,10 @@ const useHeatMasterData = (hookInput) => {
             return array.filter((line) => line.move === move);
         };
 
+        const filterByFirstMove = (array, firstMove) => {
+            return array.filter((line) => line.firstMove === firstMove);
+        };
+
         const getUniqueMoveArray = (moveData) => {
             const allMoves = (moveData.map((line) => line.move)).sort()
             return new Set(allMoves)
@@ -114,61 +123,53 @@ const useHeatMasterData = (hookInput) => {
         // This is what is going to the hook output
         const results = {"white": {}, "black": {}}
 
-        // We're going to loop through each turn number, so get every turn number in numerical order
-        const turnNumberSet = getTurnNumberArray(moveData)
+        // The type of moves to categorize:
+        const firstMoves = ["1.e4", "1.d4", "other"]
 
-        // Seperate the entire data into black moves and white moves
+        // Separate the entire data into black moves and white moves
         const whiteGames = moveData.filter((line) => line.team === "white");
         const blackGames = moveData.filter((line) => line.team === "black");
 
-        /*     
-        We want an object that looks like this:
-            {"white":
-                {
-                    1: {a4:[], e4:[], Nc3:[]} 2: {e5:[], d4:[], Nf2:[]}, 3: {etc}
-                }
+        firstMoves.forEach(firstMove => {
+            const whiteMovesByFirst = filterByFirstMove(whiteGames, firstMove);
+            const blackMovesByFirst = filterByFirstMove(blackGames, firstMove);
 
-            ,"black":
-                {
-                    1: {a5:[], e5:[], Nf6:[]} 2: {Bd5:[], d3:[], Qe7:[]}, 3: {etc}
-                }
-            }
-        This is sorted data, by player colour, by turn, by unique move for that particular turn
+            const categorizedWhiteMoves = {};
+            const categorizedBlackMoves = {};
 
-        
-        To achieve this, we:
-            Loop through each turn number
-            Get all the white/black moves that happened on that particular turn number
-            We look at the moves for each turn, and extract all the types of moves for that turn
-            We further filter by this. And then combine all the above information to make an Object entry for that turn number
-        */
+            // We're going to loop through each turn number, so get every turn number in numerical order
+            const turnNumberSet = getTurnNumberArray(moveData);
 
+            // Loop through each turn number
+            turnNumberSet.forEach(turnNumber => {
+                // Get moves player performed on that turn
+                const whiteResultOnTurn = filterByTurnNum(whiteMovesByFirst, turnNumber);
+                const blackResultOnTurn = filterByTurnNum(blackMovesByFirst, turnNumber);
 
-        turnNumberSet.forEach(turnNumber => {
+                // Get array of unique moves that player performed on that turn
+                const whiteUniqueMovesOnTurn = getUniqueMoveArray(whiteResultOnTurn);
+                const blackUniqueMovesOnTurn = getUniqueMoveArray(blackResultOnTurn);
 
-            // Get moves player performed on that turn
-            const whiteResultOnTurn = filterByTurnNum(whiteGames, turnNumber)
-            const blackResultOnTurn = filterByTurnNum(blackGames, turnNumber)
+                // For white, loop through each unique move, get its data lines and add it to an object
+                const eachMoveWhite = {};
+                whiteUniqueMovesOnTurn.forEach(move => {
+                    eachMoveWhite[`${move}`] = filterByMove(whiteResultOnTurn, move);
+                });
 
-            // Get array of unique moves that player performed on that turn
-            const whiteUniqueMovesOnTurn = getUniqueMoveArray(whiteResultOnTurn)
-            const blackUniqueMovesOnTurn = getUniqueMoveArray(blackResultOnTurn)
+                // For black, loop through each unique move, get its data lines and add it to an object
+                const eachMoveBlack = {};
+                blackUniqueMovesOnTurn.forEach(move => {
+                    eachMoveBlack[`${move}`] = filterByMove(blackResultOnTurn, move);
+                });
 
-            // For white, loop through each unique move, get its data lines and add it to an object
-            const eachMoveWhite = {}
-            whiteUniqueMovesOnTurn.forEach(move => {
-                eachMoveWhite[`${move}`] = filterByMove(whiteResultOnTurn, move);
+                // Add these to the categorized results
+                categorizedWhiteMoves[turnNumber] = eachMoveWhite;
+                categorizedBlackMoves[turnNumber] = eachMoveBlack;
             });
 
-            // For black, loop through each unique move, get its data lines and add it to an object
-            const eachMoveBlack = {}
-            blackUniqueMovesOnTurn.forEach(move => {
-                eachMoveBlack[`${move}`] = filterByMove(blackResultOnTurn, move);
-            });
-
-            // Add these to the final Object and then loop for the next turn number
-            results["white"][turnNumber] = eachMoveWhite
-            results["black"][turnNumber] = eachMoveBlack
+            // Add these to the final Object
+            results["white"][firstMove] = categorizedWhiteMoves;
+            results["black"][firstMove] = categorizedBlackMoves;
         });
 
         return results

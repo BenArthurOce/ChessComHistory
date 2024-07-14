@@ -57,7 +57,7 @@ const HeatmapTileMobile = (props) => {
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
 
-    
+    // console.log(tile)
 
     //
     // States
@@ -72,15 +72,15 @@ const HeatmapTileMobile = (props) => {
     // Effects
     //
     useEffect(() => {
-        if (tile.winpct >= 60) {
+        if (tile.winrate >= 60) {
             setColorBackground("#4caf50"); // Dark Green (win over 60%)
-        } else if (tile.winpct > 50) {
+        } else if (tile.winrate > 50) {
             setColorBackground("#8dbd4f"); // Light Green (win 50% - 60%)
-        } else if (tile.winpct === 50) {
+        } else if (tile.winrate === 50) {
             setColorBackground("#ffeb3b"); // Yellow (win 50%)
-        } else if (tile.winpct >= 40) {
+        } else if (tile.winrate >= 40) {
             setColorBackground("#ff9800"); // Orange (win 40% - 50%)
-        } else if (tile.winpct >= 0) {
+        } else if (tile.winrate >= 0) {
             setColorBackground("#f44336"); // Red (win under 40%)
         } else {
             setColorBackground("black"); // Indicates an error
@@ -128,12 +128,12 @@ const HeatmapTileMobile = (props) => {
                         {isDisplayPopup && (
                             <Popup colorBackground={colorBackground}>
                                 <PopupTextSpan><p><b>Move:</b></p><p>{tile.move}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winpct.toFixed(2)}%</p></PopupTextSpan>
+                                <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winrate.toFixed(2)}%</p></PopupTextSpan>
                                 <br></br>
                                 <PopupTextSpan><p><b>Games:</b></p><p>{tile.played}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Won:</b></p><p>{tile.win}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Lost:</b></p><p>{tile.lose}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Draw:</b></p><p>{tile.draw}</p></PopupTextSpan>
+                                <PopupTextSpan><p><b>Won:</b></p><p>{tile.wins}</p></PopupTextSpan>
+                                <PopupTextSpan><p><b>Lost:</b></p><p>{tile.losses}</p></PopupTextSpan>
+                                <PopupTextSpan><p><b>Draw:</b></p><p>{tile.draws}</p></PopupTextSpan>
 
                                 {/* Button - Link to Games */}
                                 <PopupTextSpan>

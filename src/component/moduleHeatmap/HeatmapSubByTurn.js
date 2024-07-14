@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-// import { Container, Title, FlexRow } from "../styles3";
 import { Container, Title, Inner, ContainerUserInput, FlexRow, FlexLabel, FlexDropDown} from "../styles3";
 
-
+// Components
 import HeatmapTilePC from "./HeatmapTilePC";
 import HeatmapTileMobile from "./HeatmapTileMobile";
-
 import PopupOverlay from "../Overlay";
 import SingleIcon from "../SingleIcon";
 
+// Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-// import useHeatmapSubByPieceDataset
 
-// import useIsMobile from "../../hooks/useIsMobile";
 import useHeatmapControllerDataset from '../../hooksSpecific/useHeatmapControllerDataset';
 import useHeatmapControllerSortData from '../../hooksSpecific/useHeatmapControllerSortData';
 import useHeatmapControllerWinsLossDraw from '../../hooksSpecific/useHeatmapControllerWinsLossDraw';
 
-
-
-
+import useHeatMasterSort from "../../hooksSpecific/useHeatMasterSort";
 
 
 //
@@ -67,13 +62,14 @@ const HeatmapSubByTurn = (props) => {
     //
     // Props
     //
-    const { matchHistory } = props;
+    const { matchHistory: turnData } = props;
+
+
     // // console.log(matchHistory)
 
     //
     // States
     //
-    const [renderFlag, setRenderFlag] = useState(false);
     const [popupMatchHistory, setPopupMatchHistory] = useState(null);
     const [singleTileSelected, setSingleTileSelected] = useState(null);
 
@@ -83,32 +79,19 @@ const HeatmapSubByTurn = (props) => {
     //
     // Hooks
     //
+
+    const masterData = props.turnData
+    const hookUseHeatmapSubByTurnData = useHeatMasterSort(masterData, selectedTeam, firstMove)
     const hookIsMobile = useIsMobile(true);
-    const hookDataSet = useHeatmapControllerDataset(matchHistory);
-    const hookWinsLossDrawWHITE = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove);
-    const hookWinsLossDrawBLACK = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove);
-
-    const hookWinLossDraw = useHeatmapControllerWinsLossDraw(hookDataSet, selectedTeam, firstMove)
-
-    console.log("hookWinsLossDrawWHITE")
-    console.log(hookWinsLossDrawWHITE)
-    console.log()
-
-
-    
-    // // console.log(testHook)
 
     //
     // Effects
     //
     useEffect(() => {
-        // // // console.log(hookWinLossDraw)
-        if (Object.values(hookWinsLossDrawWHITE).length > 0 && Object.values(hookWinsLossDrawBLACK).length > 0) {
-            setRenderFlag(true);
-        } else {
-            setRenderFlag(false);
+
+        console.log(hookUseHeatmapSubByTurnData);
     }
-    }, [hookWinsLossDrawWHITE, hookWinsLossDrawBLACK]);
+    , [masterData, hookUseHeatmapSubByTurnData]);
 
     //
     // Handlers
@@ -136,13 +119,13 @@ const HeatmapSubByTurn = (props) => {
         // // // // console.log()
 
         const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
-        const result = filterMatchHistory(matchHistory, arrayMatchId);
+        const result = filterMatchHistory(turnData, arrayMatchId);
         setPopupMatchHistory(result);
     };
 
     return (
-        <Container>
-            <Title>Heatmap Overview</Title>
+        <Inner>
+            {/* <Title>Heatmap Overview</Title> */}
                 <>
 
 
@@ -173,23 +156,18 @@ const HeatmapSubByTurn = (props) => {
 
 
                     <TileContainer>
-                        {Object.values(hookWinLossDraw).map((array, index) => (
+                        {Object.values(hookUseHeatmapSubByTurnData).map((tile, index) => (
+                            
                             <Row key={`row-${index}`}>
                                 <TurnNumber>Turn: {index + 1}</TurnNumber> {/* Add 1 to index */}
                                 <MovesContainer>
-                                    {array.map((item, innerIndex) => (
 
-
-                                        <HeatmapTileMobile
-                                            tileInformation={item}
-                                            isClicked={singleTileSelected === item}
-                                            handleButtonClick={handleIndividualTileClick}
+                                    <HeatmapTileMobile
+                                        tileInformation={tile}
+                                        isClicked={singleTileSelected === tile}
+                                        handleButtonClick={handleIndividualTileClick}
                                         />
 
-                                        // <Tile key={`tile-${index}-${innerIndex}`} onClick={() => handleComponentClick(item)}>
-                                        //     <p>{item.move}</p>
-                                        // </Tile>
-                                    ))}
                                 </MovesContainer>
                             </Row>
                         ))}
@@ -199,25 +177,9 @@ const HeatmapSubByTurn = (props) => {
                         <PopupOverlay matchHistory={popupMatchHistory} />
                     )}
                 </>
-        </Container>
+        </Inner>
     );
 
 
 };
 export default HeatmapSubByTurn;
-
-// {hookSortData.king.map((moveObj) => (
-//     <HeatmapTileMobile
-//         tileInformation={moveObj}
-//         isClicked={singleTileSelected === moveObj}
-//         handleButtonClick={handleIndividualTileClick}
-//     />
-// ))}
-
-// {hookSortData.king.map((moveObj) => (
-//     <HeatmapTileMobile
-//         tileInformation={moveObj}
-//         isClicked={singleTileSelected === moveObj}
-//         handleButtonClick={handleIndividualTileClick}
-//     />
-// ))}

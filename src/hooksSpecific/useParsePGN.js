@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const useParseFEN = (hookInput) => {
+const useParsePGN = (hookInput) => {
     const [hookOutput, setHookOutput] = useState('')
 
 
@@ -71,4 +71,4 @@ const useParseFEN = (hookInput) => {
     return hookOutput;
 };
 
-export default useParseFEN;
+export default useParsePGN;

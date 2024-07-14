@@ -1,10 +1,4 @@
-// useParseFEN
 
-/* 
-
-
-
-*/
 
 import { useState, useEffect } from 'react';
 

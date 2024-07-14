@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import { Container, Title } from '../styles3';
 
 
-//Custom Hooks
-// import useHeatmapSubByPieceDataset from '../../hooksSpecific/useHeatmapSubByPieceDataset';
+// Components
+import HeatmapSubByPiece from './HeatmapSubByPiece';
+import HeatmapSubByTurn from './HeatmapSubByTurn';
+
+// Custom Hooks
 import useHeatMasterData from '../../hooksSpecific/useHeatMasterData';
 
-
 //
-// Styles
+// Component Styles
 //
 const TabContainer = styled.div
 `
@@ -76,36 +78,37 @@ const HeatmapMaster = (props) => {
     //
     // Helpers
     //
-    const renderContent = () => {
-        if (activeTab === 'byPiece') {
-            return <p>Content for "By Piece"</p>;
-        } else if (activeTab === 'allMoves') {
-            return <p>Content for "All Moves"</p>;
-        }
-    };
+
+
+
+
+
 
     return (
         <Container>
             <Title>Heatmap Master</Title>
+
             <TabContainer>
-                <TabButton
-                active={activeTab === 'byPiece'}
-                onClick={() => setActiveTab('byPiece')}
-                >
+                <TabButton active={activeTab === 'byPiece'} onClick={() => setActiveTab('byPiece')}>
                     By Piece
                 </TabButton>
 
-                <TabButton
-                active={activeTab === 'allMoves'}
-                onClick={() => setActiveTab('allMoves')}
-                >
-                    All Moves
+                <TabButton active={activeTab === 'byTurn'} onClick={() => setActiveTab('byTurn')}>
+                    By Turn
                 </TabButton>
             </TabContainer>
 
+
             <Content>
-                {renderContent()}
+                {activeTab === 'byPiece' && (
+                    <HeatmapSubByPiece turnData={hookMasterData} />
+                )}
+
+                {activeTab === 'byTurn' && (
+                    <HeatmapSubByTurn turnData={hookMasterData} />
+                )}
             </Content>
+
         </Container>
     );
 };
