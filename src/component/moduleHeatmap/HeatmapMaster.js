@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Container, Title } from '../styles3';
 
-
 // Components
 import HeatmapSubByPiece from './HeatmapSubByPiece';
 import HeatmapSubByTurn from './HeatmapSubByTurn';
@@ -63,27 +62,6 @@ const HeatmapMaster = (props) => {
     const hookMasterData = useHeatMasterData(matchHistory)
     
 
-    //
-    // Effects
-    //
-    useEffect(() => {
-        // if (!hookDataSet || hookDataSet.length === 0) { return};
-        // console.log(hookDataSet);
-
-        if (!hookMasterData || hookMasterData.length === 0) { return};
-        console.log(hookMasterData);      
-
-    }, [hookMasterData]);
-
-    //
-    // Helpers
-    //
-
-
-
-
-
-
     return (
         <Container>
             <Title>Heatmap Master</Title>
@@ -101,11 +79,11 @@ const HeatmapMaster = (props) => {
 
             <Content>
                 {activeTab === 'byPiece' && (
-                    <HeatmapSubByPiece turnData={hookMasterData} />
+                    <HeatmapSubByPiece matchHistory={matchHistory} hookMasterData={hookMasterData} />
                 )}
 
                 {activeTab === 'byTurn' && (
-                    <HeatmapSubByTurn turnData={hookMasterData} />
+                    <HeatmapSubByTurn matchHistory={matchHistory} hookMasterData={hookMasterData} />
                 )}
             </Content>
 

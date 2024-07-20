@@ -219,21 +219,13 @@ const NavigationBarSliding = (props) => {
                         Heatmap Master
                     </NavigationButton>
 
-                    <NavigationButton selected={activeModule === 'heatMapOverview'} onClick={() => handleNavigationButtonClick('heatMapOverview')}>
-                        Heatmap Overview
-                    </NavigationButton>
-
-                    <NavigationButton selected={activeModule === 'heatMapAnalysis'} onClick={() => handleNavigationButtonClick('heatMapAnalysis')}>
-                        Heatmap Analysis
-                    </NavigationButton>
-
                     <NavigationButton selected={activeModule === 'openingAnalysis'} onClick={() => handleNavigationButtonClick('openingAnalysis')}>
                         Opening Analysis
                     </NavigationButton>
 
-                    <NavigationButton selected={activeModule === 'debugging'} onClick={() => handleNavigationButtonClick('debugging')}>
+                    {/* <NavigationButton selected={activeModule === 'debugging'} onClick={() => handleNavigationButtonClick('debugging')}>
                         Debugging
-                    </NavigationButton>
+                    </NavigationButton> */}
                 </>
             )}
             </Inner>

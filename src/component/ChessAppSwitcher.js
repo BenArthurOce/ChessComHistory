@@ -23,25 +23,6 @@ import RequestChessCom from './RequestChessCom';
 import RequestLichess from './RequestLichess';
 
 
-// const Container = styled.div
-// `
-//     display: flex;
-//     flex-direction: column;
-//     position: relative;
-//     height: 100vh;
-//     width: 100vw;
-//     overflow: hidden;
-// `
-// ;
-
-// const ContentContainer = styled.div
-// `
-//     // flex: 1;
-//     // padding: 5px;
-//     // overflow-y: auto;
-// `
-// ;
-
 const ChessAppSwitcher = (props) => {
     const { username, lastNGames, activeModule, playerInformation, website } = props;
     const [matchData, setMatchData] = useState(null);
@@ -93,21 +74,13 @@ const ChessAppSwitcher = (props) => {
                         <HeatmapMaster matchHistory={matchData} />
                     )}
 
-                    {matchData && activeModule === 'heatMapOverview' && (
-                        <HeatmapSubByTurn matchHistory={matchData} />
-                    )}
-
-                    {matchData && activeModule === 'heatMapAnalysis' && (
-                        <HeatmapSubByPiece matchHistory={matchData} />
-                    )}
-
                     {matchData && activeModule === 'openingAnalysis' && (
                         <OpeningAnalysisController matchHistory={matchData} />
                     )}
 
-                    {matchData && activeModule === 'debugging' && (
+                    {/* {matchData && activeModule === 'debugging' && (
                         <Debugging matchHistory={matchData} />
-                    )}
+                    )} */}
                 </Inner>
             )}
         </Container>

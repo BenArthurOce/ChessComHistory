@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Container, Title, Inner, ContainerUserInput, FlexRow, FlexLabel, FlexDropDown} from "../styles3";
-// import { Container, Title, FlexRow } from "../styles3";
 
-import HeatmapTileMobile from "./HeatmapTileMobile";
+// Components
 import HeatmapTilePC from "./HeatmapTilePC";
+import HeatmapTileMobile from "./HeatmapTileMobile";
 import PopupOverlay from "../Overlay";
-
 import SingleIcon from "../SingleIcon";
+
+// Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
 import useHeatMasterSort from "../../hooksSpecific/useHeatMasterSort";
 
 //
-// Styles
+// Component Styles
 //
-
 const Label = styled.label
 `
     display: flex;
@@ -97,7 +97,7 @@ const HeatmapSubByPiece = (props) => {
     //
     // Props
     //
-    const {turnData} = props
+    const {matchHistory, hookMasterData} = props;
 
     //
     // States
@@ -109,8 +109,7 @@ const HeatmapSubByPiece = (props) => {
 
     const [dataToRender, setDataToRender] = useState([]);
 
-
-    const [popupMatchHistory, setPopupMatchHistory] = useState(null); // State to hold selected match details
+    const [popupMatchHistory, setPopupMatchHistory] = useState(null);   // State to hold selected match details
     const [singleTileSelected, setSingleTileSelected] = useState(null); // for Mobile - Displays Bubble if selected
 
 
@@ -118,8 +117,7 @@ const HeatmapSubByPiece = (props) => {
     // Hooks
     //
     const hookIsMobile = useIsMobile(); // Custom hook to test if mobile device
-    const hookUseHeatmapSubByTurnData = useHeatMasterSort(turnData, selectedTeam, firstMove, start, end)
-
+    const hookUseHeatmapSubByhookMasterData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove, start, end)
 
 
     //
@@ -127,56 +125,29 @@ const HeatmapSubByPiece = (props) => {
     //
     useEffect(() => {
 
-        if (!turnData || turnData.length === 0) { return};
-        if (!hookUseHeatmapSubByTurnData || hookUseHeatmapSubByTurnData.length === 0) { return};
+        if (!hookMasterData || hookMasterData.length === 0) { return};
+        if (!hookUseHeatmapSubByhookMasterData || hookUseHeatmapSubByhookMasterData.length === 0) { return};
 
-        // console.log(turnData)
+        console.log(hookMasterData)
+        console.log(hookUseHeatmapSubByhookMasterData)
 
         function performFilterByPiece(data, piece) {
             return data.filter((entry) => entry.piece === piece);
         };
 
-
-        // // Combining multiple "tiles" into a single tile
-        // function combineStats(array) {
-        //     return array.reduce((acc, obj) => {
-        //       acc.wins += obj.wins;
-        //       acc.losses += obj.losses;
-        //       acc.draws += obj.draws;
-        //       acc.matchIds = acc.matchIds.concat(obj.matchIds);
-        //       return acc;
-        //     }, {
-        //       wins: 0,
-        //       losses: 0,
-        //       draws: 0,
-        //       matchIds: [],
-        //       team: array[0].team,
-        //       piece: array[0].piece,
-        //       firstMove: array[0].firstMove,
-        //     });
-        //   }
-
-
-          const summaryByPiece = {
-            pawn: performFilterByPiece(hookUseHeatmapSubByTurnData, "Pawn"),
-            rook: performFilterByPiece(hookUseHeatmapSubByTurnData, "Rook"),
-            knight: performFilterByPiece(hookUseHeatmapSubByTurnData, "Knight"),
-            bishop: performFilterByPiece(hookUseHeatmapSubByTurnData, "Bishop"),
-            queen: performFilterByPiece(hookUseHeatmapSubByTurnData, "Queen"),
-            king: performFilterByPiece(hookUseHeatmapSubByTurnData, "King"),
-            castling: performFilterByPiece(hookUseHeatmapSubByTurnData, "Castling"),
-          }
-
-        //   console.log(summaryByPiece)
+        const summaryByPiece = {
+              pawn: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Pawn")
+            , rook: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Rook")
+            , knight: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Knight")
+            , bishop: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Bishop")
+            , queen: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Queen")
+            , king: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "King")
+            , castling: performFilterByPiece(hookUseHeatmapSubByhookMasterData, "Castling")
+        }
 
           setDataToRender(summaryByPiece);
-
-        // const a = performFilterByPiece(hookUseHeatmapSubByTurnData, "Knight")
-        // console.log(Object.keys(dataToRender).length)
-        // console.log(dataToRender.length)
-        // console.log(dataToRender.length === 0)
     }
-    , [hookUseHeatmapSubByTurnData]);
+    , [hookUseHeatmapSubByhookMasterData]);
 
 
 
@@ -228,23 +199,10 @@ const HeatmapSubByPiece = (props) => {
     //
     // Method when a user clicks on the "ViewGames" button on a single tile
     const handleIndividualTileClick = (tile) => {
-
-
-        // In order to get the viewGames working
-        // Need to pass an array of ID numbers (tile.matchIds)
-
-
-        // // // // // console.log(tile)
-        // const myMatchHistory = tile.matchIds;
-        // // // // // console.log(myMatchHistory)
-        // const arrayMatchId = tile.matchIds.map((entry) => entry.id);
-
-        // // // // // console.log(arrayMatchId)
-        // // // // // console.log()
-
-        // const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
-        // const result = filterMatchHistory(hookUseHeatmapSubByTurnData, arrayMatchId);
-        // setPopupMatchHistory(result);
+        const myMatchHistory = tile.matchIds;
+        const filterMatchHistory = (matchHistory, array) => matchHistory.filter((obj) => array.includes(obj.general.id));
+        const result = filterMatchHistory(matchHistory, myMatchHistory);
+        setPopupMatchHistory(result);
     };
 
 
@@ -257,11 +215,12 @@ const HeatmapSubByPiece = (props) => {
     );
 
     return (
-        <Container>
-
+        <Inner>
+        <>
 
             <ContainerUserInput>
 
+                {/* Input: Select Start and End Move */}
                 <FlexRow>
                     <NumericIncDecContainer>
                         <Label htmlFor="startInput">Start:</Label>
@@ -306,184 +265,178 @@ const HeatmapSubByPiece = (props) => {
             </ContainerUserInput>
 
 
-
-
-
-
             <HeatmapContainer>
-                        {/* {console.log(dataToRender)} */}
-                        {/* {console.log(dataToRender.length)} */}
-                        {!hookIsMobile && Object.keys(dataToRender).length > 0 && (
-                            <>
-                            
-                                <DisplayColumn>
-                                    {renderPieceIcon(`pawn`, selectedTeam)}
-                                    {dataToRender.pawn.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                {!hookIsMobile && Object.keys(dataToRender).length > 0 && (
+                <>
+                    <DisplayColumn>
+                        {renderPieceIcon(`pawn`, selectedTeam)}
+                        {dataToRender.pawn.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`rook`, selectedTeam)}
-                                    {dataToRender.rook.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`rook`, selectedTeam)}
+                        {dataToRender.rook.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`knight`, selectedTeam)}
-                                    {dataToRender.knight.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`knight`, selectedTeam)}
+                        {dataToRender.knight.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`bishop`, selectedTeam)}
-                                    {dataToRender.bishop.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`bishop`, selectedTeam)}
+                        {dataToRender.bishop.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`queen`, selectedTeam)}
-                                    {dataToRender.queen.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`queen`, selectedTeam)}
+                        {dataToRender.queen.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`king`, selectedTeam)}
-                                    {dataToRender.king.map((moveObj) => (
-                                        <HeatmapTilePC
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`king`, selectedTeam)}
+                        {dataToRender.king.map((moveObj) => (
+                            <HeatmapTilePC
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`exchange`, selectedTeam)}
-                                    {dataToRender.castling.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
-                            </>
-                        )}
+                    <DisplayColumn>
+                        {renderPieceIcon(`exchange`, selectedTeam)}
+                        {dataToRender.castling.map((moveObj) => (
+                            <HeatmapTileMobile
+                                tileInformation={moveObj}
+                                isClicked={singleTileSelected === moveObj}
+                                handleButtonClick={handleIndividualTileClick}
+                            />
+                        ))}
+                    </DisplayColumn>
+                </>
+                )}
 
 
-                        {hookIsMobile && Object.keys(dataToRender).length > 0 && (
-                            <>
-                                <DisplayColumn>
-                                    {renderPieceIcon(`pawn`, selectedTeam)}
-                                    {dataToRender.pawn.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                {hookIsMobile && Object.keys(dataToRender).length > 0 && (
+                <>
+                    <DisplayColumn>
+                        {renderPieceIcon(`pawn`, selectedTeam)}
+                        {dataToRender.pawn.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`rook`, selectedTeam)}
-                                    {dataToRender.rook.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`rook`, selectedTeam)}
+                        {dataToRender.rook.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`knight`, selectedTeam)}
-                                    {dataToRender.knight.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`knight`, selectedTeam)}
+                        {dataToRender.knight.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`bishop`, selectedTeam)}
-                                    {dataToRender.bishop.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`bishop`, selectedTeam)}
+                        {dataToRender.bishop.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`queen`, selectedTeam)}
-                                    {dataToRender.queen.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`queen`, selectedTeam)}
+                        {dataToRender.queen.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`king`, selectedTeam)}
-                                    {dataToRender.king.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
+                    <DisplayColumn>
+                        {renderPieceIcon(`king`, selectedTeam)}
+                        {dataToRender.king.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
 
-                                <DisplayColumn>
-                                    {renderPieceIcon(`exchange`, selectedTeam)}
-                                    {dataToRender.castling.map((moveObj) => (
-                                        <HeatmapTileMobile
-                                            tileInformation={moveObj}
-                                            isClicked={singleTileSelected === moveObj}
-                                            handleButtonClick={handleIndividualTileClick}
-                                        />
-                                    ))}
-                                </DisplayColumn>
-                            </>
-                        )}
+                    <DisplayColumn>
+                        {renderPieceIcon(`exchange`, selectedTeam)}
+                        {dataToRender.castling.map((tile) => (
+                            <HeatmapTileMobile
+                                tileInformation={tile}
+                                isClicked={singleTileSelected === tile}
+                                handleButtonClick={handleIndividualTileClick}
+                                />
+                        ))}
+                    </DisplayColumn>
+                </>
+                )}
 
-                    </HeatmapContainer>
+            </HeatmapContainer>
 
-            
-
-
-
-        </Container>
+            {/* If "ViewGames" button is pushed, display match history*/}
+            {popupMatchHistory && (
+                <PopupOverlay matchHistory={popupMatchHistory} />
+            )}
+        </>
+        </Inner>
     );
 };
 
