@@ -2,6 +2,9 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Container, Inner } from './styles3';
 
+//
+// Component Styles
+//
 const spin = keyframes
 `
     0% { transform: rotate(0deg); }

@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+// Components
 import SingleIcon from "../SingleIcon";
+
+// Custom Hooks
 import useParseFEN from "../../hooksSpecific/useParseFEN";
 
 //
-// Styles
+// Component Styles
 //
-const Container = styled.div`
+const Container = styled.div
+`
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-`;
+`
+;
 
-const Square = styled.div`
+const Square = styled.div
+`
     flex: 1;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: ${(props) => (props.color === "white" ? '#eeeed2' : '#4e7837')};
-`;
+`
+;
 
 const Board = (props) => {
 

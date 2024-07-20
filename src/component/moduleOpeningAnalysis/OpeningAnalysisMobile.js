@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-
 //
-// Styles
+// Component Styles
 //
 const Container = styled.div
 `
@@ -127,26 +126,21 @@ const OpeningAnalysisMobile = (props) => {
 
             {/* If OpeningDiv is clicked, it will expand and show the Variations */}
             {isClicked && (
-                <>
+            <>
+                {openingInformation.variations.map((variation, vIndex) => (
+                    <VariationDiv>
 
-                    {openingInformation.variations.map((variation, vIndex) => (
-                        <VariationDiv>
+                        <VariationHeading>{variation.name}</VariationHeading>
+                        <VariationWinRate>{(variation.wins / variation.played * 100).toFixed(2)}%</VariationWinRate>
 
-                            <VariationHeading>{variation.name}</VariationHeading>
-                            <VariationWinRate>{(variation.wins / variation.played * 100).toFixed(2)}%</VariationWinRate>
-                            {/* <p>{variation.name}</p>
-                            <p>{variation.played}</p> */}
+                        <Cell>{`Played: \n ${variation.played}`}</Cell>
+                        <Cell>{`Won: \n ${variation.wins}`}</Cell>
+                        <Cell>{`Loss: \n ${variation.losses}`}</Cell>
+                        <Cell>{`Drew: \n ${variation.draws}`}</Cell>
 
-                            {/* <Cell>{`Played: \n ${openingInformation.played}`}</Cell> */}
-                            <Cell>{`Played: \n ${variation.played}`}</Cell>
-                            <Cell>{`Won: \n ${variation.wins}`}</Cell>
-                            <Cell>{`Loss: \n ${variation.losses}`}</Cell>
-                            <Cell>{`Drew: \n ${variation.draws}`}</Cell>
-
-                        </VariationDiv>
-                    ))}
-
-                </>
+                    </VariationDiv>
+                ))}
+            </>
             )}
 
         </Container>

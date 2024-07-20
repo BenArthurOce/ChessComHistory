@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import SingleIcon from "../SingleIcon";
-
 import { Container, Title } from "../styles3";
 
-//
-// Styles
-//
+// Components
+import SingleIcon from "../SingleIcon";
 
-
+//
+// Component Styles
+//
 const TableContainer = styled.div
 `
     margin-top: 20px;
@@ -46,7 +45,6 @@ const TableHeader = styled.th
 
 const TableCell = styled.td
 `
-
     padding: 5px 2px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -78,8 +76,6 @@ const FirstColumnCell = styled(TableCell)
 ;
 
 
-// props: An array of ParsedMatchObjects
-// This Component combines all the wins/losses/draws of the ParsedMatchObjects and outputs a table of the win/loss data, by piece colour and by time control
 function MatchHistoryTable(props) {
 
     //

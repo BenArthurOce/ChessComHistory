@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
+
+// Components
+import LoadingChessCom from "./LoadingChessCom";
+
+// Custom Hooks
 import useAPIChessCom from "../hooksSpecific/useAPIChessCom";
 import useBuildMatchesChessCom from "../hooksSpecific/useBuildMatchesChessCom";
-import LoadingChessCom from "./LoadingChessCom";
 
 const RequestChessCom = (props) => {
 

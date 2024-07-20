@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
+// Components
 import Board from "./Board";
 import SingleIcon from "../SingleIcon";
 
 //
-// Styles
+// Component Styles
 //
 const SingleMatchComp = styled.div
 `
@@ -166,96 +167,96 @@ function SingleMatchMobile(props) {
 
 
     return (
-        <>
-            {gameInformation && (
-                <SingleMatchComp colorBackground={colorBackground} onClick={handleComponentClick}>
+    <>
+        {gameInformation && (
+            <SingleMatchComp colorBackground={colorBackground} onClick={handleComponentClick}>
 
-                    {/* Win / Loss bar */}
-                    <ResultBar colorBar={colorBar}></ResultBar>
+                {/* Win / Loss bar */}
+                <ResultBar colorBar={colorBar}></ResultBar>
 
-                    {/* Line - Match ID */}
-                    <Title>
-                        <h3>
-                            <a
-                                href={`${gameInformation.general.url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <p>Site: {gameInformation.general.site} || ID: {gameInformation.general.id}</p>
-                            </a>
-                        </h3>
-                    </Title>
+                {/* Line - Match ID */}
+                <Title>
+                    <h3>
+                        <a
+                            href={`${gameInformation.general.url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <p>Site: {gameInformation.general.site} || ID: {gameInformation.general.id}</p>
+                        </a>
+                    </h3>
+                </Title>
 
-                    {/* Chessboard Display. "Board" is a seperate component in a different file */}
-                    <BoardContainer>
-                        <Board fen={gameInformation.results.fen} />
-                    </BoardContainer>
+                {/* Chessboard Display. "Board" is a seperate component in a different file */}
+                <BoardContainer>
+                    <Board fen={gameInformation.results.fen} />
+                </BoardContainer>
 
-                    {/* Line - General Match Info */}
-                    <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>
-                    <Row>
-                        <p>
-                            {gameInformation.time.minutes}+{gameInformation.time.increment}
-                            &nbsp; &middot; &nbsp;
-                            {gameInformation.general.rated}
-                            &nbsp; &middot; &nbsp;
-                            {gameInformation.general.event}
-                        </p>
-                    </Row>
+                {/* Line - General Match Info */}
+                <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>
+                <Row>
+                    <p>
+                        {gameInformation.time.minutes}+{gameInformation.time.increment}
+                        &nbsp; &middot; &nbsp;
+                        {gameInformation.general.rated}
+                        &nbsp; &middot; &nbsp;
+                        {gameInformation.general.event}
+                    </p>
+                </Row>
 
-                    {/* Line - Date Played */}
-                    <Icon icon={"calendar"} color={colorIcon} size={13} ></Icon>
-                    <Row>
-                        <p>{gameInformation.general.date}</p>
-                    </Row>
+                {/* Line - Date Played */}
+                <Icon icon={"calendar"} color={colorIcon} size={13} ></Icon>
+                <Row>
+                    <p>{gameInformation.general.date}</p>
+                </Row>
 
-                    {/* Line - White Details */}
-                    <Icon icon={"pawn"} color={"white"} size={13} ></Icon>
-                    <Row>
-                        <p>{gameInformation.white.username}</p>
-                        &nbsp;
-                        <strong><p>({gameInformation.white.elo})</p></strong>
-                    </Row>
+                {/* Line - White Details */}
+                <Icon icon={"pawn"} color={"white"} size={13} ></Icon>
+                <Row>
+                    <p>{gameInformation.white.username}</p>
+                    &nbsp;
+                    <strong><p>({gameInformation.white.elo})</p></strong>
+                </Row>
 
-                    {/* Line - Black Details */}
-                    <Icon icon={"pawn"} color={"black"} size={13} ></Icon>
-                    <Row>
-                        <p>{gameInformation.black.username}</p>
-                        &nbsp;
-                        <strong><p>({gameInformation.black.elo})</p></strong>
-                    </Row>
+                {/* Line - Black Details */}
+                <Icon icon={"pawn"} color={"black"} size={13} ></Icon>
+                <Row>
+                    <p>{gameInformation.black.username}</p>
+                    &nbsp;
+                    <strong><p>({gameInformation.black.elo})</p></strong>
+                </Row>
 
-                    {/* Line - Result */}
-                    <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={13} ></Icon>
-                    <Row>
-                        <p>{gameInformation.results.terminationFull}</p>
-                    </Row>
+                {/* Line - Result */}
+                <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={13} ></Icon>
+                <Row>
+                    <p>{gameInformation.results.terminationFull}</p>
+                </Row>
 
-                    {/* Line - ECO opening and link */}
-                    <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
-                    <Row>
-                        <p>{gameInformation.openingData.ECO} - {gameInformation.openingData.NAME}</p>
-                    </Row>
+                {/* Line - ECO opening and link */}
+                <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
+                <Row>
+                    <p>{gameInformation.openingData.ECO} - {gameInformation.openingData.NAME}</p>
+                </Row>
 
-                    {/* Line - String of Moves */}
-                    <CopyButton onClick={handleCopyPGNButtonClick}>
-                            <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
-                    </CopyButton>
-                    <Row>
-                        <p>{gameInformation.moves.string}</p>
-                    </Row>
+                {/* Line - String of Moves */}
+                <CopyButton onClick={handleCopyPGNButtonClick}>
+                        <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
+                </CopyButton>
+                <Row>
+                    <p>{gameInformation.moves.string}</p>
+                </Row>
 
-                    {/* Line - FEN */}
-                    <CopyButton onClick={handleCopyFENButtonClick}>
-                            <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
-                    </CopyButton>
-                    <Row>
-                        <p>{gameInformation.results.fen}</p>
-                    </Row>
+                {/* Line - FEN */}
+                <CopyButton onClick={handleCopyFENButtonClick}>
+                        <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
+                </CopyButton>
+                <Row>
+                    <p>{gameInformation.results.fen}</p>
+                </Row>
 
-                </SingleMatchComp>
-            )}
-        </>
+            </SingleMatchComp>
+        )}
+    </>
     );
 }
 

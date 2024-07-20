@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Container, Title, Inner, ContainerUserInput, FlexRow, FlexLabel, FlexDropDown} from "../styles3";
 
+// Components
 import OpeningAnalysisPC from "./OpeningAnalysisPC";
 import OpeningAnalysisMobile from "./OpeningAnalysisMobile";
 
-import useOpeningAnalysisGroupOpenings from "../../hooksSpecific/useOpeningAnalysisGroupOpenings";
+// Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-
+import useOpeningAnalysisGroupOpenings from "../../hooksSpecific/useOpeningAnalysisGroupOpenings";
 
 
 const OpeningAnalysisController = (props) => {
@@ -51,6 +52,7 @@ const OpeningAnalysisController = (props) => {
             <Title>Opening Analysis</Title>
 
             <ContainerUserInput>
+                {/* Input: Select Team */}
                 <FlexRow>
                     <FlexLabel htmlFor="teamSelect">Select Team:</FlexLabel>
                     <FlexDropDown id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
@@ -59,7 +61,7 @@ const OpeningAnalysisController = (props) => {
                     </FlexDropDown>
                 </FlexRow>
 
-
+                {/* Input: Select First Move */}
                 <FlexRow>
                     <FlexLabel htmlFor="firstMoveSelect">First Move:</FlexLabel>
                     <FlexDropDown id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
@@ -69,29 +71,6 @@ const OpeningAnalysisController = (props) => {
                     </FlexDropDown>
                 </FlexRow>
             </ContainerUserInput>
-
-            {/* Input Controls */}
-            {/* <ContainerUserInput>
-                <FlexRow>
-                    <div>
-                        <Label htmlFor="teamSelect">Select Team:</Label>
-                        <DropDownBox id="teamSelect" value={selectedTeam} onChange={handleTeamChange}>
-                            <option value="white">White</option>
-                            <option value="black">Black</option>
-                        </DropDownBox>
-                    </div>
-
-                    <div>
-                        <Label htmlFor="firstMoveSelect">First Move:</Label>
-                        <DropDownBox id="firstMoveSelect" value={firstMove} onChange={handleFirstMoveChange}>
-                            <option value="1.e4">1.e4</option>
-                            <option value="1.d4">1.d4</option>
-                            <option value="other">Other</option>
-                        </DropDownBox>
-                    </div>
-                </FlexRow>
-            </ContainerUserInput> */}
-
 
             {/* PC Display */}
             {!hookIsMobile && hookDataToRender && (

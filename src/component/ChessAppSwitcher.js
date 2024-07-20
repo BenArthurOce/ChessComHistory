@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import { Container, Title, Inner } from './styles3';
 
-// Modules
+// Components
+import RequestChessCom from './RequestChessCom';
+import RequestLichess from './RequestLichess';
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
 import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
-
-import HeatmapSubByPiece from './moduleHeatmap/HeatmapSubByPiece';
-import HeatmapSubByTurn from './moduleHeatmap/HeatmapSubByTurn';
-// import HeatmapMasterTwo from './moduleHeatmap/HeatmapMasterTwo';
-// import HeatmapSubByTurn from './moduleHeatmap/HeatmapSubByTurn';
-// import HeatmapSubByPiece from './moduleHeatmapAnalysis/HeatmapSubByPiece';
-// import HeatmapSubByPiece from './moduleHeatmap/HeatmapSubByPiece';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
 import Debugging from './Debugging';
 
-// Other Components
-import RequestChessCom from './RequestChessCom';
-import RequestLichess from './RequestLichess';
-
 
 const ChessAppSwitcher = (props) => {
+
+    //
+    // Props
+    //
     const { username, lastNGames, activeModule, playerInformation, website } = props;
+
+    //
+    // States
+    //
     const [matchData, setMatchData] = useState(null);
     const [gotDataFlag, setGotDataFlag] = useState(false);
 
+    //
+    // Helpers
+    //  
     const handleChildData = (data) => {
         if (!data) return;
         setMatchData(data);

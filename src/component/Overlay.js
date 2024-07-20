@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+// Components
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
+
+// Custom Hooks
 import useIsMobile from '../hooks/useIsMobile';
 
 //
-// Styles
+// Component Styles
 //
 const Container = styled.div
 `
@@ -60,6 +64,7 @@ const CloseButton = styled.button
 ;
 
 const PopupOverlay = (props) => {
+    
     //
     // Props
     //

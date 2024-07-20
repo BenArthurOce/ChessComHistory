@@ -4,13 +4,15 @@ import styled from "styled-components";
 import { Inner } from "./styles";
 import { Container, Title } from "./styles3";
 
-import useIsMobile from "../hooks/useIsMobile";
-
+// Components
 import ChessAppSwitcher from "./ChessAppSwitcher";
 import NavigationBarSliding from "./NavigationBarSliding";
 
+// Custom Hooks
+import useIsMobile from "../hooks/useIsMobile";
+
 //
-// Styles
+// Component Styles
 //
 const Wrapper = styled.div
 `

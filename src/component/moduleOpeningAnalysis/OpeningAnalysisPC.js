@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-
 //
-// Styles
+// Component Styles
 //
 const Container = styled.div
 `

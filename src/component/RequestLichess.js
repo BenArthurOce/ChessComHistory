@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
+
+// Components
+import LoadingLichess from "./LoadingLichess";
+
+// Custom Hooks
 import useAPILichess from "../hooksSpecific/useAPILichess";
 import useBuildMatchesLichess from "../hooksSpecific/useBuildMatchesLichess";
-import LoadingLichess from "./LoadingLichess";
+
 
 const RequestLichess = (props) => {
 

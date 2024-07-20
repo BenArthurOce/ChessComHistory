@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import useIsMobile from '../hooks/useIsMobile';
-
 import { FlexRow, FlexLabel, FlexInput, FlexDropDown } from './styles3';
 
-//
-// Styles
-//
+// Custom Hooks
+import useIsMobile from '../hooks/useIsMobile';
 
+//
+// Component Styles
+//
 const Container = styled.div
 `
     position: relative;
@@ -100,7 +100,6 @@ const NavigationBarSliding = (props) => {
     // Props
     //
     const { onFormSubmit, onNavigationButtonClick, userFound } = props;
-    // console.log(props)
 
     //
     // States
@@ -142,13 +141,6 @@ const NavigationBarSliding = (props) => {
     const handleWebsiteChange = (event) => {
         setWebsite(event.target.value);
     };
-
-    //
-    // Effects
-    //
-    useEffect(() => {
-        // console.log(website);
-    }, [website]);
 
     //
     // Helpers

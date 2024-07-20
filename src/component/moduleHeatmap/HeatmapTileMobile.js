@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-
 //
-// Styles
+// Component Styles
 //
 const Tile = styled.div
 `
@@ -20,7 +19,6 @@ const Tile = styled.div
     position: relative;
 `
 ;
-
 
 const Popup = styled.div
 `
@@ -48,7 +46,6 @@ const PopupTextSpan = styled.span
 `
 ;
 
-
 const HeatmapTileMobile = (props) => {
 
     //
@@ -57,16 +54,12 @@ const HeatmapTileMobile = (props) => {
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
 
-    // console.log(tile)
-
     //
     // States
     //
-
     const [colorBackground, setColorBackground] = useState("");
     const [isDisplayPopup, setIsDisplayPopup] = useState(false);
     const tileRef = useRef(null);
-
 
     //
     // Effects
@@ -108,7 +101,6 @@ const HeatmapTileMobile = (props) => {
     //
     const handleButtonPress = (tile) => {
         handleButtonClick(tileInformation);
-        // // console.log(tileInformation)
     };
 
     // When the user clicks an individual tile - gets small popup of tile information
@@ -117,35 +109,35 @@ const HeatmapTileMobile = (props) => {
     }
 
     return (
+    <>
+        {props && (
         <>
-            {props && (
-                <>
-                    <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => handleHeatmapTileClicked()}>
+            <Tile ref={tileRef} colorBackground={colorBackground} isDisplayPopup={isDisplayPopup} onClick={() => handleHeatmapTileClicked()}>
+                <PopupTextSpan>
+                    <p>{tile.move}</p>
+                </PopupTextSpan>
+
+                {isDisplayPopup && (
+                    <Popup colorBackground={colorBackground}>
+                        <PopupTextSpan><p><b>Move:</b></p><p>{tile.move}</p></PopupTextSpan>
+                        <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winrate.toFixed(2)}%</p></PopupTextSpan>
+                        <br></br>
+                        <PopupTextSpan><p><b>Games:</b></p><p>{tile.played}</p></PopupTextSpan>
+                        <PopupTextSpan><p><b>Won:</b></p><p>{tile.wins}</p></PopupTextSpan>
+                        <PopupTextSpan><p><b>Lost:</b></p><p>{tile.losses}</p></PopupTextSpan>
+                        <PopupTextSpan><p><b>Draw:</b></p><p>{tile.draws}</p></PopupTextSpan>
+
+                        {/* Button - Link to Games */}
                         <PopupTextSpan>
-                            <p>{tile.move}</p>
+                            <button onClick={() => handleButtonPress(tile)}>  ViewGames </button>
                         </PopupTextSpan>
-
-                        {isDisplayPopup && (
-                            <Popup colorBackground={colorBackground}>
-                                <PopupTextSpan><p><b>Move:</b></p><p>{tile.move}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winrate.toFixed(2)}%</p></PopupTextSpan>
-                                <br></br>
-                                <PopupTextSpan><p><b>Games:</b></p><p>{tile.played}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Won:</b></p><p>{tile.wins}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Lost:</b></p><p>{tile.losses}</p></PopupTextSpan>
-                                <PopupTextSpan><p><b>Draw:</b></p><p>{tile.draws}</p></PopupTextSpan>
-
-                                {/* Button - Link to Games */}
-                                <PopupTextSpan>
-                                    <button onClick={() => handleButtonPress(tile)}>  ViewGames </button>
-                                </PopupTextSpan>
-                            </Popup>
-                        )}
-                    </Tile>
-                </>
-            )}
-
+                    </Popup>
+                )}
+            </Tile>
         </>
+        )}
+
+    </>
     );
 }
 

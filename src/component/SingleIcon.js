@@ -10,7 +10,7 @@ import { faChessPawn, faChessRook, faChessKnight, faChessBishop, faChessQueen, f
 
 
 //
-// Styles
+// Component Styles
 //
 const Container = styled.div
 `
