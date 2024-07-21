@@ -5,6 +5,7 @@ import JsonFile from '../data/openings.json';
 // matchObjects = All the single match objects from the match history API
 const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     const [hookOutput, setHookOutput] = useState('')
+    const [erroredGames, setErroredGames] = useState([]);
     const openingDictionary = JsonFile;
 
 
@@ -14,21 +15,35 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         if (!username || username.length === 0) { return};
         if (!website || website.length === 0) { return};
 
-        runHook()
+        runHook();
     }, [matchObjects, pgnObjects, username, website]);
 
 
     async function runHook() {
-        try {
-            const result = await Promise.all(matchObjects.map(async (match, index) => {
-                const pgn = pgnObjects[index];
-                return createSingleMatchObject(match, pgn, username, website);
-            }));
-            setHookOutput(result);
-        } catch (err) {
-            console.error("Error in runHook:", err);
-        }
+        const results = [];
+        const errors = [];
+        const errorIndexes = [];
+    
+        await Promise.all(matchObjects.map(async (match, index) => {
+            try {
+                const matchObject = matchObjects[index];
+                const pgnObject = pgnObjects[index];
+                const parsedObject = await createSingleMatchObject(matchObject, pgnObject, username, website);
+                results.push(parsedObject);
+            } catch (err) {
+                errors.push(err);
+                errorIndexes.push(index)
+            }
+        }));
+    
+        console.log(results);
+        console.log(errors);
+        console.log(errorIndexes);
+
+        setHookOutput(results);
+        setErroredGames(errors);
     };
+  
 
     const adaptMatchInformation = (match, parsedData, username, website) => { 
 
@@ -157,6 +172,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                         , "timeout": "abandoned"
                         , "draw": ""
                         , "stalemate": "stalemate"
+                        , "Abandoned": "Abandoned"
                     };
                     return wordSwitch[match.status]
                 };
@@ -295,6 +311,24 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         // Match information from ChessCom / Lichess moved into a uniform state
         const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
     
+
+        if (match.moves === "") {
+            console.log(match)
+            console.log(parsedData)
+            console.log(adaptedInformation)
+            throw new Error (`error moves empty string: match: ${match}  parsedData: ${parsedData}`)
+        };
+
+        if (adaptedInformation["move_object"][1] === undefined) {
+            console.log(match)
+            console.log(parsedData)
+            console.log(adaptedInformation)
+            throw new Error (`error move object undefined: match: ${match}  parsedData: ${parsedData}`)
+        };
+
+
+
+
         return {
             aaaData : {
                   match:        match
@@ -316,7 +350,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , object:           adaptedInformation["move_object"]
                 , white:            getPlayerMoves(adaptedInformation["move_object"], "white")
                 , black:            getPlayerMoves(adaptedInformation["move_object"], "black")
-                , first:            getStartingMove(adaptedInformation["move_object"]["1"][0]) //getStartingMove( getPlayerMoves(parsedData, "white") )
+                , first:            getStartingMove(adaptedInformation["move_object"]["1"][0])
             }
             ,
             results: {

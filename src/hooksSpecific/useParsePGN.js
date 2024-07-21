@@ -5,21 +5,16 @@ const useParsePGN = (hookInput) => {
 
 
     useEffect(() => {
-        // // console.log(`hookInput: ${hookInput}`)
-        if (!hookInput || hookInput.length === 0) { return}
-
-        runHook(hookInput)
-        // // console.log(hookInput)
+        if (!hookInput || hookInput.length === 0) {return};
+        runHook(hookInput);
 
     }, [hookInput]);
 
 
     async function runHook(allGames) {
-
         const matchObjects = await Promise.all(allGames.map(async (match) => {
-
-        const parsedData = parseSinglePGN(match.pgn);
-            return parsedData
+            const parsedData = parseSinglePGN(match.pgn);
+            return parsedData;
         }));
 
         setHookOutput(matchObjects)
@@ -38,6 +33,7 @@ const useParsePGN = (hookInput) => {
     
     
         function buildMoveString(input) {
+            if (!input) return '';  // Handle empty input
             return input.replace(/\{[^{}]*\}|\[[^\[\]]*\]/g, '')
                         .replace(/\d+\.{3}/g, ' ')
                         .replace(/\s+/g, ' ')
@@ -47,6 +43,7 @@ const useParsePGN = (hookInput) => {
     
         
         function buildMoveObject(notation) {
+            if (!notation) return {};  // Handle empty notation
             const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
             let match;
             const allMoves = {};
@@ -61,8 +58,12 @@ const useParsePGN = (hookInput) => {
         };
     
     
-        parsedGameData.MoveString = buildMoveString(unparsedGameString.replace(pgnParseGameRegx, '').trim());
-        parsedGameData.MoveObject = buildMoveObject(parsedGameData.MoveString);
+        // parsedGameData.MoveString = buildMoveString(unparsedGameString.replace(pgnParseGameRegx, '').trim());
+        // parsedGameData.MoveObject = buildMoveObject(parsedGameData.MoveString);
+
+        const moveString = buildMoveString(unparsedGameString.replace(pgnParseGameRegx, '').trim());
+        parsedGameData.MoveString = moveString;
+        parsedGameData.MoveObject = buildMoveObject(moveString);
     
         return parsedGameData;
     
