@@ -80,22 +80,36 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         };
 
-        function getMatchWinner() {
+        function getWinningPlayerColor() {
             try {
-                if (parsedData.Result === "1/2-1/2") {return "draw"}
+                if (parsedData.Result === "1/2-1/2") {return ""}
                 if (parsedData.Result === "1-0") {return "white"}
                 if (parsedData.Result === "0-1") {return "black"}
-                return "[getMatchWinner] NOT FOUND";
+                return "[getWinningPlayerColor] NOT FOUND";
             }
             catch (err) {
-                return "[getMatchWinner] TRY/CATCH ERROR";
+                return "[getWinningPlayerColor] TRY/CATCH ERROR";
+            };
+        };
+
+        function getWinningPlayerName() {
+            try {
+                const matchWinner = getWinningPlayerColor();
+
+                if (parsedData.Result === "1/2-1/2") return "";
+                if (matchWinner === "white") return parsedData.White;
+                if (matchWinner === "black") return parsedData.Black;
+                return "[getWinningPlayerName] ERROR NOT FOUND";
+            }
+            catch (err) {
+                return "[getWinningPlayerName] TRY/CATCH ERROR";
             };
         };
 
         function getUserResult() {
             try {
                 const userPlayed = getUserPlayedColor();
-                const matchWinner = getMatchWinner();
+                const matchWinner = getWinningPlayerColor();
 
                 if (parsedData.Result === "1/2-1/2") return "draw";
                 if (userPlayed === matchWinner) return "win";
@@ -132,11 +146,44 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         function getTerminationWord() {
             try {
                 if (website === "chesscom") {return parsedData.Termination.split(' ').pop()};
-                if (website === "lichess") {return match.status};
+                if (website === "lichess") {
+
+                    if (match.status === "Time forfeit") {return "abandoned"};
+
+                    const wordSwitch = {
+                          "resign": "resignation"
+                        , "mate": "checkmate"
+                        , "outoftime": "time"
+                        , "timeout": "abandoned"
+                        , "draw": ""
+                        , "stalemate": "stalemate"
+                    };
+                    return wordSwitch[match.status]
+                };
                 return "[getTerminationWord] WEBSITE NOT FOUND";
             }
             catch (err) {
                 return "[getTerminationWord] TRY/CATCH ERROR";
+            };
+        };
+
+        function getTerminationFull() {
+            const winnerGetPlayerName = getWinningPlayerName();
+            const terminationWord = getTerminationWord();
+            try {
+                if (website === "chesscom") {return parsedData.Termination};
+                if (website === "lichess") {
+
+                    if (winnerGetPlayerName === "") {
+                        return `Game drawn by ${terminationWord}`
+                    } else {
+                        return `${winnerGetPlayerName} won by ${terminationWord}`
+                    };
+                };
+                return "[getTerminationFull] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getTerminationFull] TRY/CATCH ERROR";
             };
         };
 
@@ -177,36 +224,36 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
         return {
+              "game_website":               getWebsite()
+            , "game_url":                   getGameURL()
+            , "game_id":                    getGameID()
+            , "game_isRated":               getIsRated()
+            , "game_type":                  "to be added (standard/ what variant?"
+            , "game_date":                  parsedData["Date"]
+            , "game_type":                  getGameType()
 
-              "game_website":           getWebsite()
-            , "game_url":               getGameURL()
-            , "game_id":                getGameID()
-            , "game_isRated":           getIsRated()
-            , "game_type":              "to be added (standard/ what variant?"
-            , "game_date":              parsedData["Date"]
-            , "game_type":              getGameType()
+            , "move_string":                parsedData["MoveString"]
+            , "move_object":                parsedData["MoveObject"]
 
-            , "move_string":            parsedData["MoveString"]
-            , "move_object":            parsedData["MoveObject"]
+            , "opening_eco":                parsedData["ECO"]
+            , "opening_name":               getOpeningName()
 
-            , "opening_eco":            parsedData["ECO"]
-            , "opening_name":           getOpeningName()
+            , "player_white_name":          parsedData["White"]
+            , "player_white_elo":           parsedData["WhiteElo"]
+            , "player_black_name":          parsedData["Black"]
+            , "player_black_elo":           parsedData["BlackElo"]
 
-            , "player_white_name":      parsedData["White"]
-            , "player_white_elo":       parsedData["WhiteElo"]
-            , "player_black_name":      parsedData["Black"]
-            , "player_black_elo":       parsedData["BlackElo"]
+            , "results_winnerColor":        getWinningPlayerColor()
+            , "results_winnerName":         getWinningPlayerName()
+            , "results_userPlayed":         getUserPlayedColor()
+            , "results_userResult":         getUserResult()
+            , "results_terminationWord":    getTerminationWord()
+            , "results_terminationFull":    getTerminationFull()
+            , "results_fen":                getEndingPosition()
 
-            , "results_winner":         getMatchWinner()
-            , "results_userPlayed":     getUserPlayedColor()
-            , "results_userResult":     getUserResult()
-            , "results_termination":    getTerminationWord()
-            , "results_fen":            getEndingPosition()
-
-            , "time_control":           parsedData["TimeControl"] 
-            , "time_class":             getTimeClassType()
+            , "time_control":               parsedData["TimeControl"] 
+            , "time_class":                 getTimeClassType()
         }
-
     };
 
 
@@ -236,19 +283,25 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                         bestMatchLength = openingLength;
                     }
                 }
-            }
+            };
         
-            return bestMatch ? openings[bestMatch] : null;
+            const emptyOpening = {
+                "ID": "", "ECO": "", "VOLUME": "", "NAME": "", "FULL": "", "PGN": "", "MOVESSTRING": "", "NUMTURNS": "", "NUMMOVES": "", "NEXTTOMOVE": "", "FAMILY": "", "VARIATION": "", "SUBVARIATION": "", "ECOFAMILY": ""
+            };
+        
+            return bestMatch ? openings[bestMatch] : emptyOpening;
         };
-
-
+        
         // Match information from ChessCom / Lichess moved into a uniform state
         const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
     
         return {
-
-            // zzOriginal:         match
-            // ,
+            aaaData : {
+                  match:        match
+                , parsed:       parsedData
+                , adapted:      adaptedInformation
+            }
+            ,
             general : {
                   url:            adaptedInformation["game_url"]
                 , site:           adaptedInformation["game_website"]
@@ -268,11 +321,12 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             ,
             results: {
                   fen:              adaptedInformation["results_fen"]
-                , terminationFull:  ""
-                , terminationWord:  adaptedInformation["results_termination"]           
+                , terminationWord:  adaptedInformation["results_terminationWord"]
+                , terminationFull:  adaptedInformation["results_terminationFull"]
                 , userPlayed:       adaptedInformation["results_userPlayed"]
                 , userResult:       adaptedInformation["results_userResult"]
-                , winner:           adaptedInformation["results_winner"]
+                , winnerColor:      adaptedInformation["results_winnerColor"]
+                , winnerName:       adaptedInformation["results_winnerName"]
             }
             ,
             playerResults: {

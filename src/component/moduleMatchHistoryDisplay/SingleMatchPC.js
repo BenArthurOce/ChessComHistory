@@ -8,6 +8,9 @@ import SingleIcon from "../SingleIcon";
 //
 // Component Styles
 //
+//
+// Component Styles
+//
 const SingleMatchComp = styled.div
 `
     display: grid;
@@ -92,7 +95,7 @@ const Row = styled.span
 ;
 
 
-function SingleMatchMobile(props) {
+function SingleMatchPC(props) {
 
     //
     // Props
@@ -149,7 +152,7 @@ function SingleMatchMobile(props) {
 
     // For debugging purposes. When the component is clicked, the ParsedMatchObject is printed to terminal
     const handleComponentClick = () => {
-        // // console.log(gameInformation);
+        console.log(gameInformation);
     };
 
 
@@ -173,7 +176,7 @@ function SingleMatchMobile(props) {
 
                 {/* Line - Match ID */}
                 <Title>
-                    <h2>
+                    <h3>
                         <a
                             href={`${gameInformation.general.url}`}
                             target="_blank"
@@ -181,16 +184,16 @@ function SingleMatchMobile(props) {
                         >
                             <p>Site: {gameInformation.general.site} || ID: {gameInformation.general.id}</p>
                         </a>
-                    </h2>
+                    </h3>
                 </Title>
 
                 {/* Chessboard Display. "Board" is a seperate component in a different file */}
                 <BoardContainer>
-                    <Board fen={gameInformation.results.fen} />
+                    <Board fen={gameInformation.results.fen} userplayed={gameInformation.results.userPlayed} site={gameInformation.general.site} />
                 </BoardContainer>
 
                 {/* Line - General Match Info */}
-                <Icon icon={gameInformation.time.class} color={colorIcon} size={18} ></Icon>
+                <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>
                 <Row>
                     <p>
                         {gameInformation.time.minutes}+{gameInformation.time.increment}
@@ -202,13 +205,13 @@ function SingleMatchMobile(props) {
                 </Row>
 
                 {/* Line - Date Played */}
-                <Icon icon={"calendar"} color={colorIcon} size={18} ></Icon>
+                <Icon icon={"calendar"} color={colorIcon} size={13} ></Icon>
                 <Row>
                     <p>{gameInformation.general.date}</p>
                 </Row>
 
                 {/* Line - White Details */}
-                <Icon icon={"pawn"} color={"white"} size={18} ></Icon>
+                <Icon icon={"pawn"} color={"white"} size={13} ></Icon>
                 <Row>
                     <p>{gameInformation.white.username}</p>
                     &nbsp;
@@ -216,7 +219,7 @@ function SingleMatchMobile(props) {
                 </Row>
 
                 {/* Line - Black Details */}
-                <Icon icon={"pawn"} color={"black"} size={18} ></Icon>
+                <Icon icon={"pawn"} color={"black"} size={13} ></Icon>
                 <Row>
                     <p>{gameInformation.black.username}</p>
                     &nbsp;
@@ -224,20 +227,20 @@ function SingleMatchMobile(props) {
                 </Row>
 
                 {/* Line - Result */}
-                <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={18} ></Icon>
+                <Icon icon={gameInformation.results.terminationWord} color={colorIcon} size={13} ></Icon>
                 <Row>
                     <p>{gameInformation.results.terminationFull}</p>
                 </Row>
 
                 {/* Line - ECO opening and link */}
-                <Icon icon={"book"} color={colorIcon} size={18} ></Icon>
+                <Icon icon={"book"} color={colorIcon} size={13} ></Icon>
                 <Row>
                     <p>{gameInformation.openingData.ECO} - {gameInformation.openingData.NAME}</p>
                 </Row>
 
                 {/* Line - String of Moves */}
                 <CopyButton onClick={handleCopyPGNButtonClick}>
-                        <Icon icon={"copy"} color={colorIcon} size={18}></Icon>
+                        <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
                 </CopyButton>
                 <Row>
                     <p>{gameInformation.moves.string}</p>
@@ -245,7 +248,7 @@ function SingleMatchMobile(props) {
 
                 {/* Line - FEN */}
                 <CopyButton onClick={handleCopyFENButtonClick}>
-                        <Icon icon={"copy"} color={colorIcon} size={18}></Icon>
+                        <Icon icon={"copy"} color={colorIcon} size={13}></Icon>
                 </CopyButton>
                 <Row>
                     <p>{gameInformation.results.fen}</p>
@@ -257,4 +260,4 @@ function SingleMatchMobile(props) {
     );
 }
 
-export default SingleMatchMobile;
+export default SingleMatchPC;

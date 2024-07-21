@@ -25,7 +25,14 @@ const Square = styled.div
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${(props) => (props.color === "white" ? '#eeeed2' : '#4e7837')};
+    background-color: ${(props) =>
+        props.site === 'ChessCom'
+            ? props.color === 'white'
+                ? '#eeeed2'
+                : '#4e7837'
+            : props.color === 'white'
+            ? '#f0d9b5'
+            : '#b58863'};
 `
 ;
 
@@ -34,7 +41,7 @@ const Board = (props) => {
     //
     // Props
     //
-    const { fen } = props;
+    const { fen, userplayed, site } = props;
 
     //
     // States
@@ -58,8 +65,13 @@ const Board = (props) => {
             row.map(piece => translateLetterToPiece(piece))
         );
 
-        setPieces(array);
-
+        // Flip the board if the player is black
+        if (userplayed === "black") {
+            const reverseArray = array.map(row=>row.reverse()).reverse()
+            setPieces(reverseArray);
+        } else {
+            setPieces(array);
+        }
     }, [fen, hookUseParseFEN]);
 
     //
@@ -86,12 +98,16 @@ const Board = (props) => {
 
     return (
         <Container>
-            {pieces.map((row, rowIndex) => 
-                row.map((piece, colIndex) => (
-                    <Square key={`${rowIndex}-${colIndex}`} color={(rowIndex + colIndex) % 2 === 0 ? "white" : "black"}>
-                        {piece && <SingleIcon icon={piece.piece} color={piece.color} size={16} />}
-                    </Square>
-                ))
+            {pieces.length > 0 && (
+            <>
+                {pieces.map((row, rowIndex) => 
+                    row.map((piece, colIndex) => (
+                        <Square key={`${rowIndex}-${colIndex}`} color={(rowIndex + colIndex) % 2 === 0 ? "white" : "black"} site={site}>
+                            {piece && <SingleIcon icon={piece.piece} color={piece.color} size={16} />}
+                        </Square>
+                    ))
+                )}
+            </>
             )}
         </Container>
     );

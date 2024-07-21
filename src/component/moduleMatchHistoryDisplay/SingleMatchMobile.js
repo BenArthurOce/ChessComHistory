@@ -101,6 +101,7 @@ function SingleMatchMobile(props) {
     // Props
     //
     const { gameInformation } = props;
+    // console.log(gameInformation)
 
     //
     // States
@@ -189,7 +190,7 @@ function SingleMatchMobile(props) {
 
                 {/* Chessboard Display. "Board" is a seperate component in a different file */}
                 <BoardContainer>
-                    <Board fen={gameInformation.results.fen} />
+                    <Board fen={gameInformation.results.fen} userplayed={gameInformation.results.userPlayed} site={gameInformation.general.site} />
                 </BoardContainer>
 
                 {/* Line - General Match Info */}

@@ -31,25 +31,30 @@ const MatchHistoryDisplay = (props) => {
     // Effects
     //
     useEffect(() => {
-        setMatchesToRender(30) 
+        setMatchesToRender(60) 
     }, [matchHistory]);
 
 
     return (
         <Container>
             <Title>Match History</Title>
-            {hookIsMobile ? (
-                <>
-                    {matchHistory.map((match, index) => (
-                        index < matchesToRender && <SingleMatchMobile key={index} gameInformation={match} />
-                    ))}
-                </>
-            ) : (
-                <>
-                    {matchHistory.map((match, index) => (
-                        index < matchesToRender && <SingleMatchPC key={index} gameInformation={match} />
-                    ))}
-                </>
+
+            {/* Render PC Version */}
+            {!hookIsMobile && matchesToRender && (
+            <>
+                {matchHistory.map((match, index) => (
+                    index < matchesToRender && <SingleMatchPC key={index} gameInformation={match} />
+                ))}
+            </>
+            )}
+
+            {/* Render Mobile Version */}
+            {hookIsMobile && matchesToRender && (
+            <>
+                {matchHistory.map((match, index) => (
+                    index < matchesToRender && <SingleMatchMobile key={index} gameInformation={match} />
+                ))}
+            </>
             )}
         </Container>
     );
