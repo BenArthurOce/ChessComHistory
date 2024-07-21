@@ -94,6 +94,16 @@ function MatchHistoryTable(props) {
     useEffect(() => {
         const stats = calculateStats(matchHistory);
         setStats(stats);
+
+
+        const results = []
+        matchHistory.forEach(match => {
+            results.push(match.time.class)
+        });
+
+        const mySet = new Set(results)
+        console.log(mySet)
+
     }, [matchHistory]);
 
     //
@@ -113,6 +123,20 @@ function MatchHistoryTable(props) {
                 draws: {
                     white: filterMatches(matchHistory, "white", "draw", "daily"),
                     black: filterMatches(matchHistory, "black", "draw", "daily")
+                }
+            },
+            classical: {
+                wins: {
+                    white: filterMatches(matchHistory, "white", "win", "classical"),
+                    black: filterMatches(matchHistory, "black", "win", "classical")
+                },
+                losses: {
+                    white: filterMatches(matchHistory, "white", "lose", "classical"),
+                    black: filterMatches(matchHistory, "black", "lose", "classical")
+                },
+                draws: {
+                    white: filterMatches(matchHistory, "white", "draw", "classical"),
+                    black: filterMatches(matchHistory, "black", "draw", "classical")
                 }
             },
             rapid: {
@@ -156,22 +180,36 @@ function MatchHistoryTable(props) {
                     white: filterMatches(matchHistory, "white", "draw", "bullet"),
                     black: filterMatches(matchHistory, "black", "draw", "bullet")
                 }
+            },
+            other: {
+                wins: {
+                    white: filterOtherMatches(matchHistory, "white", "win"),
+                    black: filterOtherMatches(matchHistory, "black", "win")
+                },
+                losses: {
+                    white: filterOtherMatches(matchHistory, "white", "lose"),
+                    black: filterOtherMatches(matchHistory, "black", "lose")
+                },
+                draws: {
+                    white: filterOtherMatches(matchHistory, "white", "draw"),
+                    black: filterOtherMatches(matchHistory, "black", "draw")
+                }
             }
         };
 
         // Calculate totals
         stats.total = {
             wins: {
-                white: stats.daily.wins.white.length + stats.rapid.wins.white.length + stats.blitz.wins.white.length + stats.bullet.wins.white.length,
-                black: stats.daily.wins.black.length + stats.rapid.wins.black.length + stats.blitz.wins.black.length + stats.bullet.wins.black.length
+                white: stats.daily.wins.white.length + stats.classical.wins.white.length + stats.rapid.wins.white.length + stats.blitz.wins.white.length + stats.bullet.wins.white.length + stats.other.wins.white.length,
+                black: stats.daily.wins.black.length + stats.classical.wins.black.length + stats.rapid.wins.black.length + stats.blitz.wins.black.length + stats.bullet.wins.black.length + stats.other.wins.black.length
             },
             losses: {
-                white: stats.daily.losses.white.length + stats.rapid.losses.white.length + stats.blitz.losses.white.length + stats.bullet.losses.white.length,
-                black: stats.daily.losses.black.length + stats.rapid.losses.black.length + stats.blitz.losses.black.length + stats.bullet.losses.black.length
+                white: stats.daily.losses.white.length + stats.classical.losses.white.length + stats.rapid.losses.white.length + stats.blitz.losses.white.length + stats.bullet.losses.white.length + stats.other.losses.white.length,
+                black: stats.daily.losses.black.length + stats.classical.losses.black.length + stats.rapid.losses.black.length + stats.blitz.losses.black.length + stats.bullet.losses.black.length + stats.other.losses.black.length
             },
             draws: {
-                white: stats.daily.draws.white.length + stats.rapid.draws.white.length + stats.blitz.draws.white.length + stats.bullet.draws.white.length,
-                black: stats.daily.draws.black.length + stats.rapid.draws.black.length + stats.blitz.draws.black.length + stats.bullet.draws.black.length
+                white: stats.daily.draws.white.length + stats.classical.draws.white.length + stats.rapid.draws.white.length + stats.blitz.draws.white.length + stats.bullet.draws.white.length + stats.other.draws.white.length,
+                black: stats.daily.draws.black.length + stats.classical.draws.black.length + stats.rapid.draws.black.length + stats.blitz.draws.black.length + stats.bullet.draws.black.length + stats.other.draws.black.length
             }
         };
 
@@ -188,6 +226,16 @@ function MatchHistoryTable(props) {
         });
     };
 
+    const filterOtherMatches = (matchHistory, userPlayed, winLoseDraw) => {
+        const criteria = ["chess960", "atomic", "racingKings", "ultraBullet", "kingOfTheHill", "correspondence", "horde", "puzzle", "storm" ,"racer", "puzzle", "streak", "crazyhouse", "antichess", "threeCheck"];
+        return matchHistory.filter(({ results, time }) => {
+            return (
+                results.userPlayed === userPlayed &&
+                results.userResult === winLoseDraw &&
+                criteria.includes(time.class)
+            );
+        });
+    };
 
     // Function to render pawn icon with associated number of wins/losses/draws/total
     // see SingleIcon.js 
@@ -247,6 +295,40 @@ function MatchHistoryTable(props) {
                                     </CellTotal>
                                 </TableCell>
                             </tr>
+
+
+                            {/* Classical */}
+                            <tr>
+                                <FirstColumnCell>Classical</FirstColumnCell>
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.classical.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.classical.wins.black.length)}
+                                    <CellTotal> <b>Total: {stats.classical.wins.white.length + stats.classical.wins.black.length}</b> </CellTotal>
+                                </TableCell>
+
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.classical.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.classical.losses.black.length)}
+                                    <CellTotal> <b>Total: {stats.classical.losses.white.length + stats.classical.losses.black.length}</b> </CellTotal>
+                                </TableCell>
+
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.daily.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.daily.draws.black.length)}
+                                    <CellTotal> <b>Total: {stats.daily.draws.white.length + stats.daily.draws.black.length}</b> </CellTotal>
+                                </TableCell>
+                                
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.classical.wins.white.length + stats.classical.losses.white.length + stats.classical.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.classical.wins.black.length + stats.classical.losses.black.length + stats.classical.draws.black.length)}
+                                    <CellTotal>
+                                        <b>Total: {stats.classical.wins.white.length + stats.classical.losses.white.length + stats.classical.draws.white.length +
+                                                   stats.classical.wins.black.length + stats.classical.losses.black.length + stats.classical.draws.black.length}
+                                        </b>
+                                    </CellTotal>
+                                </TableCell>
+                            </tr>
+
 
                             {/* Rapid */}
                             <tr>
@@ -340,6 +422,38 @@ function MatchHistoryTable(props) {
                                     <CellTotal>
                                         <b>Total: {stats.bullet.wins.white.length + stats.bullet.losses.white.length + stats.bullet.draws.white.length +
                                                    stats.bullet.wins.black.length + stats.bullet.losses.black.length + stats.bullet.draws.black.length}
+                                        </b>
+                                    </CellTotal>
+                                </TableCell>
+                            </tr>
+
+                            {/* Other */}
+                            <tr>
+                                <FirstColumnCell>Other</FirstColumnCell>
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.other.wins.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.other.wins.black.length)}
+                                    <CellTotal> <b>Total: {stats.other.wins.white.length + stats.other.wins.black.length}</b> </CellTotal>
+                                </TableCell>
+
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.other.losses.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.other.losses.black.length)}
+                                    <CellTotal> <b>Total: {stats.other.losses.white.length + stats.other.losses.black.length}</b> </CellTotal>
+                                </TableCell>
+
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.other.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.other.draws.black.length)}
+                                    <CellTotal> <b>Total: {stats.other.draws.white.length + stats.other.draws.black.length}</b> </CellTotal>
+                                </TableCell>
+
+                                <TableCell>
+                                    {renderPawnIcon("pawn", "white", stats.other.wins.white.length + stats.other.losses.white.length + stats.other.draws.white.length)}
+                                    {renderPawnIcon("pawn", "black", stats.other.wins.black.length + stats.other.losses.black.length + stats.other.draws.black.length)}
+                                    <CellTotal>
+                                        <b>Total: {stats.other.wins.white.length + stats.other.losses.white.length + stats.other.draws.white.length +
+                                                   stats.other.wins.black.length + stats.other.losses.black.length + stats.other.draws.black.length}
                                         </b>
                                     </CellTotal>
                                 </TableCell>

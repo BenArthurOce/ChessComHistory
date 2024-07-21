@@ -75,9 +75,25 @@ const Debugging = (props) => {
 
     const onButton4Click = () => {
 
-        // matchHistory
 
-        // // console.log("\nbutton 4 clicked\n")
+        const results = []
+        matchHistory.forEach(game => {
+            results.push(game.aaaData.match.status)
+        });
+
+        const mySet = new Set(results)
+        console.log(mySet)
+
+
+
+        const results2 = []
+        matchHistory.forEach(game => {
+            results2.push(game.aaaData.match.perf)
+        });
+
+        const mySet2 = new Set(results2)
+        console.log(mySet2)
+
     };
 
 

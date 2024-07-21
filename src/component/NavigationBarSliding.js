@@ -215,9 +215,9 @@ const NavigationBarSliding = (props) => {
                         Opening Analysis
                     </NavigationButton>
 
-                    {/* <NavigationButton selected={activeModule === 'debugging'} onClick={() => handleNavigationButtonClick('debugging')}>
+                    <NavigationButton selected={activeModule === 'debugging'} onClick={() => handleNavigationButtonClick('debugging')}>
                         Debugging
-                    </NavigationButton> */}
+                    </NavigationButton>
                 </>
             )}
             </Inner>

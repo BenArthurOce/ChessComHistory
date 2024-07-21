@@ -79,9 +79,9 @@ const ChessAppSwitcher = (props) => {
                         <OpeningAnalysisController matchHistory={matchData} />
                     )}
 
-                    {/* {matchData && activeModule === 'debugging' && (
+                    {matchData && activeModule === 'debugging' && (
                         <Debugging matchHistory={matchData} />
-                    )} */}
+                    )}
                 </Inner>
             )}
         </Container>

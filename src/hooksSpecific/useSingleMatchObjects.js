@@ -172,7 +172,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                         , "timeout": "abandoned"
                         , "draw": ""
                         , "stalemate": "stalemate"
-                        , "Abandoned": "Abandoned"
+                        , "Abandoned": "abandoned"
+                        , "noStart": "abandoned"
                     };
                     return wordSwitch[match.status]
                 };
