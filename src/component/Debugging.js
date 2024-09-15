@@ -96,6 +96,121 @@ const Debugging = (props) => {
 
     };
 
+    const onButton5Click = () => {
+        const results = []
+        matchHistory.forEach(game => {
+            results.push(game.moves.string)
+        });
+
+
+        const arrayOpenings = [];
+
+        results.forEach(match => {
+            const parsedGameData = parsePGNData(match);
+            arrayOpenings.push(parsedGameData);
+            
+        });
+
+        processOpenings(arrayOpenings);
+    };
+
+
+// Function to parse single match data from PGN notation
+const parsePGNData = (unparsedGameString) => {
+    const pgnParseGameRegx = /\[([\w\s]+)\s"([^"]+)"\]/g;
+    const parsedGameData = {};
+
+    let match;
+    while ((match = pgnParseGameRegx.exec(unparsedGameString)) !== null) {
+        parsedGameData[match[1]] = match[2];
+    }
+
+    // Function to clean up move string
+    const buildMoveString = (input) => {
+        return input.replace(/\{[^{}]*\}|\[[^\[\]]*\]/g, '')
+                    .replace(/\d+\.{3}/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .replace(/\s+\./g, '.').replace(/\.\s+/g, '.')
+                    .trim();
+    };
+
+    // Function to build move object from move notation
+    const buildMoveObject = (notation) => {
+        const MOVE_REGEX = /\s*(\d{1,3})\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)(?:\s*\d+\.?\d+?m?s)?\.?\s*((?:(?:O-O(?:-O)?)|(?:[KQNBR][1-8a-h]?x?[a-h]x?[1-8])|(?:[a-h]x?[a-h]?[1-8]\=?[QRNB]?))\+?)?(?:\s*\d+\.?\d+?m?s)?(?:#)?/g;
+        const allMoves = {};
+        let match;
+
+        while ((match = MOVE_REGEX.exec(notation)) !== null) {
+            const moveNumber = parseInt(match[1]);
+            const whiteMove = match[2];
+            const blackMove = match[3] || undefined;
+            allMoves[moveNumber] = [whiteMove, blackMove];
+        }
+        return allMoves;
+    };
+
+    parsedGameData.MoveString = buildMoveString(unparsedGameString.replace(pgnParseGameRegx, '').trim());
+    parsedGameData.MoveObject = buildMoveObject(parsedGameData.MoveString);
+
+    return parsedGameData;
+};
+
+
+
+    // Function to process array of openings and log results
+    const processOpenings = (arrayOpenings) => {
+        const maxIterations = 10; 
+        const finalResult = new Set();
+
+        arrayOpenings.forEach((match) => {
+            const movesObject = match.MoveObject;
+            let result = "";
+            let count = 0;
+
+
+
+            for (const [key, value] of Object.entries(movesObject)) {
+                if (count >= maxIterations) {
+                    break;
+                }
+                value.forEach((move, index) => {
+                    if (move !== undefined) { // Check for undefined
+                        if (index === 0) {
+                            result += `${key}.${move} `;
+                        } else {
+                            result += `${move} `;
+                        }
+                    }
+                });
+                finalResult.add(result.trim()); // Add unique results to Set
+                count++;
+            }
+        });
+
+        // Convert Set to array and join with newline
+        const finalResultArray = [...finalResult];
+        console.log(finalResultArray)
+        const finalResultString = finalResultArray.join('\n');
+
+        // Create a data URI for the text file
+        const blob = new Blob([finalResultString], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        // Create a link element to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'fen_strings.txt';
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
+
 
     const findOpeningMatch = (game, openings) => {
         const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
@@ -128,6 +243,8 @@ const Debugging = (props) => {
                 <button onClick={() => onButton3Click()}>Button 3</button>
 
                 <button onClick={() => onButton4Click()}>Button 4</button>
+
+                <button onClick={() => onButton5Click()}>Button 5</button>
             </ButtonContainer>
 
             <StatContainer>

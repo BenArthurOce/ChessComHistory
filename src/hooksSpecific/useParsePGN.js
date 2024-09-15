@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const useParsePGN = (hookInput) => {
     const [hookOutput, setHookOutput] = useState('')
+    const [erroredGames, setErroredGames] = useState([]);
 
 
     useEffect(() => {
@@ -12,12 +13,26 @@ const useParsePGN = (hookInput) => {
 
 
     async function runHook(allGames) {
-        const matchObjects = await Promise.all(allGames.map(async (match) => {
-            const parsedData = parseSinglePGN(match.pgn);
-            return parsedData;
+        const results = [];
+        const errors = [];
+        const errorIndexes = [];
+
+        await Promise.all(allGames.map(async (match, index) => {
+            try {
+                const parsedData = parseSinglePGN(match.pgn);
+                results.push(parsedData);
+            } catch (err) {
+                errors.push(err);
+                errorIndexes.push(index)
+            }
         }));
 
-        setHookOutput(matchObjects)
+        console.log(results);
+        console.log(errors);
+        console.log(errorIndexes);
+
+        setHookOutput(results);
+        setErroredGames(errors);
     };
 
 

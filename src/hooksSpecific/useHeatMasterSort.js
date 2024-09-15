@@ -34,7 +34,12 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
     };
 
     const summarizeMatchData = (matches) => {
+
+        // matches = an array of matches which has been filtered by firstMove and startTurn 
+        // Each match contains the firstmove, team, result, piece type and piece type
         if (matches.length === 0) return null;
+
+        // console.log(matches);
 
         const firstMatch = matches[0];
         const summary = matches.reduce((acc, match) => {
@@ -61,6 +66,10 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
         summary.score = summary.winrate * summary.played;
         summary.isPositive = summary.winrate >= 50;
 
+        // console.log(summary)
+
+        // "summary" is an object which contents all the data required to make a heatmap tile, including a "score" and if the winrate is over 50%
+        // It is an aggregation of all the matches within the parameter "matches"
         return summary;
     };
 

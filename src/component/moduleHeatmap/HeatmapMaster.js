@@ -60,6 +60,7 @@ const HeatmapMaster = (props) => {
     // Hooks
     //
     const hookMasterData = useHeatMasterData(matchHistory)
+    console.log(hookMasterData)
     
 
     return (

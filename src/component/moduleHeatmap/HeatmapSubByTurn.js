@@ -61,14 +61,54 @@ const HeatmapSubByTurn = (props) => {
     const [selectedTeam, setSelectedTeam] = useState("white"); // Default selected team
     const [firstMove, setFirstMove] = useState("1.e4"); // Default starting move
 
+    const [dataToRender, setDataToRender] = useState([]); 
+
     const [popupMatchHistory, setPopupMatchHistory] = useState(null);
     const [singleTileSelected, setSingleTileSelected] = useState(null);
 
     //
     // Hooks
     //
-    const hookUseHeatmapSubByTurnData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove)
+    const hookUseHeatmapSubByTurnData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove);
+
     const hookIsMobile = useIsMobile(true);
+
+
+    //
+    // Effects
+    //
+    useEffect(() => {
+
+        if (!hookUseHeatmapSubByTurnData || hookUseHeatmapSubByTurnData.length === 0) { return};
+
+        const groupedByTurn = hookUseHeatmapSubByTurnData.reduce((acc, obj) => {
+            const turn = obj.turn;
+          
+
+            if (obj.isPositive && obj.played >= 2) {
+              // Initialize the array for this turn if it doesn't exist
+              if (!acc[turn]) {
+                acc[turn] = [];
+              }
+          
+              acc[turn].push(obj);
+            }  
+            return acc;
+          }, {});
+          
+          // Sort each turn array by score in descending order and keep only the top 3
+          for (let turn in groupedByTurn) {
+            groupedByTurn[turn]
+              .sort((a, b) => b.score - a.score)  // Sort by score (highest to lowest)
+              .splice(3);  // Keep only the first 3
+          }
+          
+          console.log(groupedByTurn);
+          
+
+          setDataToRender(groupedByTurn)
+    }
+    , [hookUseHeatmapSubByTurnData]);
 
     //
     // Handlers
@@ -120,22 +160,32 @@ const HeatmapSubByTurn = (props) => {
 
 
             <TileContainer>
-                {Object.values(hookUseHeatmapSubByTurnData).map((tile, index) => (
-                    
-                    
-                    <Row key={`row-${index}`}>
-                        <TurnNumber>Turn: {index + 1}</TurnNumber> {/* Add 1 to index */}
-                        <MovesContainer>
 
-                            <HeatmapTileMobile
-                                tileInformation={tile}
-                                isClicked={singleTileSelected === tile}
-                                handleButtonClick={handleIndividualTileClick}
-                                />
+                {hookIsMobile && Object.keys(dataToRender).length > 0 && (
+                <>
+                    {Object.values(dataToRender).map((data, index) => ( 
+                    <>
+                        <Row key={`row-${index}`}>
+                            <TurnNumber>Turn: {index + 1}</TurnNumber>
+                            <MovesContainer>
 
-                        </MovesContainer>
-                    </Row>
-                ))}
+                                {Object.values(data).map((tile, index2) => (
+                                <>
+                                    <HeatmapTileMobile
+                                        tileInformation={tile}
+                                        isClicked={singleTileSelected === tile}
+                                        handleButtonClick={handleIndividualTileClick}
+                                        />
+                                </>
+                                ))} 
+
+                            </MovesContainer>
+                        </Row>
+                    </>
+                    ))} 
+                </>
+                )}
+
             </TileContainer>
 
             {popupMatchHistory && (
