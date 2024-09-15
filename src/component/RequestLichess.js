@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 // Components
-import LoadingLichess from "./LoadingLichess";
+import RequestLichessLoading from "./RequestLichessLoading";
 
 // Custom Hooks
 import useAPILichess from "../hooksSpecific/useAPILichess";
@@ -35,7 +35,7 @@ const RequestLichess = (props) => {
     return (
         <>
         {loading && (
-            <LoadingLichess progress={progress} total={totalGames} gamesremaining={totalGames - progress} />
+            <RequestLichessLoading progress={progress} total={totalGames} gamesremaining={totalGames - progress} />
         )}
         </>
     )

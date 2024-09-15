@@ -33,13 +33,13 @@ const Spinner = styled.div
 `
 ;
 
-const LoadingChessCom = ({ progress, total, gamesremaining }) => (
+const RequestChessComLoading = ({ progress, total, gamesremaining }) => (
     <Container>
         <Inner>
             <LoadingContainer>
-                
+                                
                 <Spinner />
-                <p>{`${progress}/${total} endpoints completed`}</p>
+                <p>{`${progress}/${total} months requested`}</p>
                 <p>{`${gamesremaining} games remaining`}</p>
 
             </LoadingContainer>
@@ -47,4 +47,4 @@ const LoadingChessCom = ({ progress, total, gamesremaining }) => (
     </Container>
 );
 
-export default LoadingChessCom;
+export default RequestChessComLoading;

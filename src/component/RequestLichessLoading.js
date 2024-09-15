@@ -33,7 +33,7 @@ const Spinner = styled.div
 `
 ;
 
-const LoadingLichess = ({ progress, total, gamesremaining }) => (
+const RequestLichessLoading = ({ progress, total, gamesremaining }) => (
     <Container>
         <Inner>
             <LoadingContainer>
@@ -47,4 +47,4 @@ const LoadingLichess = ({ progress, total, gamesremaining }) => (
     </Container>
 );
 
-export default LoadingLichess;
+export default RequestLichessLoading;
