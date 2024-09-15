@@ -3807,6 +3807,22 @@
         "SUBVARIATION": null,
         "ECOFAMILY": "A06 - Zukertort Opening"
     },
+    "1.Nf3 d5 2.e4": {
+        "ID": 239,
+        "ECO": "A06",
+        "VOLUME": "A",
+        "NAME": "Zukertort Opening: Tennison Gambit",
+        "FULL": "A06 - Zukertort Opening: Tennison Gambit",
+        "PGN": "1.Nf3 d5 2.e4",
+        "MOVESSTRING": "[{1 || Nf3 || d5}, {2 || e4}]",
+        "NUMTURNS": 2,
+        "NUMMOVES": 3,
+        "NEXTTOMOVE": "Black",
+        "FAMILY": "Zukertort Opening",
+        "VARIATION": "Tennison Gambit",
+        "SUBVARIATION": null,
+        "ECOFAMILY": "A06 - Zukertort Opening"
+    },
     "1.e4 d5 2.Nf3": {
         "ID": 239,
         "ECO": "A06",

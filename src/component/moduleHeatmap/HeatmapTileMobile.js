@@ -65,16 +65,46 @@ const HeatmapTileMobile = (props) => {
     // Effects
     //
     useEffect(() => {
-        if (tile.winrate >= 60) {
-            setColorBackground("#4caf50"); // Dark Green (win over 60%)
-        } else if (tile.winrate > 50) {
-            setColorBackground("#8dbd4f"); // Light Green (win 50% - 60%)
-        } else if (tile.winrate === 50) {
-            setColorBackground("#ffeb3b"); // Yellow (win 50%)
+        if (tile.winrate >= 95) {
+            setColorBackground("#35d404"); 
+        } else if (tile.winrate >= 90) {
+            setColorBackground("#35d404"); 
+        } else if (tile.winrate >= 85) {
+            setColorBackground("#2cba00"); 
+        } else if (tile.winrate >= 80) {
+            setColorBackground("#2cba00"); 
+        } else if (tile.winrate >= 75) {
+            setColorBackground("#2cba00"); 
+        } else if (tile.winrate >= 70) {
+            setColorBackground("#60ba00"); 
+        } else if (tile.winrate >= 65) {
+            setColorBackground("#60ba00");
+        } else if (tile.winrate >= 60) {
+            setColorBackground("#60ba00"); 
+        } else if (tile.winrate >= 55) {
+            setColorBackground("#60ba00"); 
+        } else if (tile.winrate >= 50) {
+            setColorBackground("#82ba00"); 
+        } else if (tile.winrate >= 45) {
+            setColorBackground("#d0db02"); 
         } else if (tile.winrate >= 40) {
-            setColorBackground("#ff9800"); // Orange (win 40% - 50%)
+            setColorBackground("#d0db02"); 
+        } else if (tile.winrate >= 35) {
+            setColorBackground("#d0db02"); 
+        } else if (tile.winrate >= 30) {
+            setColorBackground("#d1b204"); 
+        } else if (tile.winrate >= 25) {
+            setColorBackground("#d1b204"); 
+        } else if (tile.winrate >= 20) {
+            setColorBackground("#ff0000"); 
+        } else if (tile.winrate >= 15) {
+            setColorBackground("#ff0000"); 
+        } else if (tile.winrate >= 10) {
+            setColorBackground("#ff0000"); 
+        } else if (tile.winrate >= 5) {
+            setColorBackground("#ff0000"); 
         } else if (tile.winrate >= 0) {
-            setColorBackground("#f44336"); // Red (win under 40%)
+            setColorBackground("#ff0000"); 
         } else {
             setColorBackground("black"); // Indicates an error
         }

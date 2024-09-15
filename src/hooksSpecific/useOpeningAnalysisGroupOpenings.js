@@ -71,6 +71,11 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
         return [...new Set(objectArray.map((element) => element.openingData.NAME))];
     };
 
+    // Function to get unique Full Opening Names from objectArray
+    const getUniqueFullNames = (objectArray) => {
+        return [...new Set(objectArray.map((element) => element.openingData.FULL))];
+    };
+
     
     // Function to rank the most frequent openings based on match history and selected team
     const rankMostFrequentOpenings = (matchHistory) => {

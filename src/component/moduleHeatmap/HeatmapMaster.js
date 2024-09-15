@@ -7,7 +7,9 @@ import HeatmapSubByPiece from './HeatmapSubByPiece';
 import HeatmapSubByTurn from './HeatmapSubByTurn';
 
 // Custom Hooks
-import useHeatMasterData from '../../hooksSpecific/useHeatMasterData';
+// import useHeatMasterData from '../../hooksSpecific/useHeatMasterData';
+
+import useHeatmapControllerDatasetNEW from '../../hooksSpecific/useHeatmapControllerDatasetNEW';
 
 //
 // Component Styles
@@ -55,14 +57,13 @@ const HeatmapMaster = (props) => {
     //
     const [activeTab, setActiveTab] = useState('byPiece');
 
-
     //
     // Hooks
     //
-    const hookMasterData = useHeatMasterData(matchHistory)
-    console.log(hookMasterData)
-    
+    // const hookMasterData = useHeatMasterData(matchHistory);
+    const hookMasterData = useHeatmapControllerDatasetNEW(matchHistory);
 
+  
     return (
         <Container>
             <Title>Heatmap Master</Title>
