@@ -15,12 +15,17 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
         if (!hookInput[selectedTeam] || !hookInput[selectedTeam][firstMove]) return;
 
         const dataToUse = hookInput[selectedTeam][firstMove];
-        const filteredData = Object.values(dataToUse)
-            .flatMap(value => Object.values(value))
-            .map(matches => filterMatchesByTurn(matches, startTurn, endTurn))
-            .map(summarizeMatchData)
-            .filter(summary => summary !== null); // Filter out null summaries
 
+        console.log("-----")
+        console.log(dataToUse)
+        console.log("-----")
+        const filteredData = Object.values(dataToUse)
+        .filter(match => {
+            console.log("Match before filtering:", match);
+            return match && typeof match.firstMove === firstMove;  // Filter out invalid matches
+        })
+
+        console.log(filteredData)
         setHookOutput(filteredData);
     };
 

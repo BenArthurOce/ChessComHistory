@@ -7,8 +7,6 @@ import HeatmapSubByPiece from './HeatmapSubByPiece';
 import HeatmapSubByTurn from './HeatmapSubByTurn';
 
 // Custom Hooks
-// import useHeatMasterData from '../../hooksSpecific/useHeatMasterData';
-
 import useHeatmapControllerDatasetNEW from '../../hooksSpecific/useHeatmapControllerDatasetNEW';
 
 //
@@ -60,7 +58,6 @@ const HeatmapMaster = (props) => {
     //
     // Hooks
     //
-    // const hookMasterData = useHeatMasterData(matchHistory);
     const hookMasterData = useHeatmapControllerDatasetNEW(matchHistory);
 
   

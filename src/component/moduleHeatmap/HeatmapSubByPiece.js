@@ -266,7 +266,7 @@ const HeatmapSubByPiece = (props) => {
 
 
             <HeatmapContainer>
-                {hookIsMobile && Object.keys(dataToRender).length > 0 && (
+                {!hookIsMobile && Object.keys(dataToRender).length > 0 && (
                 <>
 
                     <DisplayColumn>

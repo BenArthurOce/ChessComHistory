@@ -53,6 +53,7 @@ const HeatmapTileMobile = (props) => {
     //
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
+    // console.log(tile)
 
     //
     // States
@@ -149,6 +150,7 @@ const HeatmapTileMobile = (props) => {
 
                 {isDisplayPopup && (
                     <Popup colorBackground={colorBackground}>
+                        {console.log(tile)}
                         <PopupTextSpan><p><b>Move:</b></p><p>{tile.move}</p></PopupTextSpan>
                         <PopupTextSpan><p><b>Rate:</b></p><p>{tile.winrate.toFixed(2)}%</p></PopupTextSpan>
                         <br></br>
