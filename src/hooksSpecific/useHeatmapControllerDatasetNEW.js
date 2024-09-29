@@ -101,6 +101,8 @@ const useHeatmapControllerDatasetNEW = (hookInput) => {
     //
     // HOOK PART TWO OF TWO - ORGANIZE DATA LINES
     //
+
+    // I think this is incorrect. This should only be grouped by team, not by the first move
     const groupByTeamAndFirstMove = (moveData) => {
 
         const results = {

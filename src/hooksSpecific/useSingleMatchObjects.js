@@ -229,6 +229,34 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         };
 
+        function getTime() {
+            try {
+
+                if (website === "chesscom") {
+                    const utcDate = parsedData["UTCDate"].replace(/\./g, "-"); // Convert YYYY.MM.DD to YYYY-MM-DD
+                    const utcTime = parsedData["UTCTime"];  
+                    
+                    const utcDateTime = `${utcDate}T${utcTime}Z`; // 'Z' indicates UTC
+                    
+                    // Convert to local time in Melbourne, Australia and return only the time in 12-hour format with AM/PM
+                    const convertedTime = new Date(utcDateTime).toLocaleString("en-AU", {
+                        timeZone: "Australia/Melbourne",
+                        hour12: true,  // Use 12-hour format with AM/PM
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                
+                    return convertedTime;  // This will return the time in the format hh:mm:ss AM/PM
+                }
+                
+                // if (website === "lichess") {return match.variant.charAt(0).toUpperCase() + match.variant.slice(1);};
+                // return "[getTime] TIME NOT FOUND";
+            }
+            catch (err) {
+                return "[getTime] TRY/CATCH ERROR";
+            };
+        };
+
         function getGameType() {
             try {
                 if (website === "chesscom") {return parsedData["Event"]}
@@ -246,6 +274,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             , "game_id":                    getGameID()
             , "game_isRated":               getIsRated()
             , "game_type":                  "to be added (standard/ what variant?"
+            , "game_time":                  getTime()
             , "game_date":                  parsedData["Date"]
             , "game_type":                  getGameType()
 
@@ -343,6 +372,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , event:          adaptedInformation["game_type"]
                 , rated:          adaptedInformation["game_isRated"] ? "Rated" : "Casual"
                 , id:             adaptedInformation["game_id"]
+                , time:           adaptedInformation["game_time"] 
                 , date:           adaptedInformation["game_date"] 
             }
             ,

@@ -75,7 +75,10 @@ const HeatmapSubByTurn = (props) => {
     //
     // const hookUseHeatmapSubByTurnData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove);
 
-    const hookUseHeatmapControllerWinsLossDraw = useHeatmapControllerWinsLossDraw(hookMasterData, selectedTeam, firstMove);
+    // const hookUseHeatmapControllerWinsLossDraw = useHeatmapControllerWinsLossDraw(hookMasterData, selectedTeam, firstMove);
+
+    // Disable feature for now
+    const hookUseHeatmapControllerWinsLossDraw = null
     console.log(hookUseHeatmapControllerWinsLossDraw)
 
 

@@ -39,6 +39,12 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
     };
 
 
+    // Function to filter matchArray by Family Name
+    const filterByFamilyName = (matchArray, name) => {
+        if (matchArray.length === 0) { return []; }
+        return matchArray.filter(match => match.openingData.FAMILY === name);
+    };
+
     // Function to filter matchArray by ECO Code
     const filterByEco = (matchArray, ecoCode) => {
         if (matchArray.length === 0) { return []; }
@@ -66,6 +72,12 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
     };
 
 
+    // Function to get unique ECO Family Names from objectArray
+    const getUniqueFamilyNames = (objectArray) => {
+        return [...new Set(objectArray.map((element) => element.openingData.FAMILY))];
+    };
+
+
     // Function to get unique Opening Names from objectArray
     const getUniqueNames = (objectArray) => {
         return [...new Set(objectArray.map((element) => element.openingData.NAME))];
@@ -90,10 +102,18 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
         // Get unique ECO Family Names from filtered games
         const arrayOfUniqueOpeningFamilies = getUniqueEcoFamilyNames(gamesFilteredByColourUsed);
 
+        // const arrayOfUniqueOpeningFamilies = getUniqueFamilyNames(gamesFilteredByColourUsed);
+
+
+        console.log(gamesFilteredByColourUsed)
+
         // Iterate over each unique ECO Family Name
         arrayOfUniqueOpeningFamilies.forEach(ecoFamilyName => {
             
             const filteredEcoFamilyMatches = filterByEcoFamilyName(gamesFilteredByColourUsed, ecoFamilyName); // Filter games by current ECO Family Name
+
+            // const filteredEcoFamilyMatches = filterByFamilyName(gamesFilteredByColourUsed, ecoFamilyName); // Filter games by current ECO Family Name
+            
             const uniqueVariationNames = getUniqueNames(filteredEcoFamilyMatches);  // Get unique Variation Names from filtered matches
 
             const variations = uniqueVariationNames.map(variationName => {  // Map unique Variation Names to objects containing statistics
