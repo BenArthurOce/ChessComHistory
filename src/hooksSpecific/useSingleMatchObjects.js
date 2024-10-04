@@ -316,6 +316,24 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             return "other";
         };
 
+        // Helper function to convert time (e.g., "12:07 PM") to minutes after midnight
+        function convertTimeToMinutes(timeString) {
+            const [time, period] = timeString.split(" "); // Split into time and AM/PM period
+            let [hours, minutes] = time.split(":").map(Number); // Split hours and minutes, convert to numbers
+        
+            // Correct handling of 12 AM (midnight) and 12 PM (noon)
+            if (period === "am" && hours === 12) {
+                hours = 0; // Midnight (12 AM) should be 0 hours
+            } else if (period === "pm" && hours !== 12) {
+                hours += 12; // Convert PM hours to 24-hour format, except 12 PM
+            }
+        
+            const totalMinutes = hours * 60 + minutes; // Convert hours to minutes and add the minutes
+            return totalMinutes; // Return the total number of minutes after midnight
+        }
+        
+
+
         const findOpeningMatch = (game, openings) => {
             const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
             let bestMatch = null;
@@ -372,7 +390,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , event:          adaptedInformation["game_type"]
                 , rated:          adaptedInformation["game_isRated"] ? "Rated" : "Casual"
                 , id:             adaptedInformation["game_id"]
-                , time:           adaptedInformation["game_time"] 
+                , time:           adaptedInformation["game_time"]
+                , timeMinutes:    convertTimeToMinutes(adaptedInformation["game_time"]) 
                 , date:           adaptedInformation["game_date"] 
             }
             ,

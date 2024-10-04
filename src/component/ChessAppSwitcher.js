@@ -7,10 +7,12 @@ import RequestChessCom from './RequestChessCom';
 import RequestLichess from './RequestLichess';
 import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
-import MatchHistoryTable from './moduleMatchHistoryTable/MatchHistoryTable';
+import MatchHistoryTableMaster from './moduleMatchHistoryTable/MatchHistoryTableMaster';
 import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
 import Debugging from './Debugging';
+
+
 
 
 const ChessAppSwitcher = (props) => {
@@ -67,8 +69,16 @@ const ChessAppSwitcher = (props) => {
                         <MatchHistoryDisplay matchHistory={matchData} />
                     )}
 
-                    {matchData && activeModule === 'tableSummary' && (
+                    {/* {matchData && activeModule === 'tableSummary' && (
                         <MatchHistoryTable matchHistory={matchData} />
+                    )} */}
+
+                    {/* {matchData && activeModule === 'tableSummary' && (
+                        <MatchHistoryTimeTable matchHistory={matchData} />
+                    )} */}
+
+                    {matchData && activeModule === 'tableSummary' && (
+                        <MatchHistoryTableMaster matchHistory={matchData} />
                     )}
 
                     {matchData && activeModule === 'heatMapMaster' && (
