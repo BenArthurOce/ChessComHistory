@@ -12,6 +12,8 @@ import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
 import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
 import Debugging from './Debugging';
 
+import SingleOpeningInfo from './moduleOpeningAnalysis/SingleOpeningInfo';
+
 
 
 
@@ -85,9 +87,16 @@ const ChessAppSwitcher = (props) => {
                         <HeatmapMaster matchHistory={matchData} />
                     )}
 
-                    {matchData && activeModule === 'openingAnalysis' && (
+                    {/* {matchData && activeModule === 'openingAnalysis' && (
                         <OpeningAnalysisController matchHistory={matchData} />
+                    )} */}
+
+                    {matchData && activeModule === 'openingAnalysis' && (
+                        <SingleOpeningInfo matchHistory={matchData} />
                     )}
+
+
+
 
                     {matchData && activeModule === 'debugging' && (
                         <Debugging matchHistory={matchData} />

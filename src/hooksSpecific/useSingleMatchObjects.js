@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import JsonFile from '../data/openings.json';
+import JsonFileNew from '../data/openingsNew.json';
 
 
 // matchObjects = All the single match objects from the match history API
@@ -7,6 +8,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     const [hookOutput, setHookOutput] = useState('')
     const [erroredGames, setErroredGames] = useState([]);
     const openingDictionary = JsonFile;
+    const openingDictionaryNew = JsonFileNew;
 
 
     useEffect(() => {
@@ -338,6 +340,17 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
             let bestMatch = null;
             let bestMatchLength = 0;
+
+            
+
+
+
+            // const pgns = openings.map(opening => opening['PGN'])
+            // console.log(pgns)
+
+            // console.log(openings)
+            // const pgns2 = Object.values(openings).map(opening => opening['PGN'])
+            // console.log(pgns2) 
         
             for (const opening in openings) {
                 if (gameMoves.startsWith(opening)) {
@@ -350,11 +363,35 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         
             const emptyOpening = {
-                "ID": "", "ECO": "", "VOLUME": "", "NAME": "", "FULL": "", "PGN": "", "MOVESSTRING": "", "NUMTURNS": "", "NUMMOVES": "", "NEXTTOMOVE": "", "FAMILY": "", "VARIATION": "", "SUBVARIATION": "", "ECOFAMILY": ""
+                'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
             };
         
             return bestMatch ? openings[bestMatch] : emptyOpening;
         };
+
+
+        const findOpeningMatchNew = (game, openings) => {
+            const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
+            let bestMatch = null;
+            let bestMatchLength = 0;
+        
+            // Iterate through the opening objects to access both the key and its value
+            for (const [key, opening] of Object.entries(openings)) {
+                const openingPGN = opening.PGN; // Get the PGN from each opening object
+        
+                if (gameMoves.startsWith(openingPGN)) {
+                    const openingLength = openingPGN.split(' ').length;
+                    if (openingLength > bestMatchLength) {
+                        bestMatch = opening; // Store the entire opening object as the best match
+                        bestMatchLength = openingLength;
+                    }
+                }
+            }
+        
+            return bestMatch; // Return the entire opening object with the matching PGN
+        };
+        
+        
         
         // Match information from ChessCom / Lichess moved into a uniform state
         const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
@@ -447,6 +484,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             }
             ,
             openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
+            ,
+            openingDataNew:     findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew)
         };
     };
 
