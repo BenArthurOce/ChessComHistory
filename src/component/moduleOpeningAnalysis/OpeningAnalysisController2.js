@@ -15,7 +15,7 @@ import useOpeningAnalysisGroupOpenings from "../../hooksSpecific/useOpeningAnaly
 import useOpeningAnalysisGroupOpeningsNEW from '../../hooksSpecific/useOpeningAnalysisGroupOpeningsNEW';
 
 
-const OpeningAnalysisController = (props) => {
+const OpeningAnalysisController2 = (props) => {
 
     //
     // Props
@@ -27,7 +27,7 @@ const OpeningAnalysisController = (props) => {
     //
     const [selectedTeam, setSelectedTeam] = useState("white");
     const [firstMove, setFirstMove] = useState("1.e4"); // Default starting move
-    const [expandedIndex, setExpandedIndex] = useState(null);   // Component contains Opening Divs. This holds the index number of the clicked Div so it can be expanded.
+    // const [expandedIndex, setExpandedIndex] = useState(null);   // Component contains Opening Divs. This holds the index number of the clicked Div so it can be expanded.
 
     //
     // Hooks
@@ -46,7 +46,7 @@ const OpeningAnalysisController = (props) => {
     };
 
     const handleElementClick = (index) => {
-        setExpandedIndex(expandedIndex === index ? null : index);
+        // setExpandedIndex(expandedIndex === index ? null : index);
     };
 
     const handleFirstMoveChange = (event) => {
@@ -79,21 +79,6 @@ const OpeningAnalysisController = (props) => {
                 </FlexRow>
             </ContainerUserInput>
 
-            {/* PC Display */}
-            {!hookIsMobile && hookDataToRender && (
-                <>
-                    {hookDataToRender.map((opening, index) => (
-                        <div key={index}>
-                            <SingleOpeningLevel1
-                                openingInformation={opening}
-                                isClicked={expandedIndex === index}
-                                handleElementClick={() => handleElementClick(index)}
-                            />
-                        </div>
-                    ))}
-                </>
-            )}
-
 
             {/* Mobile Display */}
             {hookIsMobile && hookDataToRender && (
@@ -102,8 +87,7 @@ const OpeningAnalysisController = (props) => {
                         <div key={index}>
                             <SingleOpeningLevel1
                                 openingInformation={opening}
-                                isClicked={expandedIndex === index}
-                                handleElementClick={() => handleElementClick(index)}
+                                elementIndex={index}
                             />
                         </div>
                     ))}
@@ -116,4 +100,4 @@ const OpeningAnalysisController = (props) => {
 
 
 };
-export default OpeningAnalysisController;
+export default OpeningAnalysisController2;
