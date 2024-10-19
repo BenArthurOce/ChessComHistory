@@ -21,16 +21,17 @@ const Inner = styled.div
 
 const VariationDiv = styled.div
 `
-    min-width: 45%;
 
     /* Adjust width if expanded */
-    width: ${({ expanded }) => (expanded ? '100%' : '45%')};
+
+    min-width: ${({ expanded }) => (expanded ? '100%' : '45%')};
+    max-width: ${({ expanded }) => (expanded ? '100%' : '45%')};
 
     background-color: #fff;
     border: 1px solid #ddd;
 
     border-radius: 8px;
-    margin: 10px 10px;
+    margin: 2% 2%;
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -94,7 +95,7 @@ const SingleOpeningLevel2 = (props) => {
                     {/* Name of the Heading, and the winrate (appears on top of chessboard) */}
                     <VariationHeading>
                         <p>{ecoOpening.familyECOName} </p>
-                        <p>{((ecoOpening.matchesWon / ecoOpening.matchesPlayed) * 100).toFixed(2)}%</p>
+                        <b>{((ecoOpening.matchesWon / ecoOpening.matchesPlayed) * 100).toFixed(2)}%</b>
                     </VariationHeading>
 
                     {/* Expands to show more openings if clicked */}

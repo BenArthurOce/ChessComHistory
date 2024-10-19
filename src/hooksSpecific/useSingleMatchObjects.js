@@ -356,15 +356,6 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             let bestMatchLength = 0;
 
             
-
-
-
-            // const pgns = openings.map(opening => opening['PGN'])
-            // console.log(pgns)
-
-            // console.log(openings)
-            // const pgns2 = Object.values(openings).map(opening => opening['PGN'])
-            // console.log(pgns2) 
         
             for (const opening in openings) {
                 if (gameMoves.startsWith(opening)) {
@@ -387,22 +378,6 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         const findOpeningMatchNew = (game, openings) => {
 
 
-            // Manual adjustments to find transposed games purely for the italian game
-            // const italianGames = {
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Nd4 4.Nxe5 Qg5 5.Nxf7 Qxg2 6.Rf1 Qxe4+ 7.Be2 Nf3+": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nd4 4.Nxe5 Qg5 5.Nxf7 Qxg2 6.Rf1 Qxe4+ 7.Be2 Nf3+",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 f5": "1.e4 e5 2.Nf3 Nc6 3.Bc4 f5",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Be7": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Be7 4.d4 exd4 5.c3 Nf6 6.e5 Ne4": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7 4.d4 exd4 5.c3 Nf6 6.e5 Ne4",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.Nc3 Nf6": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Nc3 Nf6",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.Bxf7+": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Bxf7+",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.d3": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.d3 f5 5.Ng5 f4": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 f5 5.Ng5 f4",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.d3 Nf6": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 Nf6",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.d3 Nf6 5.Nc3": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 Nf6 5.Nc3",
-            //     "1.e4 e5 2.Bc4 Nc6 3.Nf3 Bc5 4.d3 Nf6 5.Nc3 d6 6.Bg5": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 Nf6 5.Nc3 d6 6.Bg5"
-            // };
 
             const filterOpenings = (searchItem, dictionary) => {
                 return Object.values(dictionary).filter(({ PGN }) => {
@@ -563,31 +538,10 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 }
 
 
-            }
+            };
 
 
-            if (game.startsWith("1.e4 e5 2.Bc4 Nc6")  && isVienna == 0 && isWaywardQueen === 0 && isBb4Nf3Adjust === 0) {
-                console.log(game)
-                console.log(bestMatch)
-            }
 
-            // if (bestMatch.FULL === "C20 - King's Pawn Game") {
-            //     console.log(game)
-            //     console.log(bestMatch)
-            // }
-
-
-            
-
-            // console.log("----")
-            // console.log(bestMatch.ID)
-            // console.log(bestMatch.FULL)
-
-            // if( bestMatch.FULL === "C23 - Bishop's Opening") {
-            //     // console.log(arrayOfMoves[14])
-            //     console.log("yes")
-            //     console.log(game)
-            // };
 
             return bestMatch; // Return the entire opening object with the matching PGN
         };

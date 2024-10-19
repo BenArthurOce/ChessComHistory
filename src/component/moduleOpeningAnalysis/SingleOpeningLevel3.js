@@ -65,8 +65,12 @@ const Row = styled.span
     grid-column: 1;
     display: flex;
     justify-content: space-between;
-`
-;
+
+    p { 
+        overflow: visible;
+    }
+`;
+
 
 const BoardContainer = styled.span
 `
@@ -84,12 +88,6 @@ const SingleOpeningLevel3 = (props) => {
     const { openingInformation } = props;
     const openingDictionaryNew = JsonFileNew2;
 
-    //
-    // States
-    //
-    const [popupMatchHistory, setPopupMatchHistory] = useState(null);   // State to hold selected match details
-
-    const [isPopupTriggered, setIsPopupTriggered] = useState(false);   // State to hold selected match details
 
     // Function to filter matchArray by Opening Name
     const searchDictionaryForOpening = (matchArray) => {
