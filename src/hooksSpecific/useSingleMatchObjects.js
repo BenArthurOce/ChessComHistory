@@ -251,8 +251,22 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                     return convertedTime;  // This will return the time in the format hh:mm:ss AM/PM
                 }
                 
-                // if (website === "lichess") {return match.variant.charAt(0).toUpperCase() + match.variant.slice(1);};
-                // return "[getTime] TIME NOT FOUND";
+                if (website === "lichess") {
+                    const utcDate = parsedData["UTCDate"].replace(/\./g, "-"); // Convert YYYY.MM.DD to YYYY-MM-DD
+                    const utcTime = parsedData["UTCTime"];  
+                    
+                    const utcDateTime = `${utcDate}T${utcTime}Z`; // 'Z' indicates UTC
+                    
+                    // Convert to local time in Melbourne, Australia and return only the time in 12-hour format with AM/PM
+                    const convertedTime = new Date(utcDateTime).toLocaleString("en-AU", {
+                        timeZone: "Australia/Melbourne",
+                        hour12: true,  // Use 12-hour format with AM/PM
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                
+                    return convertedTime;  // This will return the time in the format hh:mm:ss AM/PM
+                }
             }
             catch (err) {
                 return "[getTime] TRY/CATCH ERROR";
