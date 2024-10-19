@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => {
+const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) => {
     const [hookOutput, setHookOutput] = useState([]);
 
     useEffect(() => {
@@ -12,52 +12,43 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
         const resultData = rankMostFrequentOpenings(hookInput, selectedTeam, firstMove);
         setHookOutput(resultData);
 
-        // // // console.log("====Hook Result===");
-        // // // console.log(resultData);
-        // // // console.log();
-
     }, [hookInput, selectedTeam, firstMove]);
 
-
-    // Function to filter by the first move in the game 
-    const filterByFirstMove = (matchArray, firstMove) => {
+    // Function to filter by the first move in the Match 
+    const filterMatchesByFirstMove = (matchArray, firstMove) => {
         if (matchArray.length === 0) { return []; }
         return matchArray.filter(match => match.moves.first === firstMove);
     };
 
     // Function to filter matchArray by ECO Family Name
-    const filterByEcoFamilyName = (matchArray, fullName) => {
+    const filterMatchesByECOFamilyName = (matchArray, fullName) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingData.ECOFAMILY === fullName);
+        return matchArray.filter(match => match.openingDataNew.ECOFAMILY === fullName);
     };
-
 
     // Function to filter matchArray by Opening Name
-    const filterByName = (matchArray, name) => {
+    const filterMatchesByVariationName = (matchArray, name) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingData.NAME === name);
+        return matchArray.filter(match => match.openingDataNew.NAME === name);
     };
 
-
     // Function to filter matchArray by Family Name
-    const filterByFamilyName = (matchArray, name) => {
+    const filterMatchesByFamilyName = (matchArray, name) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingData.FAMILY === name);
+        return matchArray.filter(match => match.openingDataNew.FAMILY === name);
     };
 
     // Function to filter matchArray by ECO Code
-    const filterByEco = (matchArray, ecoCode) => {
+    const filterByEcoCode = (matchArray, ecoCode) => {
         if (matchArray.length === 0) { return []; }
         return matchArray.filter(match => match.opening.eco === ecoCode);
     };
 
-
     // Function to filter matchArray by user's played color
-    const filterByColour = (matchArray) => {
+    const filterMatchesByColour = (matchArray) => {
         if (matchArray.length === 0) { return []; }
         return matchArray.filter(match => match.results.userPlayed === selectedTeam);
     };
-
 
     // Function to filter matchArray by player's result (win, lose, draw)
     const filterByResult = (matchArray, result) => {
@@ -65,95 +56,124 @@ const useOpeningAnalysisGroupOpenings = (hookInput, selectedTeam, firstMove) => 
         return matchArray.filter(match => match.playerResults.userResult === result);
     };
 
-
     // Function to get unique ECO Family Names from objectArray
-    const getUniqueEcoFamilyNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingData.ECOFAMILY))];
+    const getUniqueECOFamilyNames = (objectArray) => {
+        return [...new Set(objectArray.map((element) => element.openingDataNew.ECOFAMILY))];
     };
 
-
-    // Function to get unique ECO Family Names from objectArray
-    const getUniqueFamilyNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingData.FAMILY))];
+    // Function to get unique Family Names from objectArray
+    const getUniqueGeneralFamilyNames = (objectArray) => {
+        return [...new Set(objectArray.map((element) => element.openingDataNew.FAMILY))];
     };
-
 
     // Function to get unique Opening Names from objectArray
-    const getUniqueNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingData.NAME))];
+    const getUniqueVariationNames = (objectArray) => {
+        return [...new Set(objectArray.map((element) => element.openingDataNew.NAME))];
     };
 
-    // Function to get unique Full Opening Names from objectArray
-    const getUniqueFullNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingData.FULL))];
-    };
-
-    
     // Function to rank the most frequent openings based on match history and selected team
     const rankMostFrequentOpenings = (matchHistory) => {
         const results = [];
 
-        // Filter games based on the starting move
-        const gamesFilteredByStartingMove = filterByFirstMove(matchHistory, firstMove)
+        //
+        // Filters
+        //
 
-        // Filter games played by the selected team's color
-        const gamesFilteredByColourUsed = filterByColour(gamesFilteredByStartingMove);
+        // Filter matches based on the starting move
+        const matchesFilteredByStartingMove = filterMatchesByFirstMove(matchHistory, firstMove);
+
+        // Filter matches played by the selected team's color
+        const matchesFilteredByColourUsed = filterMatchesByColour(matchesFilteredByStartingMove);
         
-        // Get unique ECO Family Names from filtered games
-        const arrayOfUniqueOpeningFamilies = getUniqueEcoFamilyNames(gamesFilteredByColourUsed);
+        
+        //
+        // General Family
+        //
 
-        // const arrayOfUniqueOpeningFamilies = getUniqueFamilyNames(gamesFilteredByColourUsed);
+        // Get unique General Family Names based on filtered Matches
+        const arrayOfUniqueGeneralFamilyNames = getUniqueGeneralFamilyNames(matchesFilteredByColourUsed);
 
-
-        console.log(gamesFilteredByColourUsed)
-
-        // Iterate over each unique ECO Family Name
-        arrayOfUniqueOpeningFamilies.forEach(ecoFamilyName => {
+        // Iterate over each unique General Family Name
+        arrayOfUniqueGeneralFamilyNames.forEach(eachgeneralFamilyName => {
             
-            const filteredEcoFamilyMatches = filterByEcoFamilyName(gamesFilteredByColourUsed, ecoFamilyName); // Filter games by current ECO Family Name
 
-            // const filteredEcoFamilyMatches = filterByFamilyName(gamesFilteredByColourUsed, ecoFamilyName); // Filter games by current ECO Family Name
+            //
+            // ECO Family
+            //
+
+            // Filter matches by current General Family Name
+            const filteredGeneralFamilyMatches = filterMatchesByFamilyName(matchesFilteredByColourUsed, eachgeneralFamilyName); 
             
-            const uniqueVariationNames = getUniqueNames(filteredEcoFamilyMatches);  // Get unique Variation Names from filtered matches
+            // Get unique ECO Family Names based on filtered General Family Name Matches
+            const arrayOfUniqueECOFamilyNames = getUniqueECOFamilyNames(filteredGeneralFamilyMatches);  
 
-            const variations = uniqueVariationNames.map(variationName => {  // Map unique Variation Names to objects containing statistics
-                
-                const matchesForVariation = filterByName(filteredEcoFamilyMatches, variationName);  // Filter matches by current Variation Name
+            // Iterate over each unique ECO Family Name
+            const generalFamilyMatchObjects = arrayOfUniqueECOFamilyNames.map(eachECOFamilyName => {  
 
+
+                //
+                // Variations
+                //
+
+                // Filter matches by current ECO Family Name
+                const filteredECOFamilyMatches = filterMatchesByECOFamilyName(filteredGeneralFamilyMatches, eachECOFamilyName);
+
+                // Get unique Variation Names from filtered matches
+                const arrayOfUniqueVariationNames = getUniqueVariationNames(filteredECOFamilyMatches); 
+
+                // Map unique Variation Names to objects containing statistics
+                const ECOFamilyMatchObjects = arrayOfUniqueVariationNames.map(eachVariationName => { 
+                    const variationMatchObjects = filterMatchesByVariationName(filteredECOFamilyMatches, eachVariationName);
+
+                    return {
+                        variationName: eachVariationName,
+                        variationMatches: variationMatchObjects,
+                        matchesPlayed: variationMatchObjects.length,
+                        matchesWon: filterByResult(variationMatchObjects, "win").length,
+                        matchesLost: filterByResult(variationMatchObjects, "lose").length,
+                        matchesDrew: filterByResult(variationMatchObjects, "draw").length
+                    };
+                });
+
+                // Sort variations by the number of matches played
+                ECOFamilyMatchObjects.sort((a, b) => b.matchesPlayed - a.matchesPlayed);
+
+                // Return an object representing the current ECO Family and its variations
                 return {
-                      name: variationName
-                    , matches: matchesForVariation
-                    , played: matchesForVariation.length
-                    , wins: filterByResult(matchesForVariation, "win").length
-                    , losses: filterByResult(matchesForVariation, "lose").length
-                    , draws: filterByResult(matchesForVariation, "draw").length
+                    familyECOName: eachECOFamilyName,
+                    familyECOMatches: ECOFamilyMatchObjects,
+                    matchesPlayed: filteredECOFamilyMatches.length,
+                    matchesWon: filterByResult(filteredECOFamilyMatches, "win").length,
+                    matchesLost: filterByResult(filteredECOFamilyMatches, "lose").length,
+                    matchesDrew: filterByResult(filteredECOFamilyMatches, "draw").length
                 };
             });
 
-            // Sort variations by games played
-            variations.sort((a, b) => b.played - a.played);
+            // Sort ECO Family by the number of matches played
+            generalFamilyMatchObjects.sort((a, b) => b.matchesPlayed - a.matchesPlayed);
 
-            // Construct object for current ECO Family with its variations
+            // Construct object for current general family with its variations
             const familyEntry = {
-                  familyECO: ecoFamilyName
-                , variations: variations
-                , played: filteredEcoFamilyMatches.length
-                , wins: filterByResult(filteredEcoFamilyMatches, "win").length
-                , losses: filterByResult(filteredEcoFamilyMatches, "lose").length
-                , draws: filterByResult(filteredEcoFamilyMatches, "draw").length
+                familyGeneralName: eachgeneralFamilyName,
+                familyGeneralMatches: generalFamilyMatchObjects,
+                matchesPlayed: filteredGeneralFamilyMatches.length,
+                matchesWon: filterByResult(filteredGeneralFamilyMatches, "win").length,
+                matchesLost: filterByResult(filteredGeneralFamilyMatches, "lose").length,
+                matchesDrew: filterByResult(filteredGeneralFamilyMatches, "draw").length
             };
 
             // Push current ECO Family entry to results array
             results.push(familyEntry);
         });
 
-        // Sort family entries by games played
-        results.sort((a, b) => b.played - a.played);
+        // Sort general family entries by the number of matches played
+        results.sort((a, b) => b.matchesPlayed - a.matchesPlayed);
 
         return results;
     };
 
+
     return hookOutput;
 };
 
-export default useOpeningAnalysisGroupOpenings;
+export default useOpeningAnalysisGroupOpeningsNEW;

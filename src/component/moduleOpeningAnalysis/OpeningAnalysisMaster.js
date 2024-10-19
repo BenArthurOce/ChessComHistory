@@ -10,12 +10,10 @@ import SingleOpeningLevel1 from "./SingleOpeningLevel1";
 
 // Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-import useOpeningAnalysisGroupOpenings from "../../hooksSpecific/useOpeningAnalysisGroupOpenings";
-
-import useOpeningAnalysisGroupOpeningsNEW from '../../hooksSpecific/useOpeningAnalysisGroupOpeningsNEW';
+import useOpeningAnalysisGroupOpeningsNEW from '../../hooksSpecific/useOpeningAnalysisGroupOpenings';
 
 
-const OpeningAnalysisController = (props) => {
+const OpeningAnalysisMaster = (props) => {
 
     //
     // Props
@@ -27,14 +25,13 @@ const OpeningAnalysisController = (props) => {
     //
     const [selectedTeam, setSelectedTeam] = useState("white");
     const [firstMove, setFirstMove] = useState("1.e4"); // Default starting move
-    const [expandedIndex, setExpandedIndex] = useState(null);   // Component contains Opening Divs. This holds the index number of the clicked Div so it can be expanded.
+    // const [expandedIndex, setExpandedIndex] = useState(null);   // Component contains Opening Divs. This holds the index number of the clicked Div so it can be expanded.
 
     //
     // Hooks
     //
     // const hookIsMobile = useIsMobile()
     const hookDataToRender = useOpeningAnalysisGroupOpeningsNEW(matchHistory, selectedTeam, firstMove);
-    console.log(hookDataToRender)
     const hookIsMobile = useIsMobile()
 
     
@@ -46,7 +43,7 @@ const OpeningAnalysisController = (props) => {
     };
 
     const handleElementClick = (index) => {
-        setExpandedIndex(expandedIndex === index ? null : index);
+        // setExpandedIndex(expandedIndex === index ? null : index);
     };
 
     const handleFirstMoveChange = (event) => {
@@ -79,21 +76,6 @@ const OpeningAnalysisController = (props) => {
                 </FlexRow>
             </ContainerUserInput>
 
-            {/* PC Display */}
-            {!hookIsMobile && hookDataToRender && (
-                <>
-                    {hookDataToRender.map((opening, index) => (
-                        <div key={index}>
-                            <SingleOpeningLevel1
-                                openingInformation={opening}
-                                isClicked={expandedIndex === index}
-                                handleElementClick={() => handleElementClick(index)}
-                            />
-                        </div>
-                    ))}
-                </>
-            )}
-
 
             {/* Mobile Display */}
             {hookIsMobile && hookDataToRender && (
@@ -102,8 +84,7 @@ const OpeningAnalysisController = (props) => {
                         <div key={index}>
                             <SingleOpeningLevel1
                                 openingInformation={opening}
-                                isClicked={expandedIndex === index}
-                                handleElementClick={() => handleElementClick(index)}
+                                elementIndex={index}
                             />
                         </div>
                     ))}
@@ -111,9 +92,5 @@ const OpeningAnalysisController = (props) => {
             )}
         </Container>
     );
-
-
-
-
 };
-export default OpeningAnalysisController;
+export default OpeningAnalysisMaster;

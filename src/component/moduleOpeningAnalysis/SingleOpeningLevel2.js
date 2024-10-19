@@ -11,11 +11,11 @@ import SingleOpeningLevel3 from "./SingleOpeningLevel3";
 
 const Inner = styled.div
 `
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #e6f7ff;
-  border: 1px solid #ddd;
-  justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #e6f7ff;
+    border: 1px solid #ddd;
+    justify-content: flex-start;
 `
 ;
 
@@ -41,11 +41,10 @@ const VariationDiv = styled.div
 
 const VariationHeading = styled.div
 `
-
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  margin-left: 2%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-left: 2%;
 `
 ;
 

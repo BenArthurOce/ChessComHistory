@@ -9,12 +9,8 @@ import PlayerInformation from './modulePlayerInformation/PlayerInformation';
 import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
 import MatchHistoryTableMaster from './moduleMatchHistoryTable/MatchHistoryTableMaster';
 import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
-import OpeningAnalysisController from './moduleOpeningAnalysis/OpeningAnalysisController';
+import OpeningAnalysisMaster from './moduleOpeningAnalysis/OpeningAnalysisMaster';
 import Debugging from './Debugging';
-
-import OpeningAnalysisController2 from './moduleOpeningAnalysis/OpeningAnalysisController2';
-
-
 
 
 const ChessAppSwitcher = (props) => {
@@ -71,14 +67,6 @@ const ChessAppSwitcher = (props) => {
                         <MatchHistoryDisplay matchHistory={matchData} />
                     )}
 
-                    {/* {matchData && activeModule === 'tableSummary' && (
-                        <MatchHistoryTable matchHistory={matchData} />
-                    )} */}
-
-                    {/* {matchData && activeModule === 'tableSummary' && (
-                        <MatchHistoryTimeTable matchHistory={matchData} />
-                    )} */}
-
                     {matchData && activeModule === 'tableSummary' && (
                         <MatchHistoryTableMaster matchHistory={matchData} />
                     )}
@@ -87,18 +75,9 @@ const ChessAppSwitcher = (props) => {
                         <HeatmapMaster matchHistory={matchData} />
                     )}
 
-                    {/* {matchData && activeModule === 'openingAnalysis' && (
-                        <OpeningAnalysisController matchHistory={matchData} />
-                    )} */}
-
                     {matchData && activeModule === 'openingAnalysis' && (
-                        <OpeningAnalysisController2 matchHistory={matchData} />
+                        <OpeningAnalysisMaster matchHistory={matchData} />
                     )}
-
-                    {/* {matchData && activeModule === 'openingAnalysis' && (
-                        <SingleOpeningInfo matchHistory={matchData} />
-                    )} */}
-
 
                     {matchData && activeModule === 'debugging' && (
                         <Debugging matchHistory={matchData} />
