@@ -19,8 +19,6 @@ const Container = styled.div
 const OpeningDiv = styled.div
 `
     display: grid;
-    grid-template-rows: 2;
-    grid-template-columns: 4;
 
     background-color: ${(props) => (props.expanded ? "#e6f7ff" : "#fff")};
     border: 1px solid ${(props) => (props.expanded ? "#1890ff" : "#ddd")};
@@ -47,7 +45,7 @@ const Heading = styled.div
 const WinRate = styled.div
 `
     grid-row: 1;
-    grid-column: 4
+    grid-column: 4;
     margin-bottom: 10px;
     font-weight: bold;
 
