@@ -53,7 +53,7 @@ const HeatmapTileMobile = (props) => {
     //
     const { tileInformation, isClicked, handleButtonClick } = props;
     const tile = tileInformation;
-    // console.log(tile)
+    console.log(tile)
 
     //
     // States

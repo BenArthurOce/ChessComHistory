@@ -11,23 +11,32 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
         runHook();
     }, [hookInput, selectedTeam, firstMove, startTurn, endTurn]);
 
+
     const runHook = () => {
         if (!hookInput[selectedTeam] || !hookInput[selectedTeam][firstMove]) return;
 
         const dataToUse = hookInput[selectedTeam][firstMove];
 
-        console.log("-----")
-        console.log(dataToUse)
-        console.log("-----")
-        const filteredData = Object.values(dataToUse)
-        .filter(match => {
-            console.log("Match before filtering:", match);
-            return match && typeof match.firstMove === firstMove;  // Filter out invalid matches
-        })
+        const aa = summarizeMatchData(dataToUse);
+        // console.log
 
-        console.log(filteredData)
-        setHookOutput(filteredData);
+        
+
+        console.log("-----")
+        // console.log(dataToUse)
+        // console.log("-----")
+        // const filteredData = Object.values(dataToUse)
+        // console.log(filteredData)
+
+        // .filter(match => {
+        //     console.log("Match before filtering:", match);
+        //     return match && typeof match.firstMove === firstMove;  // Filter out invalid matches
+        // })
+
+        // console.log(filteredData)
+        // setHookOutput(filteredData);
     };
+
 
     const filterMatchesByTurn = (matches, start, end) => {
         return matches.filter(match => {
@@ -39,12 +48,8 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
     };
 
     const summarizeMatchData = (matches) => {
-
-        // matches = an array of matches which has been filtered by firstMove and startTurn 
-        // Each match contains the firstmove, team, result, piece type and piece type
+        // Summarize the matches for a specific move
         if (matches.length === 0) return null;
-
-        // console.log(matches);
 
         const firstMatch = matches[0];
         const summary = matches.reduce((acc, match) => {
@@ -66,15 +71,11 @@ const useHeatMasterSort = (hookInput, selectedTeam, firstMove, startTurn, endTur
         });
 
         summary.played = matches.length;
-        summary.winpct = summary.wins / matches.length;
+        summary.winpct = (summary.wins / matches.length) * 100;
         summary.winrate = summary.wins / matches.length * 100;
         summary.score = summary.winrate * summary.played;
         summary.isPositive = summary.winrate >= 50;
 
-        // console.log(summary)
-
-        // "summary" is an object which contents all the data required to make a heatmap tile, including a "score" and if the winrate is over 50%
-        // It is an aggregation of all the matches within the parameter "matches"
         return summary;
     };
 

@@ -85,6 +85,7 @@ const OpeningAnalysisMaster = (props) => {
                             <SingleOpeningLevel1
                                 openingInformation={opening}
                                 elementIndex={index}
+                                colour={selectedTeam}
                             />
                         </div>
                     ))}

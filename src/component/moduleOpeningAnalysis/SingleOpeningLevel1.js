@@ -68,7 +68,7 @@ const SingleOpeningLevel1 = (props) => {
     //
     // Props
     //
-    const { openingInformation, elementIndex } = props;
+    const { openingInformation, elementIndex, colour } = props;
 
     //
     // States
@@ -89,6 +89,7 @@ const SingleOpeningLevel1 = (props) => {
             <OpeningDiv
                 onClick={() => handleElementClick(elementIndex)}
                 expanded={expandedIndex === elementIndex}
+                colour={colour}
             >
 
                 <Heading>{openingInformation.familyGeneralName}</Heading>
@@ -107,6 +108,7 @@ const SingleOpeningLevel1 = (props) => {
             {expandedIndex === elementIndex && (
                 <SingleOpeningLevel2
                     openingInformation={openingInformation.familyGeneralMatches}
+                    colour={colour}
                 />
             )}
         </Container>

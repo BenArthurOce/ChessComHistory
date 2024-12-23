@@ -52,6 +52,7 @@ const MovesContainer = styled.div
 
 const HeatmapSubByTurn = (props) => {
 
+    console.log("HeatmapSubByTurn")
     console.log(props)
 
     //
@@ -73,13 +74,17 @@ const HeatmapSubByTurn = (props) => {
     //
     // Hooks
     //
+
+
     // const hookUseHeatmapSubByTurnData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove);
 
-    // const hookUseHeatmapControllerWinsLossDraw = useHeatmapControllerWinsLossDraw(hookMasterData, selectedTeam, firstMove);
+    const hookUseHeatmapControllerWinsLossDraw = useHeatmapControllerWinsLossDraw(hookMasterData, selectedTeam, firstMove);
 
     // Disable feature for now
-    const hookUseHeatmapControllerWinsLossDraw = null
-    console.log(hookUseHeatmapControllerWinsLossDraw)
+    // const hookUseHeatmapControllerWinsLossDraw = null
+    // console.log(hookUseHeatmapControllerWinsLossDraw)
+
+    // console.log(hookUseHeatmapSubByTurnData);
 
 
 
@@ -89,38 +94,41 @@ const HeatmapSubByTurn = (props) => {
     //
     // Effects
     //
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     if (!hookUseHeatmapSubByTurnData || hookUseHeatmapSubByTurnData.length === 0) { return};
+        if (!hookUseHeatmapControllerWinsLossDraw || hookUseHeatmapControllerWinsLossDraw.length === 0) { return};
 
-    //     const groupedByTurn = hookUseHeatmapSubByTurnData.reduce((acc, obj) => {
-    //         const turn = obj.turn;
-          
+        console.log(hookUseHeatmapControllerWinsLossDraw)
 
-    //         if (obj.isPositive && obj.played >= 2) {
-    //           // Initialize the array for this turn if it doesn't exist
-    //           if (!acc[turn]) {
-    //             acc[turn] = [];
-    //           }
-          
-    //           acc[turn].push(obj);
-    //         }  
-    //         return acc;
-    //       }, {});
-          
-    //       // Sort each turn array by score in descending order and keep only the top 3
-    //       for (let turn in groupedByTurn) {
-    //         groupedByTurn[turn]
-    //           .sort((a, b) => b.score - a.score)  // Sort by score (highest to lowest)
-    //           .splice(3);  // Keep only the first 3
-    //       }
-          
-    //       console.log(groupedByTurn);
+        // const groupedByTurn = hookUseHeatmapControllerWinsLossDraw.reduce((acc, obj) => {
+        //     const turn = obj.turn;
           
 
-    //       setDataToRender(groupedByTurn)
-    // }
-    // , [hookUseHeatmapSubByTurnData]);
+        //     if (obj.isPositive && obj.played >= 2) {
+        //       // Initialize the array for this turn if it doesn't exist
+        //       if (!acc[turn]) {
+        //         acc[turn] = [];
+        //       }
+          
+        //       acc[turn].push(obj);
+        //     }  
+        //     return acc;
+        //   }, {});
+          
+        //   // Sort each turn array by score in descending order and keep only the top 3
+        //   for (let turn in groupedByTurn) {
+        //     groupedByTurn[turn]
+        //       .sort((a, b) => b.score - a.score)  // Sort by score (highest to lowest)
+        //       .splice(3);  // Keep only the first 3
+        //   }
+          
+        //   console.log(groupedByTurn);
+          
+
+        //   setDataToRender(groupedByTurn)
+        setDataToRender(hookUseHeatmapControllerWinsLossDraw)
+    }
+    , [hookUseHeatmapControllerWinsLossDraw]);
 
     //
     // Handlers
@@ -183,6 +191,10 @@ const HeatmapSubByTurn = (props) => {
 
                                 {Object.values(data).map((tile, index2) => (
                                 <>
+                                {/* {console.log('tile')}
+                                {console.log(tile)}
+                                {console.log('index2')}
+                                {console.log(index2)} */}
                                     <HeatmapTileMobile
                                         tileInformation={tile}
                                         isClicked={singleTileSelected === tile}

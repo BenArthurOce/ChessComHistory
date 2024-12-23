@@ -24,20 +24,34 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
 
         if (Object.values(hookInput).length === 0) {return};
 
+        console.log(hookInput)
 
-        // Reduce the array of Matches by firstMove
-        const filteredByFirstMove = hookInput.filter((obj) => obj.firstMove === firstMove)
+        const getData = hookInput[selectedTeam][firstMove]
 
         // Reduce the number of Matches by white/black
-        const filteredByTeam = filteredByFirstMove.filter((obj) => obj.team === selectedTeam)
+        // const filteredByTeam = hookInput.filter((obj) => obj.team === selectedTeam)
+
+        console.log(getData)
+
+        // Reduce the array of Matches by firstMove
+        // const filteredByFirstMove = hookInput.filter((obj) => obj.firstMove === firstMove)
+
+        // Reduce the number of Matches by white/black
+        // const filteredByTeam = filteredByFirstMove.filter((obj) => obj.team === selectedTeam)
 
         // Filter moves by turn number
-        const organizedMoves = organizeMovesByTurn(filteredByTeam)
+        const organizedMoves = organizeMovesByTurn(getData)
+        console.log(organizedMoves)
+
+
 
         // Apply a winRate, score and if over 50% winrate per turn and move (returns an array)
         const arrayOfWinrate = runHook(organizedMoves)
+        console.log(arrayOfWinrate)
 
         const topPositiveMoves = getTopPositiveMoves(arrayOfWinrate);
+        console.log(topPositiveMoves)
+
         // // // console.log(topPositiveMoves);
         // // // console.log(finalresult)
 
@@ -70,16 +84,21 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
             if (dataSet.hasOwnProperty(key)) {
                 let value = dataSet[key];
 
-                // // // console.log(key, value);
-                // // // console.log(value)
+                // console.log(key, value);
+                // console.log(value)
+
+                const matches = []
 
                 for (let key2 in value) {
                     let value2 = value[key2];
 
                     // // // console.log(key2, value2);
 
-                    // // // console.log(key2)
-                    // // // console.log(key)
+                    // console.log(key2)
+                    // console.log(key)
+
+                    // console.log(key2)
+                    console.log(value2)
 
                     const wins = filterResult("win", value2).length;
                     const losses  = filterResult("lose", value2).length;
@@ -91,7 +110,9 @@ const useHeatmapControllerWinsLossDraw = (hookInput, selectedTeam, firstMove) =>
                     const score = winrate * played  // Tries to get games over 1 played - 100%
                     const isPositive = winrate >= 50
 
-                    const objectSample = {"turn": key, "move": key2, "played": played, "win": wins, "lose": losses, "draw": draws, "winpct": winrate, "score": score, "isPositive": isPositive, "matches": []}
+                    const matches2 = value2.map((game) => game.id)
+
+                    const objectSample = {"turn": key, "move": key2, "played": played, "wins": wins, "losses": losses, "draws": draws, "winrate": winrate, "score": score, "isPositive": isPositive, "matchIds": matches2}
 
                     result.push(objectSample)
 

@@ -85,9 +85,10 @@ const SingleOpeningLevel3 = (props) => {
     //
     // Props
     //
-    const { openingInformation } = props;
+    const { openingInformation, colour } = props;
     const openingDictionaryNew = JsonFileNew2;
 
+    console.log(colour)
 
     // Function to filter matchArray by Opening Name
     const searchDictionaryForOpening = (matchArray) => {
@@ -138,7 +139,7 @@ const SingleOpeningLevel3 = (props) => {
                     
                     {/* Chessboard Display. "Board" is a seperate component in a different file */}
                     <BoardContainer>
-                        <Board fen={searchDictionaryForOpening(variation.variationMatches)} userplayed={"White"} site={"-"} />
+                        <Board fen={searchDictionaryForOpening(variation.variationMatches)} userplayed={colour} site={"-"} />
                     </BoardContainer>
 
                 </OpeningDiv>

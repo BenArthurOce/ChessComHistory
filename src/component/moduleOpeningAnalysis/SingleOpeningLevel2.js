@@ -56,7 +56,7 @@ const SingleOpeningLevel2 = (props) => {
     //
     // Props
     //
-    const { openingInformation } = props;
+    const { openingInformation, colour } = props;
     const openingDictionaryNew = JsonFileNew2;
 
     //
@@ -91,6 +91,7 @@ const SingleOpeningLevel2 = (props) => {
                     key={index}
                     onClick={() => handleElementClick(index)} // Handle the click to expand
                     expanded={expandedIndex === index}
+                    colour={colour}
                 >
                     {/* Name of the Heading, and the winrate (appears on top of chessboard) */}
                     <VariationHeading>
@@ -100,12 +101,12 @@ const SingleOpeningLevel2 = (props) => {
 
                     {/* Expands to show more openings if clicked */}
                     {expandedIndex === index && (
-                        <SingleOpeningLevel3 openingInformation={ecoOpening.familyECOMatches} />
+                        <SingleOpeningLevel3 openingInformation={ecoOpening.familyECOMatches} colour={colour} />
                     )}
 
                     {/* ChessBoard */}
                     {expandedIndex === null && (
-                        <Board fen={searchDictionaryForOpening(ecoOpening.familyECOName)} userplayed={"White"} site={"-"} />
+                        <Board fen={searchDictionaryForOpening(ecoOpening.familyECOName)} userplayed={colour} site={"-"} />
                     )}
 
                 </VariationDiv>
