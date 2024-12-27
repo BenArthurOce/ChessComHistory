@@ -45,6 +45,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         setHookOutput(results);
         setErroredGames(errors);
     };
+
   
 
     const adaptMatchInformation = (match, parsedData, username, website) => { 
@@ -284,6 +285,11 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         };
 
+
+
+
+
+
         return {
               "game_website":               getWebsite()
             , "game_url":                   getGameURL()
@@ -299,6 +305,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
             , "opening_eco":                parsedData["ECO"]
             , "opening_name":               getOpeningName()
+            , "opening_url":                parsedData["ECOUrl"]
 
             , "player_white_name":          parsedData["White"]
             , "player_white_elo":           parsedData["WhiteElo"]
@@ -320,6 +327,28 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
 
     const createSingleMatchObject = (match, parsedData, username, website) => {
+
+
+
+        // Match information from ChessCom / Lichess moved into a uniform state
+        const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
+    
+
+        if (match.moves === "") {
+            console.log(match)
+            console.log(parsedData)
+            console.log(adaptedInformation)
+            throw new Error (`error moves empty string: match: ${match}  parsedData: ${parsedData}`)
+        };
+
+        if (adaptedInformation["move_object"][1] === undefined) {
+            console.log(match)
+            console.log(parsedData)
+            console.log(adaptedInformation)
+            throw new Error (`error move object undefined: match: ${match}  parsedData: ${parsedData}`)
+        };
+
+
 
         function getPlayerMoves(movesObject, player) {
             const isWhite = player.toLowerCase() === 'white';
@@ -375,9 +404,119 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
 
-        const findOpeningMatchNew = (game, openings) => {
 
 
+        //
+        // Using the Opening URL, return a list of words used
+        //
+        function getOpeningKeywords(ecoUrl) {
+
+                const matchArray = ecoUrl.match(/\/openings\/(.+)/);
+                const result = matchArray ? matchArray[1] : null;
+
+                const cleanedString = result
+                    .replace(/\.\.\..*/, '') // Remove everything after '...'
+                    .replace(/\d+.*$/, '') // Remove everything after a number and any following characters
+                    .replace(/-/g, ' ') // Replace all remaining hyphens with spaces
+                    .trim(); // Remove leading and trailing whitespace 
+                    
+                return cleanedString.split(' ')
+
+            // return null; // Return null if the website is not "chesscom"
+        };
+
+        
+        //
+        // Reduce the Openings Dictionary to contain only relevant openings
+        //
+        function reduceDictionarySize(dictionary, openingKeywords, eco) {
+
+            // Filter dictionary lines that match the Volume letter
+            const filterByVolume = Object.values(dictionary).filter(
+                entry => entry.VOLUME === eco.charAt(0)
+            );
+        
+            // Filter dictionary lines that have at least 1 matching keyword in FAMILYKEYWORDS
+            const filterByFamily = filterByVolume.filter(entry =>
+                openingKeywords.filter(keyword => entry.FAMILYKEYWORDS.includes(keyword)).length >= 2
+            );
+
+            if( filterByFamily.length == null) {return filterByVolume};
+
+            // // Continue to filter by VARIATIONKEYWORDS
+            // const filterByVariation = filterByFamily.filter(entry =>
+            //     openingKeywords.filter(keyword => entry.VARIATIONKEYWORDS.includes(keyword)).length >= 2
+            // );
+
+            // if( filterByVariation.length == null) {return filterByFamily};
+        
+            // return filterByVariation;
+        
+            return filterByFamily;
+        };
+
+
+
+
+
+
+
+        const findOpeningMatchNew = (game, openings, keywords) => {
+
+
+
+
+            //
+            // ATTEMPT TO REDUCE DICTIONARY SIZE - FAILED
+            // OPENINGS NOT BEING CORRECTLY GOTTEN
+            //
+
+            // function findBestMatch(dictionary, openingKeywords) {
+
+            //     // Function to calculate matches for a single entry
+            //     const calculateMatchCount = (entry) => {
+            //         const allKeywords = [
+            //             ...(entry.FAMILYKEYWORDS || []),
+            //             ...(entry.VARIATIONKEYWORDS || []),
+            //             ...(entry.SUBVARIATIONKEYWORDS || [])
+            //         ];
+            //         return openingKeywords.filter(keyword => allKeywords.includes(keyword)).length;
+            //     };
+            
+            //     // Find the entry with the highest match count
+            //     let bestMatch = null;
+            //     let maxMatches = 0;
+            
+            //     for (const entry of Object.values(dictionary)) {
+            //         const matchCount = calculateMatchCount(entry);
+            //         if (matchCount > maxMatches) {
+            //             bestMatch = entry;
+            //             maxMatches = matchCount;
+            //         }
+            //     }
+            
+            //     return bestMatch;
+            // };
+
+            // const bestKeywordsFound = findBestMatch(openings, keywords);
+            // // console.log(bestMatch);
+            // // return bestKeywordsFound;
+
+            // if (bestKeywordsFound == null) {
+            //     console.log(keywords)
+            //     console.log(adaptedInformation["opening_url"])
+            // }
+
+            // if (bestKeywordsFound !== null) {return bestKeywordsFound};
+
+
+
+
+        // const a = getOpeningKeywords()
+        // console.log(a)
+
+        // console.log(game)
+        
 
             const filterOpenings = (searchItem, dictionary) => {
                 return Object.values(dictionary).filter(({ PGN }) => {
@@ -467,7 +606,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
 
 
-                const matchingOpenings = filterOpenings(singlePGN, openings)
+                const matchingOpenings = filterOpenings(singlePGN, openingDictionaryNew)
                 // console.log(matchingOpenings)
 
                 if (matchingOpenings.length > 0) {
@@ -481,7 +620,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
                 if (isVienna == 1) {
                     singlePGN = singlePGN.replace("1.e4 e5 2.Bc4 Nc6 3.Nc3 Nf6", "1.e4 e5 2.Nc3 Nc6 3.Bc4 Nf6")
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
+                    const matchingOpenings = filterOpenings(singlePGN, openingDictionaryNew)
 
                     if (matchingOpenings.length > 0) {
 
@@ -492,7 +631,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
                 if (isWaywardQueen == 1) {
                     singlePGN = singlePGN.replace("1.e4 e5 2.Bc4 Nc6 3.Qh5", "1.e4 e5 2.Qh5 Nc6 3.Bc4")
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
+                    const matchingOpenings = filterOpenings(singlePGN, openingDictionaryNew)
 
                     if (matchingOpenings.length > 0) {
 
@@ -510,7 +649,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                     .replace("TEMP_BISHOP", '.Nf3');
 
 
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
+                    const matchingOpenings = filterOpenings(singlePGN, openingDictionaryNew)
 
                     if (matchingOpenings.length > 0) {
 
@@ -528,7 +667,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                     .replace("TEMP_BISHOP", '.Nc3');
 
 
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
+                    const matchingOpenings = filterOpenings(singlePGN, openingDictionaryNew)
 
                     if (matchingOpenings.length > 0) {
 
@@ -542,29 +681,31 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
 
 
-
             return bestMatch; // Return the entire opening object with the matching PGN
         };
         
         
-        
-        // Match information from ChessCom / Lichess moved into a uniform state
-        const adaptedInformation = adaptMatchInformation(match, parsedData, username, website)
-    
+        // console.log("---")
+        // console.log(parsedData['ECOUrl'])
+        // const a = getOpeningKeywords()
+        // console.log(a)
 
-        if (match.moves === "") {
-            console.log(match)
-            console.log(parsedData)
-            console.log(adaptedInformation)
-            throw new Error (`error moves empty string: match: ${match}  parsedData: ${parsedData}`)
-        };
+        // const b = reduceDictionarySize(JsonFileNew, a, parsedData["ECO"])
+        // console.log(b)
 
-        if (adaptedInformation["move_object"][1] === undefined) {
-            console.log(match)
-            console.log(parsedData)
-            console.log(adaptedInformation)
-            throw new Error (`error move object undefined: match: ${match}  parsedData: ${parsedData}`)
-        };
+        //
+        // Game opening Keywords
+        //
+        // console.log(adaptedInformation)
+        // console.log("######")
+        const keywords = getOpeningKeywords(adaptedInformation['opening_url']);
+        // console.log(keywords);
+
+        const openingsReduced = reduceDictionarySize(openingDictionaryNew, keywords, adaptedInformation["opening_eco"]);
+        // console.log(openingsReduced);
+
+        const openingsResult = findOpeningMatchNew(parsedData.MoveString, openingsReduced, keywords);
+        // console.log(openingsResult);
 
 
 
@@ -638,9 +779,9 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , name:         adaptedInformation["opening_name"]
             }
             ,
-            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
+            openingData:     findOpeningMatch(parsedData.MoveString, openingsReduced)
             ,
-            openingDataNew:     findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew)
+            openingDataNew:     findOpeningMatchNew(parsedData.MoveString, openingsReduced, keywords)
         };
     };
 

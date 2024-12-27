@@ -115,6 +115,50 @@ const Debugging = (props) => {
     };
 
 
+
+    // Dirty Cheaters Debugging
+    const onButton6Click = () => {
+    
+        // Extract usernames
+        const white = matchHistory.map((game) => game['white']['username']);
+        const black = matchHistory.map((game) => game['black']['username']);
+    
+        // Combine white and black usernames
+        const all = [...white, ...black];
+    
+        // Filter out specific username
+        const opponentUsernames = all.filter((username) => username !== 'BenArthurOce');
+    
+        const opponentUsernames2 = opponentUsernames.slice(0,1000)
+
+        //armpitsniffer42
+// status	"closed:fair_play_violations"
+        opponentUsernames2.forEach(username => {
+
+            const url = `https://api.chess.com/pub/player/${username}`
+            
+            fetch(url)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then((data) => {
+                // console.log(data.status)
+                if(data.status == 'closed:fair_play_violations') {
+                    console.log(data)
+                }
+            })
+            .catch((error) => {
+
+            });
+
+        });
+    
+    };
+
+
 // Function to parse single match data from PGN notation
 const parsePGNData = (unparsedGameString) => {
     const pgnParseGameRegx = /\[([\w\s]+)\s"([^"]+)"\]/g;
@@ -245,6 +289,8 @@ const parsePGNData = (unparsedGameString) => {
                 <button onClick={() => onButton4Click()}>Button 4</button>
 
                 <button onClick={() => onButton5Click()}>Button 5</button>
+
+                <button onClick={() => onButton6Click()}>Button 6</button>
             </ButtonContainer>
 
             <StatContainer>

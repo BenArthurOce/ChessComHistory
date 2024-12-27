@@ -89,7 +89,8 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
         //
         // General Family
         //
-
+        console.log(matchesFilteredByStartingMove)
+        console.log(matchesFilteredByColourUsed)
         // Get unique General Family Names based on filtered Matches
         const arrayOfUniqueGeneralFamilyNames = getUniqueGeneralFamilyNames(matchesFilteredByColourUsed);
 
