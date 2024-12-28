@@ -105,7 +105,7 @@ const NavigationBarSliding = (props) => {
     // States
     //
     const [username, setUsername] = useState("BenArthurOCE");
-    const [lastNGames, setLastNGames] = useState(208);
+    const [lastNGames, setLastNGames] = useState(200);
     const [website, setWebsite] = useState('chesscom');
     const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
     const [activeModule, setActiveModule] = useState('playerInfo');
@@ -205,6 +205,10 @@ const NavigationBarSliding = (props) => {
 
                     <NavigationButton selected={activeModule === 'tableSummary'} onClick={() => handleNavigationButtonClick('tableSummary')}>
                         Table Summary
+                    </NavigationButton>
+
+                    <NavigationButton selected={activeModule === 'otherStats'} onClick={() => handleNavigationButtonClick('otherStats')}>
+                        Other Stats
                     </NavigationButton>
 
                     <NavigationButton selected={activeModule === 'heatMapMaster'} onClick={() => handleNavigationButtonClick('heatMapMaster')}>

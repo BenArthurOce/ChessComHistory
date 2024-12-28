@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-
+import useOtherGameStats from '../hooksSpecific/useOtherGameStats';
 
 const ButtonContainer = styled.div
 `
@@ -36,9 +36,7 @@ const Debugging = (props) => {
 
     const {matchHistory, openingDictionary} = props
 
-
-
-
+    const [dataToRender, setDataToRender] = useState(null);
 
 
     useEffect(() => {
@@ -157,6 +155,250 @@ const Debugging = (props) => {
         });
     
     };
+
+    const onButton7Click = () => {
+        const fianchettoDataFiltered = matchHistory
+            .map(match => {
+                const { id: gameId } = match.general;
+                const { white, black } = match.fianchettos;
+                const { userPlayed, userResult } = match.playerResults;
+    
+                const you = userPlayed === "white" ? white : black;
+                const them = userPlayed === "white" ? black : white;
+    
+                return {
+                    gameId,
+                    you: you ? you.side : null,
+                    them: them ? them.side : null,
+                    result: userResult
+                };
+            })
+            .filter(game => game.you !== null || game.them !== null);
+    
+        console.log(fianchettoDataFiltered);
+
+        const fianchettoDataGrouped = fianchettoDataFiltered.reduce((acc, { you, them, result, gameId }) => {
+            const key = `${you || "null"}:${them || "null"}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    you: you || "null",
+                    them: them || "null",
+                    wincount: 0,
+                    losscount: 0,
+                    drawcount: 0,
+                    games: []
+                };
+            }
+
+            if (result === "win") acc[key].wincount++;
+            else if (result === "lose") acc[key].losscount++;
+            else if (result === "draw") acc[key].drawcount++;
+
+            acc[key].games.push(gameId);
+            return acc;
+        }, {});
+
+        console.log(fianchettoDataGrouped)
+
+    };
+
+
+
+
+    const onButton8Click = () => {
+
+
+        const fianchettoExtract = matchHistory.map((match) => ({
+            gameId: match.general.id,
+            white: match.fianchettos.white,
+            black: match.fianchettos.black,
+            youPlayed: match.playerResults.userPlayed,
+            result: match.playerResults.userResult,
+            you: match.playerResults.userPlayed == "white" ? match.fianchettos.white: match.fianchettos.black,
+            them: match.playerResults.userPlayed == "white" ? match.fianchettos.black: match.fianchettos.white,
+        }));
+    
+        console.log(fianchettoExtract);
+
+        const fianchettoData = fianchettoExtract.map((match) => ({
+            you: match.you == null ? null : match.you.side,
+            them: match.them == null ? null : match.them.side,
+            result: match.result
+        }));
+    
+        console.log(fianchettoData);
+
+        const fianchettoDataFiltered = fianchettoData
+            .filter(game => game.you !== null || game.them !== null
+
+            );
+        console.log(fianchettoDataFiltered);
+
+
+        const filterData = (data, youDid, theyDid, winLoseDraw) => {
+            return data.filter((line) => {
+                return (
+                    // results.userPlayed === userPlayed &&
+                    // results.userResult === winLoseDraw &&
+                    // time.class === timeClass
+                    line.you === youDid &&
+                    line.them === theyDid && 
+                    line.result === winLoseDraw
+                );
+            });
+        };
+
+
+        // Kingside
+        // nll
+
+
+        const stats = [
+            // Single-side combinations (null for one side)
+            {
+                you: "Kingside",
+                them: null,
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Kingside", null, "win"),
+                    lose: filterData(fianchettoDataFiltered, "Kingside", null, "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Kingside", null, "draw"),
+                },
+            },
+            {
+                you: "Queenside",
+                them: null,
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Queenside", null, "win"),
+                    lose: filterData(fianchettoDataFiltered, "Queenside", null, "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Queenside", null, "draw"),
+                },
+            },
+            {
+                you: "Both",
+                them: null,
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Both", null, "win"),
+                    lose: filterData(fianchettoDataFiltered, "Both", null, "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Both", null, "draw"),
+                },
+            },
+            {
+                you: null,
+                them: "Kingside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, null, "Kingside", "win"),
+                    lose: filterData(fianchettoDataFiltered, null, "Kingside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, null, "Kingside", "draw"),
+                },
+            },
+            {
+                you: null,
+                them: "Queenside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, null, "Queenside", "win"),
+                    lose: filterData(fianchettoDataFiltered, null, "Queenside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, null, "Queenside", "draw"),
+                },
+            },
+            {
+                you: null,
+                them: "Both",
+                results: {
+                    win: filterData(fianchettoDataFiltered, null, "Both", "win"),
+                    lose: filterData(fianchettoDataFiltered, null, "Both", "lose"),
+                    draw: filterData(fianchettoDataFiltered, null, "Both", "draw"),
+                },
+            },
+            // Dual-side combinations
+            {
+                you: "Kingside",
+                them: "Kingside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Kingside", "Kingside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Kingside", "Kingside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Kingside", "Kingside", "draw"),
+                },
+            },
+            {
+                you: "Kingside",
+                them: "Queenside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Kingside", "Queenside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Kingside", "Queenside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Kingside", "Queenside", "draw"),
+                },
+            },
+            {
+                you: "Kingside",
+                them: "Both",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Kingside", "Both", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Kingside", "Both", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Kingside", "Both", "draw"),
+                },
+            },
+            {
+                you: "Queenside",
+                them: "Kingside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Queenside", "Kingside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Queenside", "Kingside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Queenside", "Kingside", "draw"),
+                },
+            },
+            {
+                you: "Queenside",
+                them: "Queenside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Queenside", "Queenside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Queenside", "Queenside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Queenside", "Queenside", "draw"),
+                },
+            },
+            {
+                you: "Queenside",
+                them: "Both",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Queenside", "Both", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Queenside", "Both", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Queenside", "Both", "draw"),
+                },
+            },
+            {
+                you: "Both",
+                them: "Kingside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Both", "Kingside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Both", "Kingside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Both", "Kingside", "draw"),
+                },
+            },
+            {
+                you: "Both",
+                them: "Queenside",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Both", "Queenside", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Both", "Queenside", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Both", "Queenside", "draw"),
+                },
+            },
+            {
+                you: "Both",
+                them: "Both",
+                results: {
+                    win: filterData(fianchettoDataFiltered, "Both", "Both", "win"),
+                    lose: filterData(fianchettoDataFiltered, "Both", "Both", "lose"),
+                    draw: filterData(fianchettoDataFiltered, "Both", "Both", "draw"),
+                },
+            },
+        ];
+        
+        
+        
+        console.log(stats)
+        setDataToRender(stats)
+
+    }
 
 
 // Function to parse single match data from PGN notation
@@ -291,6 +533,11 @@ const parsePGNData = (unparsedGameString) => {
                 <button onClick={() => onButton5Click()}>Button 5</button>
 
                 <button onClick={() => onButton6Click()}>Button 6</button>
+
+                <button onClick={() => onButton7Click()}>Button 7</button>
+
+                <button onClick={() => onButton8Click()}>Button 8</button>
+
             </ButtonContainer>
 
             <StatContainer>
@@ -299,6 +546,35 @@ const parsePGNData = (unparsedGameString) => {
                     <p>{stats}</p>
                 </StatBox>
             </StatContainer>
+
+            {dataToRender && (
+                <div>
+                    {dataToRender && (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Wins</th>
+                                    <th>Losses</th>
+                                    <th>Draws</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {dataToRender.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.from}</td>
+                                        <td>{row.to}</td>
+                                        <td>{row.results.win}</td>
+                                        <td>{row.results.lose}</td>
+                                        <td>{row.results.draw}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            )}
 
 
         </>

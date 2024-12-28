@@ -284,6 +284,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         };
 
+
         return {
               "game_website":               getWebsite()
             , "game_url":                   getGameURL()
@@ -319,7 +320,24 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
     };
 
 
+
+
     const createSingleMatchObject = (match, parsedData, username, website) => {
+
+
+        function getEloDiff() {
+
+            if (adaptedInformation['results_userPlayed'] == "white") {
+                return adaptedInformation['player_white_elo'] - adaptedInformation['player_black_elo']
+            };
+
+            if (adaptedInformation['results_userPlayed'] == "black") {
+                return adaptedInformation['player_black_elo'] - adaptedInformation['player_white_elo']
+            };
+
+            return 0;
+        };
+
 
         function getPlayerMoves(movesObject, player) {
             const isWhite = player.toLowerCase() === 'white';
@@ -567,6 +585,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
 
+        const white_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
+        const black_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
 
 
         return {
@@ -610,6 +630,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , userPlayed:       adaptedInformation["results_userPlayed"]
                 , userResult:       adaptedInformation["results_userResult"]
                 , userMoves:        getPlayerMoves(adaptedInformation["move_object"], adaptedInformation["results_userPlayed"])
+                , eloDiff:          getEloDiff()
             }
             ,
             time: {
@@ -626,11 +647,13 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             white: {
                   username:     adaptedInformation["player_white_name"]
                 , elo:          adaptedInformation["player_white_elo"]
+                , accuracy:     white_accuracy
             }
             ,
             black: {
                   username:     adaptedInformation["player_black_name"]
                 , elo:          adaptedInformation["player_black_elo"]
+                , accuracy:     black_accuracy
             }
             ,
             openingMatch: {

@@ -11,6 +11,7 @@ import MatchHistoryTableMaster from './moduleMatchHistoryTable/MatchHistoryTable
 import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
 import OpeningAnalysisMaster from './moduleOpeningAnalysis/OpeningAnalysisMaster';
 import Debugging from './Debugging';
+import OtherStatsMaster from './moduleOtherStats/OtherStatsMaster';
 
 
 const ChessAppSwitcher = (props) => {
@@ -69,6 +70,10 @@ const ChessAppSwitcher = (props) => {
 
                     {matchData && activeModule === 'tableSummary' && (
                         <MatchHistoryTableMaster matchHistory={matchData} />
+                    )}
+
+                    {matchData && activeModule === 'otherStats' && (
+                        <OtherStatsMaster matchHistory={matchData} />
                     )}
 
                     {matchData && activeModule === 'heatMapMaster' && (
