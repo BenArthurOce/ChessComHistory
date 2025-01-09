@@ -63,7 +63,18 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
 
     // Function to get unique Family Names from objectArray
     const getUniqueGeneralFamilyNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingDataNew.FAMILY))];
+        try {
+            return [...new Set(objectArray.map((element) => {
+                if (!element.openingDataNew) {
+                    console.error('Missing openingDataNew in getUniqueGeneralFamilyNames:', element);
+                    return null;  // Skip this element if missing
+                }
+                return element.openingDataNew.FAMILY;
+            }))].filter(Boolean); // Filter out null values
+        } catch (error) {
+            console.error('Error in getUniqueGeneralFamilyNames:', error);
+            return [];
+        }
     };
 
     // Function to get unique Opening Names from objectArray
@@ -91,6 +102,8 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
         //
         console.log(matchesFilteredByStartingMove)
         console.log(matchesFilteredByColourUsed)
+
+
         // Get unique General Family Names based on filtered Matches
         const arrayOfUniqueGeneralFamilyNames = getUniqueGeneralFamilyNames(matchesFilteredByColourUsed);
 

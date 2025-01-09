@@ -284,7 +284,6 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             };
         };
 
-
         return {
               "game_website":               getWebsite()
             , "game_url":                   getGameURL()
@@ -560,7 +559,16 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
             };
 
+            
 
+            if(bestMatch == null) {
+                console.log("BEST MATCH NOT FOUND")
+                const eachSingleMoveTwo = game.split(' ').slice(0, 16)
+                const firstmove = eachSingleMoveTwo[0]
+                // bestMatch = openingDictionaryNew[]
+                bestMatch = filterOpenings(firstmove, openingDictionaryNew)
+                console.log(bestMatch)
+            }
 
 
             return bestMatch; // Return the entire opening object with the matching PGN
@@ -589,6 +597,13 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
         const white_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
         const black_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
+
+
+        if(findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew) == null ) {
+            console.log("=======MOVESTRING WAS NOT RETURNED=======")
+            console.log(parsedData)
+            console.log(parsedData.MoveString)
+            return null};
 
 
         return {

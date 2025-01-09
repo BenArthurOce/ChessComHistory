@@ -10,7 +10,7 @@ import SingleOpeningLevel1 from "./SingleOpeningLevel1";
 
 // Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-import useOpeningAnalysisGroupOpeningsNEW from '../../hooksSpecific/useOpeningAnalysisGroupOpenings';
+import useOpeningAnalysisGroupOpeningsNEW from '../../hooksSpecific/HookOpenings/useOpeningAnalysisGroupOpenings';
 
 
 const OpeningAnalysisMaster = (props) => {
