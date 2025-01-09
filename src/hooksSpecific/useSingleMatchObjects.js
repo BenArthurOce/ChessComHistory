@@ -299,7 +299,9 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             , "move_object":                parsedData["MoveObject"]
 
             , "opening_eco":                parsedData["ECO"]
+            , "opening_volume":             parsedData["ECO"].charAt(0)
             , "opening_name":               getOpeningName()
+            , "opening_url":                parsedData["ECOUrl"]
 
             , "player_white_name":          parsedData["White"]
             , "player_white_elo":           parsedData["WhiteElo"]
