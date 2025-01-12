@@ -36,7 +36,7 @@ const Square = styled.div
 `
 ;
 
-const Board = (props) => {
+const BoardComponent = (props) => {
 
     //
     // Props
@@ -113,4 +113,4 @@ const Board = (props) => {
     );
 };
 
-export default Board;
+export default BoardComponent;

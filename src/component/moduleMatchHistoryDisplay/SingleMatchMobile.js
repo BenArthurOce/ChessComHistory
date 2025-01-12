@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 // Components
-import Board from "./Board";
+import BoardComponent from "./BoardComponent";
 import SingleIcon from "../SingleIcon";
 
 //
@@ -37,7 +37,7 @@ const ResultBar = styled.span
 `
 ;
 
-const BoardContainer = styled.span
+const BoardComponentContainer = styled.span
 `
     display: inline-block;
 
@@ -189,9 +189,9 @@ function SingleMatchMobile(props) {
                 </Title>
 
                 {/* Chessboard Display. "Board" is a seperate component in a different file */}
-                <BoardContainer>
-                    <Board fen={gameInformation.results.fen} userplayed={gameInformation.results.userPlayed} site={gameInformation.general.site} />
-                </BoardContainer>
+                <BoardComponentContainer>
+                    <BoardComponent fen={gameInformation.results.fen} userplayed={gameInformation.results.userPlayed} site={gameInformation.general.site} />
+                </BoardComponentContainer>
 
                 {/* Line - General Match Info */}
                 <Icon icon={gameInformation.time.class} color={colorIcon} size={13} ></Icon>

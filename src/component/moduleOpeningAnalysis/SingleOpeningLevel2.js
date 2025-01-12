@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Container } from "../styles3";
 
-import Board from "../moduleMatchHistoryDisplay/Board";
+import BoardComponent from "../moduleMatchHistoryDisplay/BoardComponent";
 import JsonFileNew2 from '../../data/openingsNew.json';
 
 // Components
@@ -106,7 +106,7 @@ const SingleOpeningLevel2 = (props) => {
 
                     {/* ChessBoard */}
                     {expandedIndex === null && (
-                        <Board fen={searchDictionaryForOpening(ecoOpening.familyECOName)} userplayed={colour} site={"-"} />
+                        <BoardComponent fen={searchDictionaryForOpening(ecoOpening.familyECOName)} userplayed={colour} site={"-"} />
                     )}
 
                 </VariationDiv>

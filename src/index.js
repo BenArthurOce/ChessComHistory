@@ -4,16 +4,25 @@ import { StrictMode } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ChessApp from './component/ChessApp';
 
+import EngineDebug from './engine/engineDebug';
+
+
+
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-        <Router>
-            <ChessApp />
-        </Router>
+        // <Router>
+        //     <ChessApp />
+        // </Router>
+
+<Router>
+    <EngineDebug />
+</Router>
 
 );
+
 
 
 /* 

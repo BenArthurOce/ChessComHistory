@@ -5,7 +5,7 @@ import { Container, Inner } from "../styles3";
 
 import PopupOverlay from "../Overlay";
 
-import Board from "../moduleMatchHistoryDisplay/Board";
+import BoardComponent from "../moduleMatchHistoryDisplay/BoardComponent";
 import JsonFileNew2 from '../../data/openingsNew.json';
 
 
@@ -72,7 +72,7 @@ const Row = styled.span
 `;
 
 
-const BoardContainer = styled.span
+const BoardComponentContainer = styled.span
 `
     grid-column: 2;
     grid-row: 2 / span 5;
@@ -137,10 +137,10 @@ const SingleOpeningLevel3 = (props) => {
                     </Row>
 
                     
-                    {/* Chessboard Display. "Board" is a seperate component in a different file */}
-                    <BoardContainer>
-                        <Board fen={searchDictionaryForOpening(variation.variationMatches)} userplayed={colour} site={"-"} />
-                    </BoardContainer>
+                    {/* Chessboard Display. "BoardComponentContainer" is a seperate component in a different file */}
+                    <BoardComponentContainer>
+                        <BoardComponent fen={searchDictionaryForOpening(variation.variationMatches)} userplayed={colour} site={"-"} />
+                    </BoardComponentContainer>
 
                 </OpeningDiv>
             ))}
