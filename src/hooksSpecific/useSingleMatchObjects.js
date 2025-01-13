@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import JsonFile from '../data/openings.json';
 import JsonFileNew from '../data/openingsNew.json';
-
+import Game from "../engine/Game";
 
 // matchObjects = All the single match objects from the match history API
 const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
@@ -396,7 +396,18 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
         const findOpeningMatchNew = (game, openings) => {
 
+            // console.log("findOpeningMatchNew")
 
+            function gameFunctionTest() {
+                // const testString = "1.e4 e5 2.Bc4 Nc6 3.Qh5"
+                console.log(game)
+
+                const testSplit = game.split("10.")
+                // console.log(testSplit)
+                const newGame = new Game(testSplit[0].trim());
+            }
+
+            gameFunctionTest();
 
             const filterOpenings = (searchItem, dictionary) => {
                 return Object.values(dictionary).filter(({ PGN }) => {

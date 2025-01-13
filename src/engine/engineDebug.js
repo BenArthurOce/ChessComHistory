@@ -42,12 +42,13 @@ function EngineDebug() {
 
     const onButton1Click = () => {
         const myTest = new Test()
-        console.log(myTest.row)
+        // console.log(myTest.row)
     };
 
     const onButton2Click = () => {
-        const myGame = new Game()
-        console.log(myGame.idNumber)
+        const a = "1.d4 Nf6 2.c4 e6 3.Nf3 d5 4.g3 Bb4+ 5.Bd2 Be7 6.Bg2 O-O 7.O-O c6 8.Qc2 Nbd7 9.Bf4 b6 10.Nbd2 Ba6"
+        const myGame = new Game(a)
+        // console.log(myGame.idNumber)
     };
 
     const onButton3Click = () => {

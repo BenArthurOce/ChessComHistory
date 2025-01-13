@@ -1,9 +1,14 @@
 // import StaticGameLogic from './StaticGameLogic.js';
 // import StaticParser from './StaticChessParser.js';
 // import StaticChessUtility from './StaticChessUtility.js';
-// import  { Board, BoardDisplay, BoardInteractive} from './BoardUsingLogic.js';
+// import  { Board, BoardDisplay, BoardInteractive} from './Board.js';
 // import StaticErrorCheck from './StaticErrorCheck.js';
 // import { defaultMethod } from 'react-router-dom/dist/dom.js';
+
+import Board from "./Board";
+import StaticParser from "./StaticChessParser"; 
+import StaticErrorCheck from "./StaticErrorCheck";
+import StaticGameLogic from "./StaticGameLogic";
 
 /* 
 The Game() class is what holds the information about the chessgame, which has been generated from the Dictionary() object
@@ -13,36 +18,37 @@ Game() contains the Board() object, which contains all the Square() and Piece Ob
 
 //
 class Game {
+    #pgn;               // PGN string
     #className;         // Name of this class
     #classSubName;      // Name of this subclass
-    #idNumber;          // Id number of the game. Is passed on to the Board() and the DOM
     #information;       // Data object obtained from Dictionary().
     #parser;            // Parser() object that lists the details of each move in that opening
     #board;             // Board() object that exists in the Game() class
 
     // constructor(information, idNumber) {
-        constructor() {
+        constructor(pgn) {
         const information = null
-        const idNumber = null
-        console.log(`\tFunc: START constructor (Game)`);
+        // console.log(`\tFunc: START constructor (Game)`);
 
         // StaticErrorCheck.validateOpeningObjectLogic(information)
-        this.#idNumber = idNumber;
+        this.#pgn = pgn;
         this.#information = information;
         this.#className = "Game"
         this.#classSubName = "";
-        this.#board = null;
+        this.#board = new Board;
         this.#parser = null;
-        console.log(`\tFunc: END constructor (Game)`);  
+        this.init();
+
+        // console.log(`\tFunc: END constructor (Game)`);  
+    };
+    get pgn() {
+        return this.#pgn
     };
     get className() {
         return this.#className
     };
     get classSubName() {
         return this.#classSubName;
-    };
-    get idNumber() {
-        return this.#idNumber;
     };
     get gameInformation() {
         return this.#information;
@@ -54,13 +60,18 @@ class Game {
         return this.#parser;
     };
     set parser(value) {
-        // this.#parser = new StaticParser(value)
+        this.#parser = new StaticParser(value)
     };
     get board() {
         return this.#board;
     };
     set board(value) {
         this.#board = value;
+    };
+
+    init() {
+        this.setParser();
+        this.runGameWithParserObject();
     };
 
     returnChessboard() {
@@ -73,8 +84,12 @@ class Game {
     };
 
     setParser() {
+        // console.log(this.pgn)
         // StaticErrorCheck.validatePGNExistence(this.gameInformation.PGN);
+        StaticErrorCheck.validatePGNExistence(this.pgn);
         // this.#parser = new StaticParser(this.gameInformation.PGN).parsedMoves;
+        console.log(this.pgn)
+        this.#parser = new StaticParser(this.pgn).parsedMoves;
     };
 
     runGameWithParserObject() {
@@ -82,10 +97,14 @@ class Game {
 
         // console.log(this.parser);
         
-        // StaticErrorCheck.validateBoardExistence(this.board)
-        // StaticErrorCheck.validateParserExistence(this.parser)
-        // StaticErrorCheck.checkIfBoardIsPopulated(this)
-        // StaticGameLogic.processAllMoves(this.board, this.parser);
+        StaticErrorCheck.validateBoardExistence(this.board)
+        StaticErrorCheck.validateParserExistence(this.parser)
+        StaticErrorCheck.checkIfBoardIsPopulated(this)
+        StaticGameLogic.processAllMoves(this.board, this.parser);
+
+        // console.log(this.pgn)
+
+        this.board.printToTerminal()
     }
 
     print() {

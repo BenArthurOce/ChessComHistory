@@ -4,6 +4,7 @@ import Square from './Square.js';
 import { Piece, Pawn, Rook, Knight, Bishop, Queen, King } from "./Piece.js";
 
 
+
 /* 
 Game() contains the Board() object, which contains all the Square() and Piece() objects
 The Board() class generally lives inside the "Game" class on a 1 for 1 basis
@@ -12,36 +13,20 @@ The functions inside Board() are generally related to placing and moving Piece()
 to easily find and return single or multiple Square() objects, dependant on criteria
 */
 
-class BoardUsingLogic {
-    #parentElement;     // Object that contains this object, it will always be Game()
-    #element;           // This DOM element
+class Board {
     #className;         // Name of this class
-    #idNumber;          // Id number of the game. This is obtained from the Game() object
     #grid;              // 2d array of the chessboard. Contains 64 Square() objects 
 
-    constructor(idNumber, parentElement) {
+    constructor() {
         // console.log(`\t\tFunc: START constructor (Board)`);
-        this.#parentElement = parentElement;
-        this.#element = document.createElement('div');
         this.#className = "Board";
-        this.#idNumber = idNumber;
         this.#grid = [];
+        this.initSquares()
+        this.initPieces()
         // console.log(`\t\tFunc: END constructor (Board)`);
     };
-
-    get parentElement() {
-        return this.#parentElement;
-    };
-    get element() {
-        return this.#element;
-    };
-    set element(value) {
-        this.#element = value;
-    };
-    get className() {return this.#className;
-    };
-    get idNumber() {
-        return this.#idNumber;
+    get className() {
+        return this.#className;
     };
     get grid() {
         return this.#grid;
@@ -285,7 +270,7 @@ class BoardUsingLogic {
         board += `──│────│────│────│────│────│────│────│────│\t──│────│────│────│────│────│────│────│────│\n`;
       
         // suppress current output
-        // console.log(board);
+        console.log(board);
       };
 
 
@@ -295,7 +280,7 @@ class BoardUsingLogic {
     printSquaresToTerminal() {
 
         const positionArray = this.grid.map(row =>
-            row.map(square => (square instanceof SquareFactory ? square.positionRef : "--"))
+            row.map(square => (square instanceof Square ? square.positionRef : "--"))
         );
 
         const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -326,43 +311,5 @@ class BoardUsingLogic {
 };
 
 
-// This board is just for display. Its parent Game() object will have a click event for the entire object
-class BoardDisplay extends BoardUsingLogic {
-    constructor(idNumber, parentElement) {
-        super(idNumber, parentElement);
-        this.initSquares()              // Automatically creates the 64 Square() Objects into a 2d array
-        this.initPieces()               // Automatically creates the 24 Piece() Objects and appends them to a Square()
-        this.createElement()            // Automatically creates the element
-    }
 
-    /**
-     * Creates a Board() HTML object for the DOM
-     */
-    createElement() {
-        this.element.className = `chessboard small`;
-        this.element.id = `chessboard${this.idNumber+1}`;
-        this.parentElement.appendChild(this.element);
-    };
-
-};
-
-
-class BoardInteractive extends BoardUsingLogic {
-    constructor(idNumber, parentElement) {
-        super(idNumber, parentElement);
-        this.initSquares()              // Automatically creates the 64 Square() Objects into a 2d array
-        this.initPieces()               // Automatically creates the 24 Piece() Objects and appends them to a Square()
-        this.createElement()
-    }
-    /**
-     * Creates a Board() HTML object for the DOM
-     */
-    createElement() {
-        this.element.className = `chessboard large`;
-        this.element.id = `chessboard${this.idNumber+1}`;
-        this.parentElement.appendChild(this.element);
-    };
-
-}
-
-export {BoardUsingLogic as Board, BoardDisplay, BoardInteractive};
+export default Board

@@ -1,4 +1,4 @@
-// import { Square, SquareFactory, SquareHTML } from './Square.js';
+// import { Square, Square, SquareHTML } from './Square.js';
 import Square from './Square.js';
 
 import {

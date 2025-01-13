@@ -64,22 +64,22 @@ class StaticParser {
 
                 // Add White Move
                 if (eachValue[0] !== undefined) {
-                    const whiteMove = this.createSingleMoveObject(moveNumber, eachValue[0], 0)
-                    moveArray.push(whiteMove)
-                } else {null}; // This should never be null
-
+                    const whiteMove = this.createSingleMoveObject(moveNumber, eachValue[0], 0);
+                    moveArray.push(whiteMove);
+                }
                 // Add Black Move
                 if (eachValue[1] !== undefined) {
-                    const blackMove = this.createSingleMoveObject(moveNumber, eachValue[1], 1)
-                    moveArray.push(blackMove)
-                } else {null};
+                    const blackMove = this.createSingleMoveObject(moveNumber, eachValue[1], 1);
+                    moveArray.push(blackMove);
+                }
+
 
                 this.parsedMoves[moveNumber] = moveArray;
             }
         }
 
         catch (err) {
-            console.error(`${err} -  Notation: ${notation}`);
+            console.error(`${err} -  Notation: ${string}`);
         };
 
         // console.log(this.parsedMoves)

@@ -13,16 +13,16 @@ import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-        // <Router>
-        //     <ChessApp />
-        // </Router>
+        <Router>
+            <ChessApp />
+        </Router>
 
-<Router>
-    <EngineDebug />
-</Router>
 
 );
 
+{/* <Router>
+    <EngineDebug />
+</Router> */}
 
 
 /* 

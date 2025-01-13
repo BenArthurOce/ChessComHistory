@@ -7,8 +7,6 @@ It is the Square responsibility to ensure that the Piece() is updated with the c
 */
 
 class Square {
-    #parentElement;     // Object that contains this object, in this case, its Board()
-    #element;           // This DOM element
     #className;         // Name of this class
     #row;               // base 0 - row position in grid
     #col;               // base 0 - col position in grid
@@ -18,9 +16,8 @@ class Square {
     #positionArr;       // two element array of row and col (base 0)
     #contents;          // Either null, or a Piece() object
 
-    constructor(row, col, parentElement) {
-        this.#parentElement = parentElement;
-        this.#element = document.createElement('div');
+    constructor(row, col) {
+        // console.log(`\t\t\tFunc: START constructor (Square)`);
         this.#className = "Square";
         this.#row = row;
         this.#col = col;
@@ -29,13 +26,7 @@ class Square {
         this.#positionRef = this.#fileRef + this.#rankRef;
         this.#positionArr = [row, col];
         this.#contents = null;
-        this.init() //createHTMLElement
-    };
-    get parentElement() {
-        return this.#parentElement;
-    };
-    get element() {
-        return this.#element;
+        // console.log(`\t\t\tFunc: END constructor (Square)`);
     };
     get className() {
         return this.#className;
@@ -67,25 +58,6 @@ class Square {
     get piece() {
         return this.#contents;
     };
-    init() {
-        this.createHTMLElement()
-    };
-    toggleActivated() {
-        this.element.classList.toggle("activeSquare");
-    };
-
-
-    /**
-     * Creates a Square() HTML object for the DOM
-     */
-    createHTMLElement() {
-        if (this.parentElement===null) {return}
-        this.element.className = (this.row + this.col) % 2 === 0 ? "lightSquare square" : "darkSquare square";
-        this.element.dataset.row = this.row;
-        this.element.dataset.col = this.col;
-        this.parentElement.appendChild(this.element)
-    };
-
 
     /**
      * Updates the #contents attribute of the Square() object with the Piece() object that is on that square. Also updates the DOM
@@ -94,8 +66,6 @@ class Square {
     setPiece(pieceObj) {
         pieceObj.update(this);       
         this.#contents = pieceObj;
-        if (this.parentElement===null) {return}
-        this.element.appendChild(pieceObj.element)
     };
 
     
@@ -104,7 +74,6 @@ class Square {
      */
     clearContents() {
         this.#contents = null;
-        this.#element.innerHTML = '';
     };
 
 
