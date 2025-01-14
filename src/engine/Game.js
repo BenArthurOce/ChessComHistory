@@ -19,42 +19,44 @@ Game() contains the Board() object, which contains all the Square() and Piece Ob
 //
 class Game {
     #pgn;               // PGN string
+    #fen;               // FEN string
     #className;         // Name of this class
     #classSubName;      // Name of this subclass
-    #information;       // Data object obtained from Dictionary().
     #parser;            // Parser() object that lists the details of each move in that opening
     #board;             // Board() object that exists in the Game() class
 
-    // constructor(information, idNumber) {
-        constructor(pgn) {
-        const information = null
+    constructor(pgn) {
         // console.log(`\tFunc: START constructor (Game)`);
 
-        // StaticErrorCheck.validateOpeningObjectLogic(information)
+        // StaticErrorCheck.validateOpeningObjectLogic(pgn)
         this.#pgn = pgn;
-        this.#information = information;
+        this.#fen = null;
         this.#className = "Game"
         this.#classSubName = "";
         this.#board = new Board;
         this.#parser = null;
         this.init();
 
+        this.getFEN()
+
+
+
         // console.log(`\tFunc: END constructor (Game)`);  
     };
     get pgn() {
         return this.#pgn
+    };
+    get fen() {
+        return this.#fen;
+    };
+    set fen(value) {
+        this.#fen = value;
     };
     get className() {
         return this.#className
     };
     get classSubName() {
         return this.#classSubName;
-    };
-    get gameInformation() {
-        return this.#information;
-    };
-    set gameInformation(value) {
-        this.#information = value;
     };
     get parser() {
         return this.#parser;
@@ -79,38 +81,32 @@ class Game {
     };
 
     updateGameInformation(info) {
-        this.gameInformation = info
-        this.parser = info.PGN
+        this.gameInformation = info;
+        this.parser = info.PGN;
     };
 
     setParser() {
-        // console.log(this.pgn)
-        // StaticErrorCheck.validatePGNExistence(this.gameInformation.PGN);
         StaticErrorCheck.validatePGNExistence(this.pgn);
-        // this.#parser = new StaticParser(this.gameInformation.PGN).parsedMoves;
-        console.log(this.pgn)
         this.#parser = new StaticParser(this.pgn).parsedMoves;
     };
 
     runGameWithParserObject() {
         // complete error checks first
-
-        // console.log(this.parser);
-        
-        StaticErrorCheck.validateBoardExistence(this.board)
-        StaticErrorCheck.validateParserExistence(this.parser)
-        StaticErrorCheck.checkIfBoardIsPopulated(this)
+        StaticErrorCheck.validateBoardExistence(this.board);
+        StaticErrorCheck.validateParserExistence(this.parser);
+        StaticErrorCheck.checkIfBoardIsPopulated(this);
         StaticGameLogic.processAllMoves(this.board, this.parser);
-
-        // console.log(this.pgn)
-
-        this.board.printToTerminal()
-    }
-
-    print() {
-        // this.returnChessboard().printToTerminal()
     };
 
+    print() {
+        this.board.printToTerminal();
+    };
+
+    getFEN() {
+        const a = this.board.constructFEN();
+        this.fen = a;
+        // console.log(this.fen)
+    };
 
     // This is used in the "side" scripts, where we do not want to display games to the DOM
     // createDummyBoard() {

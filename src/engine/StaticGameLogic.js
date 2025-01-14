@@ -47,9 +47,10 @@ class StaticGameLogic {
                 // Special Case: If player does troll rook move early game
                 if (parseInt(moveInfo["turnNumber"]) <= 7) 
                     
-                    // Only the column must match
+                    // 
                     {
-                    if (piece["positionArr"][1] === moveInfo["targetArr"][1]) {return true} else {return false};
+                    if (piece["positionArr"][1] === moveInfo["targetArr"][1]) {return true};
+                    if (piece["positionArr"][0] === moveInfo["targetArr"][0]) {return true};
                 };
 
 
@@ -179,6 +180,7 @@ class StaticGameLogic {
             }
 
         if (!foundPiece) {
+            console.log(moveInfo)
             boardState.printToTerminal();
             throw new Error(`File: [StaticGameLogic.js] Function: [processPlayerMove]: Piece not found || Turn: ${moveInfo.turnNumber} | MoveNum: ${moveInfo.teamNumber} | Notation: ${moveInfo.notation}`);
         }

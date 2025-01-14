@@ -394,195 +394,55 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
 
+        const filterOpeningsByFEN = (searchItem, dictionary) => {
+            // Filters dictionary based on matching FEN value
+            return Object.values(dictionary).filter(({ FEN }) => FEN === searchItem);
+        };
+
+
+        
         const findOpeningMatchNew = (game, openings) => {
-
-            // console.log("findOpeningMatchNew")
-
-            function gameFunctionTest() {
-                // const testString = "1.e4 e5 2.Bc4 Nc6 3.Qh5"
-                console.log(game)
-
-                const testSplit = game.split("10.")
-                // console.log(testSplit)
-                const newGame = new Game(testSplit[0].trim());
+            // Ensure the input game string is valid
+            if (!game || !openings || typeof game !== 'string') {
+                console.error('Invalid input game or openings');
+                return null;
             }
-
-            gameFunctionTest();
-
-            const filterOpenings = (searchItem, dictionary) => {
-                return Object.values(dictionary).filter(({ PGN }) => {
-                    return PGN === searchItem; // Use === for comparison
-                });
-            };
-
-            let bestMatch = null;
-            let bestMatchLength = 0;
-            let isVienna = 0;
-            let isWaywardQueen = 0;
-
-            let isBb4Nf3Adjust = 0;
-            let isBb4Nc3Adjust = 0;
-
-            //
-            // Take the games PGN, create an arry of the first 16 moves
-            //
-            const arrayOfMoves = []
-            const eachSingleMove = game.split(' ').slice(0, 16)
-
-            // Add the first move so the rest can be appended with space characters
-            let cumulativeString = eachSingleMove[0];
-
-            // Add the rest of the moves to the array
-            for (let i = 1; i < eachSingleMove.length; i++) {
-
-                isVienna = 0;
-                isWaywardQueen = 0;
-
-                isBb4Nf3Adjust = 0;
-                isBb4Nc3Adjust = 0;
-
-                // get single move pgn
-                const singleMove = eachSingleMove[i]
-
-                // add it to the full move string to be added to array
-                cumulativeString = cumulativeString + " " + singleMove
-
-
-
-                if (cumulativeString.startsWith("1.e4 e5 2.Bc4 Nc6 3.Nc3 Nf6")) {
-                    isVienna = 1;
-                }
- 
-                /*  */
-                if (cumulativeString.startsWith("1.e4 e5 2.Bc4 Nc6 3.Qh5")) {
-                    isWaywardQueen = 1;
-                }   
+        
+            // Initialize the array to store board positions
+            const boardPositions = [];
+            
+            // Get the first 20 moves and split them
+            const splitMoves = game.split(' ').slice(0, 20);
+            let cumulativeString = splitMoves[0];
+        
+            // Generate the board positions after each move
+            for (let i = 1; i < splitMoves.length; i++) {
+                cumulativeString += " " + splitMoves[i];
                 
-                /*  */
-                if (
-                        cumulativeString.includes("2.Bc4") && cumulativeString.includes("3.Nf3")
-                    ||  cumulativeString.includes("2.Bc4") && cumulativeString.includes("4.Nf3")
-                    ||  cumulativeString.includes("2.Bc4") && cumulativeString.includes("5.Nf3")
-                )
-                {
-                    isBb4Nf3Adjust = 1;
-                }
-
-                /*  */
-                if (
-                        cumulativeString.includes("2.Bc4") && cumulativeString.includes("3.Nc3")
-                    ||  cumulativeString.includes("2.Bc4") && cumulativeString.includes("4.Nc3")
-                    ||  cumulativeString.includes("2.Bc4") && cumulativeString.includes("5.Nc3")
-                )
-                {
-                    isBb4Nc3Adjust = 1;
-                }   
-            
-                arrayOfMoves.push(cumulativeString)
-              }
-              
-            //   console.log(arrayOfMoves)
-
-            //
-            // Search for each PGN in the dictionary
-            //
-
-                // if( italianGames.hasOwnProperty(singlePGN) ) {
-                //     singlePGN = italianGames[singlePGN];
-                    
-                // }
-
-            for (let i = 0; i < arrayOfMoves.length; i++) {
-                let singlePGN = arrayOfMoves[i]
-
-
-
-                const matchingOpenings = filterOpenings(singlePGN, openings)
-                // console.log(matchingOpenings)
-
-                if (matchingOpenings.length > 0) {
-
-                    bestMatch = matchingOpenings[0];
-                    bestMatchLength = i;
-                }
-
-
-
-
-                if (isVienna == 1) {
-                    singlePGN = singlePGN.replace("1.e4 e5 2.Bc4 Nc6 3.Nc3 Nf6", "1.e4 e5 2.Nc3 Nc6 3.Bc4 Nf6")
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
-
-                    if (matchingOpenings.length > 0) {
-
-                        bestMatch = matchingOpenings[0];
-                        bestMatchLength = i;
-                    }                    
-                }
-
-                if (isWaywardQueen == 1) {
-                    singlePGN = singlePGN.replace("1.e4 e5 2.Bc4 Nc6 3.Qh5", "1.e4 e5 2.Qh5 Nc6 3.Bc4")
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
-
-                    if (matchingOpenings.length > 0) {
-
-                        bestMatch = matchingOpenings[0];
-                        bestMatchLength = i;
-                    }                    
-                }
-
-                if (isBb4Nf3Adjust === 1) {
-                    singlePGN = singlePGN
-                    .replace('.Bc4', "TEMP_BISHOP")
-                    .replace('.Nf3', "TEMP_KNIGHT")
-
-                    .replace("TEMP_KNIGHT", '.Bc4')
-                    .replace("TEMP_BISHOP", '.Nf3');
-
-
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
-
-                    if (matchingOpenings.length > 0) {
-
-                        bestMatch = matchingOpenings[0];
-                        bestMatchLength = i;
-                    }    
-                }
-
-                if (isBb4Nc3Adjust === 1) {
-                    singlePGN = singlePGN
-                    .replace('.Bc4', "TEMP_BISHOP")
-                    .replace('.Nc3', "TEMP_KNIGHT")
-
-                    .replace("TEMP_KNIGHT", '.Bc4')
-                    .replace("TEMP_BISHOP", '.Nc3');
-
-
-                    const matchingOpenings = filterOpenings(singlePGN, openings)
-
-                    if (matchingOpenings.length > 0) {
-
-                        bestMatch = matchingOpenings[0];
-                        bestMatchLength = i;
-                    }    
-                }
-
-
-            };
-
-            
-
-            if(bestMatch == null) {
-                console.log("BEST MATCH NOT FOUND")
-                const eachSingleMoveTwo = game.split(' ').slice(0, 16)
-                const firstmove = eachSingleMoveTwo[0]
-                // bestMatch = openingDictionaryNew[]
-                bestMatch = filterOpenings(firstmove, openingDictionaryNew)
-                console.log(bestMatch)
+                // Assuming `Game` is a valid constructor
+                const newGame = new Game(cumulativeString);
+                boardPositions.push(newGame.fen);
             }
-
-
-            return bestMatch; // Return the entire opening object with the matching PGN
+                
+            // Reverse the board positions to check from the latest to the earliest
+            boardPositions.reverse();
+        
+            // Initialize the result variable
+            let output = null;
+        
+            // Iterate through the board positions and try to match the FEN with the openings
+            for (const boardPosition of boardPositions) {
+                const dictionaryResult = filterOpeningsByFEN(boardPosition, openings);
+                
+                if (dictionaryResult.length > 0) {
+                    output = dictionaryResult[0]; // Set the first match and stop
+                    break;
+                }
+            }
+        
+            // Return the result
+            return output;
+        
         };
         
         
@@ -610,11 +470,11 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         const black_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
 
 
-        if(findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew) == null ) {
-            console.log("=======MOVESTRING WAS NOT RETURNED=======")
-            console.log(parsedData)
-            console.log(parsedData.MoveString)
-            return null};
+        // if(findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew) == null ) {
+        //     console.log("=======MOVESTRING WAS NOT RETURNED=======")
+        //     console.log(parsedData)
+        //     console.log(parsedData.MoveString)
+        //     return null};
 
 
         return {

@@ -200,9 +200,9 @@ class Board {
 
 
     constructFEN() {
-        console.log("--constructFEN--");
+        // console.log("--constructFEN--");
         const myBoard = this.getArray("fen", "-");
-        console.log(myBoard); // this is the array
+        // console.log(myBoard); // this is the array
     
         function rowToFEN(row) {
             let fenRow = '';
@@ -270,7 +270,7 @@ class Board {
         board += `──│────│────│────│────│────│────│────│────│\t──│────│────│────│────│────│────│────│────│\n`;
       
         // suppress current output
-        console.log(board);
+        // console.log(board);
       };
 
 
