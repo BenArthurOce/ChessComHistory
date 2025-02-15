@@ -59,42 +59,42 @@ class Board {
      */
     initPieces() {
         // Create Chess Pieces and place on board - White
-        this.putPieceFromRef(new Rook(0), "a1");
-        this.putPieceFromRef(new Knight(0), "b1");
-        this.putPieceFromRef(new Bishop(0), "c1");
-        this.putPieceFromRef(new Queen(0), "d1");
-        this.putPieceFromRef(new King(0), "e1");
-        this.putPieceFromRef(new Bishop(0), "f1");
-        this.putPieceFromRef(new Knight(0), "g1");
-        this.putPieceFromRef(new Rook(0), "h1");
+        this.putPieceFromRef(new Rook(0,   "white_rook_01"),   "a1");
+        this.putPieceFromRef(new Knight(0, "white_knight_01"), "b1");
+        this.putPieceFromRef(new Bishop(0, "white_bishop_01"), "c1");
+        this.putPieceFromRef(new Queen(0,  "white_queen_01"),  "d1");
+        this.putPieceFromRef(new King(0,   "white_king_01"),   "e1");
+        this.putPieceFromRef(new Bishop(0, "white_bishop_02"), "f1");
+        this.putPieceFromRef(new Knight(0, "white_knight_02"), "g1");
+        this.putPieceFromRef(new Rook(0,   "white_rook_02"),   "h1");
 
-        this.putPieceFromRef(new Pawn(0), "a2");
-        this.putPieceFromRef(new Pawn(0), "b2");
-        this.putPieceFromRef(new Pawn(0), "c2");
-        this.putPieceFromRef(new Pawn(0), "d2");
-        this.putPieceFromRef(new Pawn(0), "e2");
-        this.putPieceFromRef(new Pawn(0), "f2");
-        this.putPieceFromRef(new Pawn(0), "g2");
-        this.putPieceFromRef(new Pawn(0), "h2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_01"), "a2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_02"), "b2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_03"), "c2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_04"), "d2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_05"), "e2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_06"), "f2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_07"), "g2");
+        this.putPieceFromRef(new Pawn(0, "white_pawn_08"), "h2");
 
         // Create Chess Pieces and place on board - Black
-        this.putPieceFromRef(new Rook(1), "a8");
-        this.putPieceFromRef(new Knight(1), "b8");
-        this.putPieceFromRef(new Bishop(1), "c8");
-        this.putPieceFromRef(new Queen(1), "d8");
-        this.putPieceFromRef(new King(1), "e8");
-        this.putPieceFromRef(new Bishop(1), "f8");
-        this.putPieceFromRef(new Knight(1), "g8");
-        this.putPieceFromRef(new Rook(1), "h8");
+        this.putPieceFromRef(new Rook(1,   "black_rook_01"),   "a8");
+        this.putPieceFromRef(new Knight(1, "black_knight_01"), "b8");
+        this.putPieceFromRef(new Bishop(1, "black_bishop_01"), "c8");
+        this.putPieceFromRef(new Queen(1,  "black_queen_01"),  "d8");
+        this.putPieceFromRef(new King(1,   "black_king_01"),   "e8");
+        this.putPieceFromRef(new Bishop(1, "black_bishop_02"), "f8");
+        this.putPieceFromRef(new Knight(1, "black_knight_02"), "g8");
+        this.putPieceFromRef(new Rook(1,   "black_rook_02"),   "h8");
 
-        this.putPieceFromRef(new Pawn(1), "a7");
-        this.putPieceFromRef(new Pawn(1), "b7");
-        this.putPieceFromRef(new Pawn(1), "c7");
-        this.putPieceFromRef(new Pawn(1), "d7");
-        this.putPieceFromRef(new Pawn(1), "e7");
-        this.putPieceFromRef(new Pawn(1), "f7");
-        this.putPieceFromRef(new Pawn(1), "g7");
-        this.putPieceFromRef(new Pawn(1), "h7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_01"), "a7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_02"), "b7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_03"), "c7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_04"), "d7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_05"), "e7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_06"), "f7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_07"), "g7");
+        this.putPieceFromRef(new Pawn(1, "black_pawn_08"), "h7");
     };
 
 
@@ -308,6 +308,45 @@ class Board {
     };
 
 
+
+    printToTerminalError() {
+
+        const positionArray = this.getArray("code", "--")
+        
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        const nums = [7, 6, 5, 4, 3, 2, 1, 0];
+      
+        let board = '\n';
+        board += '  │  0 │  1 │  2 │  3 │  4 │  5 │  6 │  7 │\t  │  a │  b │  c │  d │  e │  f │  g │  h │\n';
+
+      
+        for (let rank = 7; rank >= 0; rank--) {
+            board += `──│────│────│────│────│────│────│────│────│\t──│────│────│────│────│────│────│────│────│\n`;
+            board += `${nums[rank]} │`;
+
+            for (let file of files) {
+                const piece = positionArray[7 - rank][files.indexOf(file)];
+                board += ` ${piece === '' ? '{}' : piece} │`;
+            };
+
+            board += '\t';
+
+            let swapNum = StaticChessUtility.rowArrayToRef(nums[rank])
+
+            board += `${swapNum} │`;
+
+            for (let file of files) {
+                let piece = positionArray[7 - rank][files.indexOf(file)];
+                board += ` ${piece === '' ? '{}' : piece} │`;
+            };
+
+            board += '\n';
+        };
+      
+        board += `──│────│────│────│────│────│────│────│────│\t──│────│────│────│────│────│────│────│────│\n`;
+      
+        console.log(board);
+      };
 };
 
 

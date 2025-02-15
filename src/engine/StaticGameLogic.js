@@ -1,8 +1,14 @@
 import StaticChessUtility from './StaticChessUtility.js';
 import StaticErrorCheck from './StaticErrorCheck.js';
 import {Piece, Pawn, Rook, Knight, Bishop, Queen, King} from "./Piece.js";
+import Board from './Board.js';
 
 class StaticGameLogic {
+
+
+    // If logic Fails and needs to be re-ran. these variables will be filled
+    // let isRedo = null;
+    // let errorMove = null;
 
     // filterBoardByAttribute(code, attributeName, attributeValue) {
     //     const array = this.grid.map(row =>
@@ -29,6 +35,7 @@ class StaticGameLogic {
      * 
      * @param {object} moveInfo Object Key/Value pair regarding the information about a single move
      * @param {Piece} moveInfo The Piece() object that is tested to see if legal move or not
+     * @param {boolean} isRedo If the entire logic fails because of a bad rook or knight, rerun the code and avoid that piece
      * @returns {boolean} Returns boolean true if the piece can move to that square.
      * @throws {Error} If the moveInfo or the Piece() object are missing
      */
@@ -122,14 +129,58 @@ class StaticGameLogic {
 
     /**
      * Loops through all the move instructions found in the Parser() object, and calls "processPlayerMove" on each move instruction
+     * If the moves fail, add a "retry flag", re-run the movements but avoiding the problem piece
+     * ie: Two knighs can move to the same square, but one causes check so only one move is legal with the reduced notation
      *
+     * @param {Board} boardState Object Key/Value pair regarding the information about a single move
+     * @param {StaticParser} parserObject The Piece() object that is tested to see if legal move or not
      * @throws {Error} If move instructions for both black and white are non existent for that turn number
      */
+
+
+    // static processAllMoves(boardState, parserObject) {
+    //     let isRedo = false;
+    //     let redoMove = null;
+    
+    //     try {
+    //         for (const [turnNum, [whiteMoveInfo, blackMoveInfo]] of Object.entries(parserObject)) {
+    //             if (whiteMoveInfo) {
+    //                 StaticGameLogic.processPlayerMove(boardState, 0, whiteMoveInfo, isRedo);
+    //             }
+    //             if (blackMoveInfo) {
+    //                 StaticGameLogic.processPlayerMove(boardState, 1, blackMoveInfo, isRedo);
+    //             }
+    //             if (!whiteMoveInfo && !blackMoveInfo) {
+    //                 throw new Error(`Turn ${turnNum} move not found.`);
+    //             }
+    //         }
+
+    //     } catch (error) {
+    //         console.error(`Error in processAllMoves: ${error.message}. Retrying with isRedo = true`);
+    //         isRedo = true;
+    //         for (const [turnNum, [whiteMoveInfo, blackMoveInfo]] of Object.entries(parserObject)) {
+    //             if (whiteMoveInfo) {
+    //                 StaticGameLogic.processPlayerMove(boardState, 0, whiteMoveInfo, isRedo);
+    //             }
+    //             if (blackMoveInfo) {
+    //                 StaticGameLogic.processPlayerMove(boardState, 1, blackMoveInfo, isRedo);
+    //             }
+    //         }
+    //     }
+    
+    //     boardState.printToTerminal();
+    // }
+
+
     static processAllMoves(boardState, parserObject) {
+
+        const isRedo = false
 
         for (const [turnNum, [whiteMoveInfo, blackMoveInfo]] of Object.entries(parserObject)) {
             // console.log(whiteMoveInfo)
             // console.log(blackMoveInfo)
+
+            console.log(turnNum)
             if (whiteMoveInfo) {
                 // console.log("WhiteMove")
                 StaticGameLogic.processPlayerMove(boardState, 0, whiteMoveInfo);
@@ -151,16 +202,28 @@ class StaticGameLogic {
     /**
      * Process a player's move based on the provided moveInfo.
      *
-     * @param {string} teamNum Team Number. 0 = White, 1 = Black
+     * @param {array} boardState Team Number. 0 = White, 1 = Black
+     * @param {number} teamNum Team Number. 0 = White, 1 = Black
      * @param {object} moveInfo Object Key/Value pair regarding the information about a single move
+     * @param {boolean} isRedo Object Key/Value pair regarding the information about a single move
      * @throws {Error} @throws {Error} If moveInfo is null, not an object, a piece is not found, or an error occurs during the move.
      */
-    static processPlayerMove(boardState, teamNum, moveInfo) {
+    static processPlayerMove(boardState, teamNum, moveInfo, isRedo) {
 
-        // console.log(moveInfo)
-        // console.log(boardState, teamNum, moveInfo)
+
+        // If the code error'd prior, skip the first knight
+        // if(moveInfo['pieceCode']=="N" && isRedo==false) {
+            
+        // }
+        // if(moveInfo['pieceCode']=="N" && isRedo==false) {
+            
+        // }
+
         let filtered = StaticGameLogic.filterPieces(boardState, teamNum, moveInfo.pieceCode)
-        // console.log(filtered)
+
+        console.log(`move ${teamNum} || piece=${moveInfo.pieceCode}`)
+        // console.log(moveInfo)
+        console.log(filtered)
 
         let foundPiece = null
         foundPiece = filtered.find(piece => StaticGameLogic.isLegal(piece, moveInfo));
@@ -181,7 +244,7 @@ class StaticGameLogic {
 
         if (!foundPiece) {
             console.log(moveInfo)
-            boardState.printToTerminal();
+            boardState.printToTerminalError();
             throw new Error(`File: [StaticGameLogic.js] Function: [processPlayerMove]: Piece not found || Turn: ${moveInfo.turnNumber} | MoveNum: ${moveInfo.teamNumber} | Notation: ${moveInfo.notation}`);
         }
 
@@ -189,57 +252,6 @@ class StaticGameLogic {
 
         return
 
-
-
-        // let found = false;
-        // while (found === false) {
-
-        //     found = StaticGameLogic.isLegal(pawn, moveInfo)
-        // }
-
-
-
-
-        // if (moveInfo.pieceCode === "p") {
-
-        //     const allPawns = StaticGameLogic.filterPieces(boardState, teamNum, "p")
-        //     // //console.log(moveInfo.turnNumber)
-        //     // //console.log(allPawns)
-
-        //     allPawns.forEach(pawn => {
-        //         //console.log(pawn)
-        //         const isLegal = StaticGameLogic.isLegal(pawn, moveInfo)
-        //         //console.log(isLegal)
-        //     });
-
-            
-
-
-
-        // }
-
-
-
-            // Check if the moveInfo object contains move information
-            if (!moveInfo || typeof moveInfo !== 'object') {
-                throw new Error('processPlayerMove: moveInfo is null');
-            }
-
-            // If there was a castling move, perform it and then leave the function
-            if (moveInfo.castlingSide) {
-                boardState.performCastling(teamNum, moveInfo.castlingSide);
-                // //console.log("Castling Command is Required")
-                return;
-            }
-
-            // Find the location of the piece as a 2 character string. If nothing found, return an error
-            const pieceLocated = StaticGameLogic.findLocation(boardState, teamNum, moveInfo);
-            if (!pieceLocated) {
-                throw new Error(`Piece not found || Turn: ${moveInfo.turnNumber} | MoveNum: ${moveInfo.teamNumber} | Notation: ${moveInfo.notation}`);
-            }
-
-            // Using "pieceLocated" and the move instructions, run the command to update the location of the Piece() object
-            boardState.movePiece(pieceLocated, moveInfo.targetSquare);
     };
 
 
@@ -251,8 +263,6 @@ class StaticGameLogic {
      * @throws {Error} If there is an issue with finding the piece or if it's not a valid chess piece.
      */
     static findLocation(boardState, teamNum, moveInfo) {
-
-
 
 
         // //console.log(moveInfo)

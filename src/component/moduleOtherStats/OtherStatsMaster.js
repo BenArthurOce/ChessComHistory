@@ -8,9 +8,9 @@ import OtherStatsCastling from './OtherStatsCastling';
 import OtherStatsOutsidePawn from './OtherStatsOutsidePawn';
 
 // Custom Hooks
-import useOtherStatsFianchetto from '../../hooksSpecific/useOtherStatsFianchetto';
-import useOtherStatsCastling from '../../hooksSpecific/useOtherStatsCastling';
-import useOtherStatsOutsidePawn from '../../hooksSpecific/useOtherStatsOutsidePawn';
+import useOtherStatsFianchetto from '../../hooksSpecific/HooksOtherStats/useOtherStatsFianchetto';
+import useOtherStatsCastling from '../../hooksSpecific/HooksOtherStats/useOtherStatsCastling';
+import useOtherStatsOutsidePawn from '../../hooksSpecific/HooksOtherStats/useOtherStatsOutsidePawn';
 
 
 //

@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { StrictMode } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ChessApp from './component/ChessApp';
+// import ChessApp2 from './component/ChessApp2';
 
-import EngineDebug from './engine/engineDebug';
+// import EngineDebug from './engine/engineDebug';
+
+import ChessAppDebug from './component/ChessAppDebug';
 
 
 
@@ -13,12 +16,25 @@ import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-        <Router>
-            <ChessApp />
-        </Router>
 
 
+<Router>
+<ChessApp />
+</Router>
 );
+
+{/* <Router>
+<ChessAppDebug />
+</Router> */}
+
+
+{/* <Router>
+<ChessApp />
+</Router> */}
+
+{/* <Router>
+<ChessApp2 />
+</Router> */}
 
 {/* <Router>
     <EngineDebug />

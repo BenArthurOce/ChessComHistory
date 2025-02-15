@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SingleIcon from "../SingleIcon";
 
 // Custom Hooks
-import useParseFEN from "../../hooksSpecific/useParseFEN";
+import useParseFEN from "../../hooksSpecific/HooksGameObjects/useParseFEN";
 
 //
 // Component Styles

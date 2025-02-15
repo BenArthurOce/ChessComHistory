@@ -10,7 +10,7 @@ import SingleIcon from "../SingleIcon";
 
 // Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-import useHeatmapControllerByTeamStartMove from "../../hooksSpecific/useHeatmapControllerByTeamStartMove";
+import useHeatmapControllerByTeamStartMove from "../../hooksSpecific/HooksHeatMap/useHeatmapControllerByTeamStartMove";
 
 //
 // Component Styles

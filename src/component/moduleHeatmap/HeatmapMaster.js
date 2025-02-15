@@ -7,7 +7,7 @@ import HeatmapSubByPiece from './HeatmapSubByPiece';
 import HeatmapSubByTurn from './HeatmapSubByTurn';
 
 // Custom Hooks
-import useHeatmapControllerDatasetNEW from '../../hooksSpecific/useHeatmapControllerDatasetNEW';
+import useHeatmapControllerDatasetNEW from '../../hooksSpecific/HooksHeatMap/useHeatmapControllerDatasetNEW';
 
 //
 // Component Styles

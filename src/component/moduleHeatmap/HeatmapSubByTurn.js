@@ -10,9 +10,8 @@ import SingleIcon from "../SingleIcon";
 
 // Custom Hooks
 import useIsMobile from "../../hooks/useIsMobile";
-import useHeatMasterSort from "../../hooksSpecific/zzzz_useHeatMasterSort";
 
-import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/zzzz_useHeatmapControllerWinsLossDraw";
+import useHeatmapControllerWinsLossDraw from "../../hooksSpecific/HooksHeatMap/zzzz_useHeatmapControllerWinsLossDraw";
 
 //
 // Component Styles
@@ -76,7 +75,6 @@ const HeatmapSubByTurn = (props) => {
     //
 
 
-    // const hookUseHeatmapSubByTurnData = useHeatMasterSort(hookMasterData, selectedTeam, firstMove);
 
     const hookUseHeatmapControllerWinsLossDraw = useHeatmapControllerWinsLossDraw(hookMasterData, selectedTeam, firstMove);
 

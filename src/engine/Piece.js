@@ -4,6 +4,7 @@
  */
 class Piece {
     #className;         // Name of this class
+    #pieceID;           // Chess Piece ID
     #team;              // 0 = White, 1 = Black
     #row;               // Base 0 - numerical row position in grid
     #col;               // Base 0 - numerical column position in grid
@@ -13,12 +14,13 @@ class Piece {
     #positionArr;       // Array position of piece
     #fen;               // Letter code of piece for FEN notation
     
-    constructor(team) {
+    constructor(team, pieceID) {
         // console.log(`\t\t\tFunc: START constructor (Piece)`);
-        this.#className = "Piece"
+        this.#className = "Piece";
+        this.#pieceID = pieceID;
         this.#team = team;
-        this.#row = -1
-        this.#col = -1
+        this.#row = -1;
+        this.#col = -1;
         this.#fileRef = '';
         this.#rankRef = -1; 
         this.#positionRef = '';
@@ -28,6 +30,12 @@ class Piece {
     };
     get className() {
         return this.#className;
+    };
+    get pieceID() {
+        return this.#pieceID;
+    };
+    set pieceID(value) {
+        this.#pieceID = value;
     };
     get team() {
         return this.#team;
@@ -125,15 +133,23 @@ class Piece {
  * @extends Piece
  */
 class Pawn extends Piece {
+    #pieceID
     #name;
     #pieceCodeStr;
     #code
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
+        this.#pieceID = pieceID;
         this.#name = "Pawn";
         this.#pieceCodeStr = "p";
         this.#code = team + this.#pieceCodeStr;
         this.fen = team===0? "P" : "p"
+    };
+    get pieceID() {
+        return this.#pieceID;
+    };
+    set pieceID(value) {
+        this.#pieceID = value;
     };
     get code() {
         return this.#code;
@@ -195,8 +211,8 @@ class Rook extends Piece {
     #name;
     #pieceCodeStr;
     #code;
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
         this.#name = "Rook";
         this.#pieceCodeStr = "R"
         this.#code = team + this.#pieceCodeStr;
@@ -245,8 +261,8 @@ class Knight extends Piece {
     #name;
     #pieceCodeStr;
     #code;
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
         this.#name = "Knight";
         this.#pieceCodeStr = "N"
         this.#code = team + this.#pieceCodeStr;
@@ -294,8 +310,8 @@ class Bishop extends Piece {
     #name;
     #pieceCodeStr;
     #code;
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
         this.#name = "Bishop";
         this.#pieceCodeStr = "B"
         this.#code = team + this.#pieceCodeStr;
@@ -332,8 +348,8 @@ class Queen extends Piece {
     #name;
     #pieceCodeStr;
     #code;
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
         this.#name = "Queen";
         this.#pieceCodeStr = "Q";
         this.#code = team + this.#pieceCodeStr;
@@ -374,8 +390,8 @@ class King extends Piece {
     #name;
     #pieceCodeStr;
     #code
-    constructor(team) {
-        super(team);
+    constructor(team, pieceID) {
+        super(team, pieceID);
         this.#name = "King";
         this.#pieceCodeStr = "K";
         this.#code = team + this.#pieceCodeStr;

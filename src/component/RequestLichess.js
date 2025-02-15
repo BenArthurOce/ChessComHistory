@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import RequestLichessLoading from "./RequestLichessLoading";
 
 // Custom Hooks
-import useAPILichess from "../hooksSpecific/useAPILichess";
-import useBuildMatchesLichess from "../hooksSpecific/useBuildMatchesLichess";
+import useAPILichess from "../hooksSpecific/HooksAPI/useAPILichess";
+import useBuildMatchesLichess from "../hooksSpecific/HooksGameObjects/useBuildMatchesLichess";
 
 
 const RequestLichess = (props) => {
