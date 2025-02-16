@@ -2,27 +2,23 @@ import { useState, useEffect } from "react";
 
 const useFetchGameArchives = (urls, lastNGames) => {
 
-    console.log(`useFetchGameArchives || urls: ${urls} || lastNGames: ${lastNGames}`)
+    // console.log(`useFetchGameArchives || urls: ${urls} || lastNGames: ${lastNGames}`)
 
     const [data, setdata] = useState([]);
     const [isPending, setLoading] = useState(true);
     const [error, setProgress] = useState(0);
 
     useEffect(() => {
-
-        // return;
-        console.log(urls)
-        console.log(lastNGames)
         if (!urls || urls.length === 0) return;
         if (!lastNGames || lastNGames === 0) return;
+        // console.log(`==useFetchGameArchives RUNHOOK==`);
         runHook();
     }, [urls, lastNGames]);
 
     async function runHook() {
-        console.log("==useFetchGameArchives runHook==")
+
         const arrayOfMatches = [];
         let currentIndex = -1;
-
 
         while (currentIndex <= urls.length && arrayOfMatches.length <= lastNGames) {
 

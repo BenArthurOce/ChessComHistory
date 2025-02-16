@@ -9,6 +9,7 @@ import Board from "./Board";
 import StaticParser from "./StaticChessParser"; 
 import StaticErrorCheck from "./StaticErrorCheck";
 import StaticGameLogic from "./StaticGameLogic";
+import StaticSingleMoveLogic from "./StaticSingleMoveLogic";
 
 /* 
 The Game() class is what holds the information about the chessgame, which has been generated from the Dictionary() object
@@ -83,51 +84,94 @@ class Game {
     };
 
     init() {
-        this.setParser();
-        // this.runGameWithParserObject();
-        this.invokeGame();
-    };
-
-    setParser() {
-        StaticErrorCheck.validatePGNExistence(this.pgn);
-
-        console.log(this.pgn)
-        // this.#parser = new StaticParser(this.pgn).parsedMoves;
+        // console.log("=====INIT======")
+        this.invokeGame()
     };
 
     //
     // NEW LOGIC TO RUN GAME
     //
     invokeGame() {
+        // console.log("=====INVOKE GAME======");
+    
+        // Validate game prerequisites
+        StaticErrorCheck.validatePGNExistence(this.pgn);
         StaticErrorCheck.validateBoardExistence(this.board);
         StaticErrorCheck.validateParserExistence(this.parser);
         StaticErrorCheck.checkIfBoardIsPopulated(this);
-
-
-        // New Required Logic:
-        // Game is Created:
-            // Parser is Created
-            // Board is Created
-
-
-        // For each turn in Parser
-            // Game() invokes Logic() to run a single move
-                // - StaticSingleMoveLogic
-
-            // Logic() returns instruction to Game() on how to move Board()
-                // - receiveInstruction()
-
-            // Game() updates Board()
-
-            // Game() saves the boardstate as a FEN into its class
-                // - getFEN()
-
-            // Code runs again
-
-
-        // StaticGameLogic.processAllMoves(this.board, this.parser);
+    
+        const legalMovesArray = [];
+        const fenArray = [];
+    
+        for (const [index, [whiteMoveInfo, blackMoveInfo]] of Object.entries(this.parser['parsedMoves'])) {
+            // console.log(`Processing turn index=${index}`);
+    
+            // -----------------
+            // Process White Move
+            // -----------------
+            if (whiteMoveInfo) {
+                // console.log(`Processing White move: ${whiteMoveInfo.notation}`);
+    
+                // If there is a castling move, perform it and skip the rest
+                if (whiteMoveInfo.castlingSide) {
+                    this.board.performCastling(0, whiteMoveInfo.castlingSide);
+                } else {
+                    // Find possible pieces that could have made the move
+                    const whitePiecesFound = StaticSingleMoveLogic.filterPieces(this.board, whiteMoveInfo['fullPieceCode']);
+                    if (whitePiecesFound.length === 0) {
+                        console.log(whiteMoveInfo);
+                        this.board.printToTerminalError();
+                        throw new Error(`File: [Game.js] Function: [invokeGame]: Piece not found || Turn: ${whiteMoveInfo.turnNumber} | MoveNum: ${whiteMoveInfo.teamNumber} | Notation: ${whiteMoveInfo.notation}`);
+                    }
+                    
+                    // Test each piece to see if they can legally move
+                    whitePiecesFound.forEach(piece => {
+                        if (StaticSingleMoveLogic.isLegal(piece, whiteMoveInfo)) {
+                            legalMovesArray.push(whiteMoveInfo);
+                            // Make the move
+                            this.board.movePiece(piece, whiteMoveInfo.targetSquare);
+                        }
+                    });
+                }
+            }
+    
+            // -----------------
+            // Process Black Move
+            // -----------------
+            if (blackMoveInfo) {
+                // console.log(`Processing Black move: ${blackMoveInfo.notation}`);
+    
+                // If there is a castling move, perform it and skip the rest
+                if (blackMoveInfo.castlingSide) {
+                    this.board.performCastling(1, blackMoveInfo.castlingSide);
+                } else {
+                    // Find possible pieces that could have made the move
+                    const blackPiecesFound = StaticSingleMoveLogic.filterPieces(this.board, blackMoveInfo['fullPieceCode']);
+                    if (blackPiecesFound.length === 0) {
+                        console.log(blackMoveInfo);
+                        this.board.printToTerminalError();
+                        throw new Error(`File: [Game.js] Function: [invokeGame]: Piece not found || Turn: ${blackMoveInfo.turnNumber} | MoveNum: ${blackMoveInfo.teamNumber} | Notation: ${blackMoveInfo.notation}`);
+                    }
+                    
+                    // Test each piece to see if they can legally move
+                    blackPiecesFound.forEach(piece => {
+                        if (StaticSingleMoveLogic.isLegal(piece, blackMoveInfo)) {
+                            legalMovesArray.push(blackMoveInfo);
+                            // Make the move
+                            this.board.movePiece(piece, blackMoveInfo.targetSquare);
+                        }
+                    });
+                }
+            }
+    
+            // Save board state after both moves
+            const fen = this.board.constructFEN();
+            fenArray.push(fen);
+        }
+    
+        this.board.printToTerminal();
+        // console.log(fenArray);
     }
-
 
     // Recieves instruction from Logic(), moves Board()
     receiveInstruction(instruction) {

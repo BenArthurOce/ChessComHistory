@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import UncontrolledForm from "./UncontrolledForm";
+import Form from "./Form";
 
 import MakeRequestsChessCom from "./MakeRequestsChessCom";
+
+import MatchHistoryDisplay from "./moduleMatchHistoryDisplay/MatchHistoryDisplay";
 
 ;
 
@@ -14,13 +16,14 @@ function ChessAppDebug() {
     const [playerStatsUrl, setPlayerStatsUrl] = useState(null);
     const [gameArchiveURls, setGameArchiveURls] = useState(null);
 
+    const [matchHistory, setMatchHistory] = useState(null);
 
 
 
     useEffect(() => {
-        setPlayerProfileUrl(null);
-        setPlayerStatsUrl(null);
-        setGameArchiveURls(null);
+        // setPlayerProfileUrl(null);
+        // setPlayerStatsUrl(null);
+        // setGameArchiveURls(null);
 
 
         if( !formData || !formData.numgames || !formData.username || !formData.website) { return;};
@@ -38,6 +41,12 @@ function ChessAppDebug() {
         setFormData(submittedForm);
     };
 
+    const handleChildData = (data) => {
+        if (!data) {return};
+        console.log(data)
+        setMatchHistory(data);
+    }
+
 
     // const handleTestButtonClick = () => {
     //     console.log("==handleButtonClick==");
@@ -51,7 +60,7 @@ function ChessAppDebug() {
         // <Form></Form>
         <>
 
-            <UncontrolledForm onFormSubmit={handleFormSubmit}></UncontrolledForm>
+            <Form onFormSubmit={handleFormSubmit}></Form>
 
 
             {playerProfileUrl && playerStatsUrl && gameArchiveURls && (
@@ -64,9 +73,22 @@ function ChessAppDebug() {
                         formData={formData} 
                         playerProfileUrl={playerProfileUrl} 
                         playerStatsUrl={playerStatsUrl} 
-                        gameArchiveURls={gameArchiveURls}>
+                        gameArchiveURls={gameArchiveURls}
+                        onDataRequest={handleChildData}
+                        >
                     </MakeRequestsChessCom>
+
+                {matchHistory && (
+                    <MatchHistoryDisplay matchHistory={matchHistory}></MatchHistoryDisplay>
+                )}
+
+
+
+
                 </>
+
+
+
             )}           
 
             

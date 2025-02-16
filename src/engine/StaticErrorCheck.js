@@ -27,7 +27,7 @@ class StaticErrorCheck {
      */
     static validatePGNExistence(pgn) {
         if (!pgn) {
-            throw new Error(`[StaticErrorCheck] Parser did not receive a PGN. Code stopped`);
+            throw new Error(`[StaticErrorCheck] [validatePGNExistence] Parser did not receive a PGN. Code stopped`);
         }
     };
 
@@ -40,7 +40,7 @@ class StaticErrorCheck {
      */
     static validateBoardExistence(board) {
         if (!board) {
-            throw new Error(`[StaticErrorCheck] the board object is null. Code stopped`);
+            throw new Error(`[StaticErrorCheck] [validateBoardExistence] the board object is null. Code stopped`);
         }
     };
 
@@ -53,7 +53,7 @@ class StaticErrorCheck {
      */
     static validateParserExistence(parser) {
         if (!parser) {
-            throw new Error(`[StaticErrorCheck] the Parser object is null. Code stopped`);
+            throw new Error(`[StaticErrorCheck] [validateParserExistence] the Parser object is null. Code stopped`);
         };
     };
 
@@ -66,7 +66,7 @@ class StaticErrorCheck {
      */
     static checkIfBoardIsPopulated(game) {
         if (!game || !game.board || !Array.isArray(game.board.grid) || game.board.grid.length === 0) {
-            throw new Error(`[StaticErrorCheck] Game.board.grid is empty or not properly populated. Code stopped`);
+            throw new Error(`[StaticErrorCheck] [checkIfBoardIsPopulated] Game.board.grid is empty or not properly populated. Code stopped`);
         };
     };
 
@@ -84,12 +84,12 @@ class StaticErrorCheck {
         ];
         
         if (!openings || typeof openings !== 'object') {
-            throw new Error("[StaticErrorCheck] The provided openings object is not a valid object.");
+            throw new Error("[StaticErrorCheck] [validateOpeningObjectFEN] The provided openings object is not a valid object.");
         }
 
         requiredKeys.forEach(key => {
             if (!openings.hasOwnProperty(key)) {
-                throw new Error(`[StaticErrorCheck] Missing required key: ${key}`);
+                throw new Error(`[StaticErrorCheck] [validateOpeningObjectFEN] Missing required key: ${key}`);
             }
         });
     };
@@ -109,16 +109,15 @@ class StaticErrorCheck {
         ];
         
         if (!openings || typeof openings !== 'object') {
-            throw new Error("[StaticErrorCheck] The provided openings object is not a valid object.");
+            throw new Error("[StaticErrorCheck] [validateOpeningObjectLogic] The provided openings object is not a valid object.");
         }
 
         requiredKeys.forEach(key => {
             if (!openings.hasOwnProperty(key)) {
-                throw new Error(`[StaticErrorCheck] Missing required key: ${key}`);
+                throw new Error(`[StaticErrorCheck] [validateOpeningObjectLogic] Missing required key: ${key}`);
             }
         });
     };
-
 
 
     /**
@@ -128,8 +127,8 @@ class StaticErrorCheck {
      * @throws {Error} If the team number passed does not equal a 0 or a 1
      */
     static validateTeamNumber(teamNum) {
-        if (!teamNum === 0 && !teamNum === 1) {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] Supplied teamNum of ${teamNum} is invalid.`);
+        if (teamNum !== 0 && teamNum !== 1) {
+            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateTeamNumber] Supplied teamNum of ${teamNum} is invalid.`);
         };
     };
 
@@ -142,7 +141,7 @@ class StaticErrorCheck {
      */
     static validateCastlingCommand(castlingName) {
         if (!castlingName === "Kingside" && !castlingName === "Queenside") {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] Supplied castlingName of ${castlingName} is invalid.`);
+            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateCastlingCommand] Supplied castlingName of ${castlingName} is invalid.`);
         };
 
         // Maybe add more code to validate piece locations?
@@ -157,7 +156,7 @@ class StaticErrorCheck {
      */
     static validateCellRef(position) {
         if (typeof position !== 'string' || position.length !== 2) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] Invalid input format for position.');
+            StaticErrorCheck.handleError('[StaticErrorCheck] [validateCellRef] Invalid input format for position.');
         }
 
         const [file, rank] = position;
@@ -165,7 +164,7 @@ class StaticErrorCheck {
         const validRanks = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
         if (!validFiles.includes(file) || !validRanks.includes(rank)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] Invalid chess position.');
+            StaticErrorCheck.handleError('[StaticErrorCheck] [validateCellRef] Invalid chess position.');
         }
     };
 
@@ -182,7 +181,7 @@ class StaticErrorCheck {
         const isValidRow = row >= 0 && row <= 7;
 
         if (!(isValidCol && isValidRow)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] Invalid chess position in array.');
+            StaticErrorCheck.handleError('[StaticErrorCheck] [validateArray] Invalid chess position in array.');
         }
     };
     
@@ -195,7 +194,7 @@ class StaticErrorCheck {
      */
     static validateSquareContainPiece(square) {
         if (!(square instanceof Square && square.piece)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] Invalid Square object or does not contain a valid chess piece.');
+            StaticErrorCheck.handleError('[StaticErrorCheck] [validateSquareContainPiece] Invalid Square object or does not contain a valid chess piece.');
         }
     };
 
@@ -210,7 +209,7 @@ class StaticErrorCheck {
     static validateContents(squareObj, whatClass) {
 
         if (!(squareObj && squareObj.piece instanceof whatClass)) {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] Contents of square ${squareObj.positionRef} are not an instance of ${whatClass.name}`);
+            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateContents] Contents of square ${squareObj.positionRef} are not an instance of ${whatClass.name}`);
         };
     };
 
@@ -223,54 +222,54 @@ class StaticErrorCheck {
      */
     static validateIsChessPiece(piece) {
         if (!(piece instanceof Piece)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] Invalid chess piece object.');
+            StaticErrorCheck.handleError('[StaticErrorCheck] [validateIsChessPiece] Invalid chess piece object.');
         }
     };
 
 
     static validateMoveObject(moveObject) {
         if (typeof moveObject.teamNumber !== 'boolean') {
-            throw new Error("[StaticErrorCheck] Invalid team number type. It must be a boolean value.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid team number type. It must be a boolean value.");
         }
     
         if (!(moveObject.teamNumber === false || moveObject.teamNumber === true)) {
-            throw new Error("[StaticErrorCheck] Invalid team number value. It must be either false or true.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid team number value. It must be either false or true.");
         }
     
         if (!(moveObject.notation.length > 0)) {
-            throw new Error("[StaticErrorCheck] Invalid notation. It must have a length greater than 0.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid notation. It must have a length greater than 0.");
         }
     
         if (!(moveObject.turnNumber > 0)) {
-            throw new Error("[StaticErrorCheck] Invalid turn number. It must be greater than 0.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid turn number. It must be greater than 0.");
         }
     
         if (!(moveObject.pieceCode.length === 1)) {
-            throw new Error("[StaticErrorCheck] Invalid piece code length. It must be exactly 1 character long.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid piece code length. It must be exactly 1 character long.");
         }
     
         if (!(moveObject.targetPosX >= 0)) {
-            throw new Error("[StaticErrorCheck] Invalid target position X. It must be greater than or equal to 0.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid target position X. It must be greater than or equal to 0.");
         }
     
         if (!(moveObject.targetPosY >= 0)) {
-            throw new Error("[StaticErrorCheck] Invalid target position Y. It must be greater than or equal to 0.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid target position Y. It must be greater than or equal to 0.");
         }
     
         if (!(moveObject.fullPieceCode.length === 2)) {
-            throw new Error("[StaticErrorCheck] Invalid full piece code length. It must be exactly 2 characters long.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid full piece code length. It must be exactly 2 characters long.");
         }
     
         if (!(moveObject.targetArr.length === 2)) {
-            throw new Error("[StaticErrorCheck] Invalid target array length. It must contain exactly 2 elements.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid target array length. It must contain exactly 2 elements.");
         }
     
         if (!(moveObject.targetSquare.length === 2)) {
-            throw new Error("[StaticErrorCheck] Invalid target square length. It must be exactly 2 characters long.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid target square length. It must be exactly 2 characters long.");
         }
     
         if (!(moveObject.Castling === "Kingside" || moveObject.Castling === "Queenside" || moveObject.Castling === false)) {
-            throw new Error("[StaticErrorCheck] Invalid Castling value. It must be either 'Kingside', 'Queenside', or false.");
+            throw new Error("[StaticErrorCheck] [validateMoveObject] Invalid Castling value. It must be either 'Kingside', 'Queenside', or false.");
         }
     };
 };

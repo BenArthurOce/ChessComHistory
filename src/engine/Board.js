@@ -145,10 +145,11 @@ class Board {
     /**
      * Performs Castling, where the Rook and the King/Queen both move at the same time.
      * 
-     * @param {string} teamNum Team Number. 0 = White, 1 = Black
+     * @param {number} teamNum Team Number. 0 = White, 1 = Black
      * @param {string} castlingSide The type of castling. Either "Kingside" or "Queenside"
      */
     performCastling(teamNum, castlingSide) {
+
         StaticErrorCheck.validateTeamNumber(teamNum);
         StaticErrorCheck.validateCastlingCommand(castlingSide);
 

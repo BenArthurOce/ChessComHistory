@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
+// import { useMemo } from "react";
 
-import useFetchTest from "./useFetchTest";
+
+import useFetch from "../hooksSpecific/HooksAPI/useFetch";
 import useFetchGameArchives from "../hooksSpecific/HooksAPI/useFetchGameArchives";
 import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildMatchesChessCom";
 
@@ -10,7 +12,7 @@ import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildM
 
 function MakeRequestsChessCom(props) {
 
-    const {formData, playerProfileUrl, playerStatsUrl, gameArchiveURls} = props
+    const {formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest} = props
 
     // const [isTriggerGameFetch, setIsTriggerGameFetch] = useState(false);
 
@@ -19,9 +21,14 @@ function MakeRequestsChessCom(props) {
     const [arrayOfGames, setArrayOfGames] = useState(null);
 
 
-    const { data: profileData, isPending: isProfilePending, error: profileError } = useFetchTest(playerProfileUrl);
-    const { data: statsData, isPending: isStatsPending, error: statsError } = useFetchTest(playerStatsUrl);
-    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError } = useFetchTest(gameArchiveURls);
+    // const profileData = useMemo(() => useFetch(playerProfileUrl), [playerProfileUrl]);
+    // const statsData = useMemo(() => useFetch(playerStatsUrl), [playerStatsUrl]);
+    // const archiveLinksData = useMemo(() => useFetch(gameArchiveURls), [gameArchiveURls]);
+
+
+    const { data: profileData, isPending: isProfilePending, error: profileError } = useFetch(playerProfileUrl);
+    const { data: statsData, isPending: isStatsPending, error: statsError } = useFetch(playerStatsUrl);
+    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError } = useFetch(gameArchiveURls);
     const { data: gamesData, isPending: isGamesPending, error: gamesError } = useFetchGameArchives(arrayOfURL, formData.numgames);
 
 
@@ -30,23 +37,62 @@ function MakeRequestsChessCom(props) {
     const hookParsedMatches = useBuildMatchesChessCom(gamesData, formData.username);
 
 
-    // Gets all game data from the list of Endpoint URLS from "archiveLinksData"
+    // // Gets all game data from the list of Endpoint URLS from "archiveLinksData"
+    // useEffect(() => {
+
+    //     console.log('-----useEffect Triggered ---- ')
+
+    //     if (!archiveLinksData || !archiveLinksData.archives) return;
+    //     setArrayOfURL(archiveLinksData['archives'].reverse())
+
+    //   }, [archiveLinksData])
+
+
+    // // Once "gamesData" has been completed, we can start transforming those games into objects
+    // useEffect(() => {
+
+    //     if (!gamesData ) return;
+    //     setArrayOfGames(gamesData)
+    //     // setArrayOfURL(archiveLinksData['archives'].reverse())
+
+    //   }, [gamesData])
+
+
+
     useEffect(() => {
-
-        if (!archiveLinksData || !archiveLinksData.archives) return;
-        setArrayOfURL(archiveLinksData['archives'].reverse())
-
-      }, [archiveLinksData])
+        if (!archiveLinksData?.archives || arrayOfURL) return;
+        setArrayOfURL([...archiveLinksData.archives].reverse());
+    }, [archiveLinksData]);
 
 
-    // Once "gamesData" has been completed, we can start transforming those games into objects
+    // When games data is populated, send it back to the parent
     useEffect(() => {
+        if (!hookParsedMatches || hookParsedMatches.length == 0) return;
+        // setArrayOfURL([...archiveLinksData.archives].reverse());
+        onDataRequest(hookParsedMatches);
+    }, [hookParsedMatches]);
 
-        if (!gamesData ) return;
-        setArrayOfGames(gamesData)
-        // setArrayOfURL(archiveLinksData['archives'].reverse())
+    
 
-      }, [gamesData])
+    // useEffect(() => {
+    //     if (!gamesData || arrayOfGames) return; 
+    //     setArrayOfGames(gamesData);
+    // }, [gamesData]);
+
+
+    //   useEffect(() => {
+
+    //     console.log('-----useEffect Triggered ---- ')
+
+
+    //     if (!archiveLinksData || !archiveLinksData.archives) return;
+    //     setArrayOfURL(archiveLinksData['archives'].reverse())
+
+    //     if (!gamesData ) return;
+    //     setArrayOfGames(gamesData)
+
+
+    //   }, [archiveLinksData, gamesData])
 
 
 

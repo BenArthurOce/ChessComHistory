@@ -5,6 +5,10 @@ import Game from "../../engine/Game";
 
 // matchObjects = All the single match objects from the match history API
 const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
+
+
+    // console.log(`useSingleMatchObjects || matchObjects: ${matchObjects} || pgnObjects: ${pgnObjects} || username: ${username} || website: ${website}`)
+
     const [hookOutput, setHookOutput] = useState('')
     const [erroredGames, setErroredGames] = useState([]);
     const openingDictionary = JsonFile;
@@ -16,9 +20,10 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         if (!pgnObjects || pgnObjects.length === 0) { return};
         if (!username || username.length === 0) { return};
         if (!website || website.length === 0) { return};
-
+        // console.log(`==useSingleMatchObjects RUNHOOK==`);
         runHook();
     }, [matchObjects, pgnObjects, username, website]);
+    // }, [matchObjects, pgnObjects, username, website]);
 
 
     async function runHook() {
@@ -33,6 +38,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 const parsedObject = await createSingleMatchObject(matchObject, pgnObject, username, website);
                 results.push(parsedObject);
             } catch (err) {
+                console.log("-----ERROR-----")
                 errors.push(err);
                 errorIndexes.push(index)
             }
@@ -402,55 +408,62 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
         
         const findOpeningMatchNew = (game, openings) => {
+
+
             // Ensure the input game string is valid
             if (!game || !openings || typeof game !== 'string') {
                 console.error('Invalid input game or openings');
                 return null;
             }
 
-            // Establish Game PGN
-            const pgn = '1.d4 d5 2.c4 c6 3.e3 f6 4.Nc3 e5 5.Nf3 Bd6 6.cxd5 cxd5 7.Nxd5 Qa5+ 8.Nc3 Bf5 9.Bd2 e4 10.Nh4 Ne7';
-
+            const splitMoves2 = game.split(' ').slice(0, 20);
+            const joinedMoves = splitMoves2.join(" ")
             // Create a new Game(). Game() will invoke itself
-            const newGame = new Game(pgn);
+            const newGame = new Game(joinedMoves);
+
+
+            // Establish temp Game PGN for testing
+            // const pgn = '1.d4 d5 2.c4 c6 3.e3 f6 4.Nc3 e5 5.Nf3 Bd6 6.cxd5 cxd5 7.Nxd5 Qa5+ 8.Nc3 Bf5 9.Bd2 e4 10.Nh4 Ne7';
+
+
 
             // Get boardstate array from Game()
 
         
-            // // Initialize the array to store board positions
-            // const boardPositions = [];
+            // Initialize the array to store board positions
+            const boardPositions = [];
             
-            // // Get the first 20 moves and split them
-            // const splitMoves = game.split(' ').slice(0, 20);
-            // let cumulativeString = splitMoves[0];
+            // Get the first 20 moves and split them
+            const splitMoves = game.split(' ').slice(0, 20);
+            let cumulativeString = splitMoves[0];
         
-            // // Generate the board positions after each move
-            // for (let i = 1; i < splitMoves.length; i++) {
-            //     cumulativeString += " " + splitMoves[i];
+            // Generate the board positions after each move
+            for (let i = 1; i < splitMoves.length; i++) {
+                cumulativeString += " " + splitMoves[i];
                 
-            //     // Assuming `Game` is a valid constructor
-            //     const newGame = new Game(cumulativeString);
-            //     boardPositions.push(newGame.fen);
-            // }
+                // Assuming `Game` is a valid constructor
+                const newGame = new Game(cumulativeString);
+                boardPositions.push(newGame.fen);
+            }
                 
-            // // Reverse the board positions to check from the latest to the earliest
-            // boardPositions.reverse();
+            // Reverse the board positions to check from the latest to the earliest
+            boardPositions.reverse();
         
-            // // Initialize the result variable
-            // let output = null;
+            // Initialize the result variable
+            let output = null;
         
-            // // Iterate through the board positions and try to match the FEN with the openings
-            // for (const boardPosition of boardPositions) {
-            //     const dictionaryResult = filterOpeningsByFEN(boardPosition, openings);
+            // Iterate through the board positions and try to match the FEN with the openings
+            for (const boardPosition of boardPositions) {
+                const dictionaryResult = filterOpeningsByFEN(boardPosition, openings);
                 
-            //     if (dictionaryResult.length > 0) {
-            //         output = dictionaryResult[0]; // Set the first match and stop
-            //         break;
-            //     }
-            // }
+                if (dictionaryResult.length > 0) {
+                    output = dictionaryResult[0]; // Set the first match and stop
+                    break;
+                }
+            }
         
-            // // Return the result
-            // return output;
+            // Return the result
+            return output;
         
         };
         

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 
-function UncontrolledForm(props) {
+function Form(props) {
 
     //
     // Props
@@ -37,14 +37,14 @@ function UncontrolledForm(props) {
             </select>
 
             <label>Username:</label>
-            <input type="text" name="username" value="BenArthurOCE"/>
+            <input type="text" name="username" defaultValue="BenArthurOCE"/>
 
             <label># of Games:</label>
-            <input type="number" name="numgames" value="2"/>
+            <input type="number" name="numgames" defaultValue="7"/>
 
             <button type="submit">Submit</button>
         </form>
     );
 }
 
-export default UncontrolledForm;
+export default Form;
