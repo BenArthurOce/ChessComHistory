@@ -44,9 +44,9 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             }
         }));
     
-        console.log(results);
-        console.log(errors);
-        console.log(errorIndexes);
+        // console.log(results);
+        // console.log(errors);
+        // console.log(errorIndexes);
 
         setHookOutput(results);
         setErroredGames(errors);
@@ -375,30 +375,6 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         
 
 
-        const findOpeningMatch = (game, openings) => {
-            const gameMoves = game.split(' ').slice(0, 15).join(' '); // Consider the first 15 moves
-            let bestMatch = null;
-            let bestMatchLength = 0;
-
-            
-        
-            for (const opening in openings) {
-                if (gameMoves.startsWith(opening)) {
-                    const openingLength = opening.split(' ').length;
-                    if (openingLength > bestMatchLength) {
-                        bestMatch = opening;
-                        bestMatchLength = openingLength;
-                    }
-                }
-            };
-        
-            const emptyOpening = {
-                'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
-            };
-        
-            return bestMatch ? openings[bestMatch] : emptyOpening;
-        };
-
 
         const filterOpeningsByFEN = (searchItem, dictionary) => {
             // Filters dictionary based on matching FEN value
@@ -406,8 +382,27 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
 
-        
-        const findOpeningMatchNew = (game, openings) => {
+        const findOpeningMatch = (game, openings) => {
+
+            //
+            // Takes Array of FENs, Finds the most relevant opening
+            //
+            function loopThroughFENS(arrayFEN, dictionary) {
+
+                const foundOpeningsArray = []
+
+                // Loop through the array of FENs to find a matching opening
+                arrayFEN.forEach(FEN => {
+                    // Search opening dictionary for single FEN
+                    const searchDictionaryResult = filterOpeningsByFEN(FEN, dictionary);
+
+                    // If an opening was found, add it to the array of found openings
+                    if (searchDictionaryResult.length > 0) {
+                        foundOpeningsArray.push(searchDictionaryResult[0]);
+                    };
+                });
+                return foundOpeningsArray[0];
+            };
 
 
             // Ensure the input game string is valid
@@ -416,57 +411,30 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 return null;
             }
 
+            // Extract only the first 20 moves (10 white, 10 black from the PGN)
             const splitMoves2 = game.split(' ').slice(0, 20);
             const joinedMoves = splitMoves2.join(" ")
+
             // Create a new Game(). Game() will invoke itself
             const newGame = new Game(joinedMoves);
 
+            // Reverse the FEN array, Loop through each FEN against the dictionary. Set an index if a match is found
+            // Lowest index = Opening
+            const reverseFENarray = newGame.boardStates.reverse()
+            const opening = loopThroughFENS(reverseFENarray, openings);
 
-            // Establish temp Game PGN for testing
-            // const pgn = '1.d4 d5 2.c4 c6 3.e3 f6 4.Nc3 e5 5.Nf3 Bd6 6.cxd5 cxd5 7.Nxd5 Qa5+ 8.Nc3 Bf5 9.Bd2 e4 10.Nh4 Ne7';
+            if (!opening) {
+                console.error('No Opening was Found!');
+            };
+
+            return opening;
 
 
-
-            // Get boardstate array from Game()
-
-        
-            // Initialize the array to store board positions
-            const boardPositions = [];
-            
-            // Get the first 20 moves and split them
-            const splitMoves = game.split(' ').slice(0, 20);
-            let cumulativeString = splitMoves[0];
-        
-            // Generate the board positions after each move
-            for (let i = 1; i < splitMoves.length; i++) {
-                cumulativeString += " " + splitMoves[i];
-                
-                // Assuming `Game` is a valid constructor
-                const newGame = new Game(cumulativeString);
-                boardPositions.push(newGame.fen);
-            }
-                
-            // Reverse the board positions to check from the latest to the earliest
-            boardPositions.reverse();
-        
-            // Initialize the result variable
-            let output = null;
-        
-            // Iterate through the board positions and try to match the FEN with the openings
-            for (const boardPosition of boardPositions) {
-                const dictionaryResult = filterOpeningsByFEN(boardPosition, openings);
-                
-                if (dictionaryResult.length > 0) {
-                    output = dictionaryResult[0]; // Set the first match and stop
-                    break;
-                }
-            }
-        
-            // Return the result
-            return output;
+            // const emptyOpening = {
+            //     'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
+            // };
         
         };
-        
         
         
         // Match information from ChessCom / Lichess moved into a uniform state
@@ -491,12 +459,6 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         const white_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
         const black_accuracy = match['accuracies'] && match['accuracies']['white'] ? match['accuracies']['white'] : '-';
 
-
-        // if(findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew) == null ) {
-        //     console.log("=======MOVESTRING WAS NOT RETURNED=======")
-        //     console.log(parsedData)
-        //     console.log(parsedData.MoveString)
-        //     return null};
 
 
         return {
@@ -571,9 +533,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , name:         adaptedInformation["opening_name"]
             }
             ,
-            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionary)
-            ,
-            openingDataNew:     findOpeningMatchNew(parsedData.MoveString, openingDictionaryNew)
+            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionaryNew)
         };
     };
 

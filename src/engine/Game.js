@@ -100,8 +100,10 @@ class Game {
         StaticErrorCheck.validateParserExistence(this.parser);
         StaticErrorCheck.checkIfBoardIsPopulated(this);
     
+        let fen = null;
         const legalMovesArray = [];
-        const fenArray = [];
+        // const fenArray = [];
+
     
         for (const [index, [whiteMoveInfo, blackMoveInfo]] of Object.entries(this.parser['parsedMoves'])) {
             // console.log(`Processing turn index=${index}`);
@@ -133,6 +135,10 @@ class Game {
                         }
                     });
                 }
+
+                // Get FEN position and store into the array ( White Move )
+                fen = this.board.constructFEN();
+                this.boardStates.push(fen);
             }
     
             // -----------------
@@ -162,14 +168,18 @@ class Game {
                         }
                     });
                 }
+
+                // Get FEN position and store into the array ( White Move )
+                fen = this.board.constructFEN();
+                this.boardStates.push(fen);
             }
     
             // Save board state after both moves
-            const fen = this.board.constructFEN();
-            fenArray.push(fen);
+            // const fen = this.board.constructFEN();
+            // fenArray.push(fen);
         }
     
-        this.board.printToTerminal();
+        // this.board.printToTerminal();
         // console.log(fenArray);
     }
 
