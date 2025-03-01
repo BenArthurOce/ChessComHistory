@@ -2,45 +2,39 @@ import { useState, useEffect } from "react";
 
 const useFetch = (url) => {
 
-    // console.log(`useFetch || url: ${url}`)
-
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
 
     useEffect(() => {
-        console.log(url)
-        if (!url || url.length === 0) return;
-        if (url == undefined) return;
-        runHook();
+        if (!url) return; 
+        runHook(url);
     }, [url]);
 
 
-    const runHook = () => {
-
-        // console.log(`==useFetch RUNHOOK== url: ${url}`);
-
-
+    async function runHook(url) {
         setIsPending(true);
-        setData(null);
-        setError(null);
+        try {
+            const json = await getData(url);
+            setData(json);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsPending(false);
+        }
+    };
 
-        fetch(url)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                setData(data);
-                setIsPending(false);
-            })
-            .catch((error) => {
-                setError(error.message);
-                setIsPending(false);
-            });
+
+    async function getData(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
+            return await response.json();
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
     };
 
     return { data, isPending, error };

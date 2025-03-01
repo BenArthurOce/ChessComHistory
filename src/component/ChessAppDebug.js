@@ -1,102 +1,102 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 
 import Form from "./Form";
 
 import MakeRequestsChessCom from "./MakeRequestsChessCom";
+import MakeRequestsChessCom2 from "./MakeRequestsChessCom2";
 
 import MatchHistoryDisplay from "./moduleMatchHistoryDisplay/MatchHistoryDisplay";
 
+import useToggle from "../hooksSpecific/useToggle";
+
+import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildMatchesChessCom";
+
 ;
 
-function ChessAppDebug() {
+const ChessAppDebug = () => {
 
     const [formData, setFormData] = useState(null);
-    const [playerProfileUrl, setPlayerProfileUrl] = useState(null);
-    const [playerStatsUrl, setPlayerStatsUrl] = useState(null);
-    const [gameArchiveURls, setGameArchiveURls] = useState(null);
-
     const [matchHistory, setMatchHistory] = useState(null);
+    const [isFormSubmitted, toggle] = useToggle(false);
+
+
+    const refPlayerProfileUrl = useRef(null)
+    const refPlayerStatsUrl = useRef(null)
+    const refPlayerArchiveURls = useRef(null)
+
+
+    const hookParsedMatches = useBuildMatchesChessCom(matchHistory, formData?.username);
 
 
 
-    useEffect(() => {
-        // setPlayerProfileUrl(null);
-        // setPlayerStatsUrl(null);
-        // setGameArchiveURls(null);
-
-
-        if( !formData || !formData.numgames || !formData.username || !formData.website) { return;};
-
-        setPlayerProfileUrl(`https://api.chess.com/pub/player/${formData.username}`);
-        setPlayerStatsUrl(`https://api.chess.com/pub/player/${formData.username}/stats`)
-        setGameArchiveURls(`https://api.chess.com/pub/player/${formData.username}/games/archives`);
-
-      }, [formData])
-
-
-
-    const handleFormSubmit = (submittedForm) => {
-        if (!submittedForm) {return};
-        setFormData(submittedForm);
-    };
-
-    const handleChildData = (data) => {
+    const handleChildData = useCallback((data) => {
+        if (data.length == 0) {return};
         if (!data) {return};
         console.log(data)
         setMatchHistory(data);
-    }
+        }, []);
 
 
-    // const handleTestButtonClick = () => {
-    //     console.log("==handleButtonClick==");
-    //     // console.log("Games Data:", gamesData);
-    //     // console.log("Profile Data:", profileData);
-    // };
+
+
+
+
+    const handleFormSubmit = useCallback((submittedForm) => {
+      if (!submittedForm) return;
+
+      setFormData(submittedForm);
+
+      refPlayerProfileUrl.current = `https://api.chess.com/pub/player/${submittedForm.username}`
+      refPlayerStatsUrl.current = `https://api.chess.com/pub/player/${submittedForm.username}/stats`
+      refPlayerArchiveURls.current = `https://api.chess.com/pub/player/${submittedForm.username}/games/archives`
+
+
+      toggle();
+      // setFormData(submittedForm);
+    }, [toggle]);
+
+
+    const handleTestButtonClick = () => {
+        console.log("==handleButtonClick==");
+        console.log(refPlayerProfileUrl)
+        console.log(refPlayerStatsUrl)
+        console.log(refPlayerArchiveURls)
+        console.log(hookParsedMatches)
+    };
 
 
     return (
-        // <progress value={0.5}></progress>
-        // <Form></Form>
         <>
 
             <Form onFormSubmit={handleFormSubmit}></Form>
+            {/* {formData && (
+                <Form onFormSubmit={handleFormSubmit}></Form>
+            )} */}
+
+            <button onClick={handleTestButtonClick}>Test Form Data</button>
 
 
-            {playerProfileUrl && playerStatsUrl && gameArchiveURls && (
-                <>
-                    <p>playerProfileUrl and gameArchiveURls successfully grabbed </p>
-                    <p>Player Profile URL: {playerProfileUrl}</p>
-                    <p>Player Stats URL: {playerStatsUrl}</p>
-                    <p>Game Archives URL: {gameArchiveURls}</p>
-                    <MakeRequestsChessCom 
-                        formData={formData} 
-                        playerProfileUrl={playerProfileUrl} 
-                        playerStatsUrl={playerStatsUrl} 
-                        gameArchiveURls={gameArchiveURls}
-                        onDataRequest={handleChildData}
-                        >
-                    </MakeRequestsChessCom>
+            {/* {refPlayerProfileUrl.current && refPlayerStatsUrl.current && refPlayerArchiveURls.current && ( */}
+            {isFormSubmitted && (
+              <>
+              <p>form has been accepted</p>
+              <MakeRequestsChessCom2
+                formData={formData}
+                playerProfileUrl={refPlayerProfileUrl.current}
+                playerStatsUrl={refPlayerStatsUrl.current}
+                gameArchiveURls={refPlayerArchiveURls.current}
+                onDataRequest={handleChildData}
+              />
+              </>
+            )}
 
-                {matchHistory && (
-                    <MatchHistoryDisplay matchHistory={matchHistory}></MatchHistoryDisplay>
-                )}
-
-
-
-
-                </>
-
-
-
-            )}           
-
-            
-            {/* <button onClick={handleTestButtonClick} >TEST</button> */}
-
+            { matchHistory && (
+              <p>data got</p>
+            )}
+          
         </>
-
-    );
-}
+      );
+    }
 
 export default ChessAppDebug;

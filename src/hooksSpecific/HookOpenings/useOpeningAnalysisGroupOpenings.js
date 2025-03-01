@@ -23,19 +23,19 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
     // Function to filter matchArray by ECO Family Name
     const filterMatchesByECOFamilyName = (matchArray, fullName) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingDataNew.ECOFAMILY === fullName);
+        return matchArray.filter(match => match.openingData.ECOFAMILY === fullName);
     };
 
     // Function to filter matchArray by Opening Name
     const filterMatchesByVariationName = (matchArray, name) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingDataNew.NAME === name);
+        return matchArray.filter(match => match.openingData.NAME === name);
     };
 
     // Function to filter matchArray by Family Name
     const filterMatchesByFamilyName = (matchArray, name) => {
         if (matchArray.length === 0) { return []; }
-        return matchArray.filter(match => match.openingDataNew.FAMILY === name);
+        return matchArray.filter(match => match.openingData.FAMILY === name);
     };
 
     // Function to filter matchArray by ECO Code
@@ -58,18 +58,18 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
 
     // Function to get unique ECO Family Names from objectArray
     const getUniqueECOFamilyNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingDataNew.ECOFAMILY))];
+        return [...new Set(objectArray.map((element) => element.openingData.ECOFAMILY))];
     };
 
     // Function to get unique Family Names from objectArray
     const getUniqueGeneralFamilyNames = (objectArray) => {
         try {
             return [...new Set(objectArray.map((element) => {
-                if (!element.openingDataNew) {
-                    console.error('Missing openingDataNew in getUniqueGeneralFamilyNames:', element);
+                if (!element.openingData) {
+                    console.error('Missing openingData in getUniqueGeneralFamilyNames:', element);
                     return null;  // Skip this element if missing
                 }
-                return element.openingDataNew.FAMILY;
+                return element.openingData.FAMILY;
             }))].filter(Boolean); // Filter out null values
         } catch (error) {
             console.error('Error in getUniqueGeneralFamilyNames:', error);
@@ -79,7 +79,7 @@ const useOpeningAnalysisGroupOpeningsNEW = (hookInput, selectedTeam, firstMove) 
 
     // Function to get unique Opening Names from objectArray
     const getUniqueVariationNames = (objectArray) => {
-        return [...new Set(objectArray.map((element) => element.openingDataNew.NAME))];
+        return [...new Set(objectArray.map((element) => element.openingData.NAME))];
     };
 
     // Function to rank the most frequent openings based on match history and selected team

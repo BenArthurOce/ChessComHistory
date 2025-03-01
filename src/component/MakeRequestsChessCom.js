@@ -1,144 +1,90 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
-
-// import { useMemo } from "react";
-
-
 import useFetch from "../hooksSpecific/HooksAPI/useFetch";
-import useFetchGameArchives from "../hooksSpecific/HooksAPI/useFetchGameArchives";
-import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildMatchesChessCom";
 
-;
-
-function MakeRequestsChessCom(props) {
-
-    const {formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest} = props
-
-    // const [isTriggerGameFetch, setIsTriggerGameFetch] = useState(false);
-
-    // Needs to be populated so the Game Fetch can be triggered
-    const [arrayOfURL, setArrayOfURL] = useState(null);
-    const [arrayOfGames, setArrayOfGames] = useState(null);
-
-
-    // const profileData = useMemo(() => useFetch(playerProfileUrl), [playerProfileUrl]);
-    // const statsData = useMemo(() => useFetch(playerStatsUrl), [playerStatsUrl]);
-    // const archiveLinksData = useMemo(() => useFetch(gameArchiveURls), [gameArchiveURls]);
-
-
-    const { data: profileData, isPending: isProfilePending, error: profileError } = useFetch(playerProfileUrl);
-    const { data: statsData, isPending: isStatsPending, error: statsError } = useFetch(playerStatsUrl);
-    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError } = useFetch(gameArchiveURls);
-    const { data: gamesData, isPending: isGamesPending, error: gamesError } = useFetchGameArchives(arrayOfURL, formData.numgames);
-
-
-    // const [finalGameData, setFinalGameData] = useState(null); 
-
-    const hookParsedMatches = useBuildMatchesChessCom(gamesData, formData.username);
-
-
-    // // Gets all game data from the list of Endpoint URLS from "archiveLinksData"
-    // useEffect(() => {
-
-    //     console.log('-----useEffect Triggered ---- ')
-
-    //     if (!archiveLinksData || !archiveLinksData.archives) return;
-    //     setArrayOfURL(archiveLinksData['archives'].reverse())
-
-    //   }, [archiveLinksData])
-
-
-    // // Once "gamesData" has been completed, we can start transforming those games into objects
-    // useEffect(() => {
-
-    //     if (!gamesData ) return;
-    //     setArrayOfGames(gamesData)
-    //     // setArrayOfURL(archiveLinksData['archives'].reverse())
-
-    //   }, [gamesData])
-
-
-
-    useEffect(() => {
-        if (!archiveLinksData?.archives || arrayOfURL) return;
-        setArrayOfURL([...archiveLinksData.archives].reverse());
-    }, [archiveLinksData]);
-
-
-    // When games data is populated, send it back to the parent
-    useEffect(() => {
-        if (!hookParsedMatches || hookParsedMatches.length == 0) return;
-        // setArrayOfURL([...archiveLinksData.archives].reverse());
-        onDataRequest(hookParsedMatches);
-    }, [hookParsedMatches]);
+const MakeRequestsChessCom = (props) => {
+    const { formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest } = props;
 
     
 
+
+    const refProfileUrl = useRef(playerProfileUrl);
+    const refStatsUrl = useRef(playerStatsUrl);
+    const refArchiveUrl = useRef(gameArchiveURls);
+
+    const isProfileDataGot = useRef(false);
+    const isStatsDataGot = useRef(false);
+    const isEndpointDataGot = useRef(false);
+
+    const rendersCountRef = useRef(0);
+    rendersCountRef.current += 1;
+
+    console.log("===MakeRequestsChessCom RENDERED===", rendersCountRef.current);
+
+    
+    // Fetch API data
+    const { data: profileData, isPending: isProfilePending, error: profileError } = useFetch(refProfileUrl.current, isProfileDataGot.current);
+    const { data: statsData, isPending: isStatsPending, error: statsError } = useFetch(refStatsUrl.current, isStatsDataGot.current);
+    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError } = useFetch(refArchiveUrl.current, isEndpointDataGot.current);
+
+    
     // useEffect(() => {
-    //     if (!gamesData || arrayOfGames) return; 
-    //     setArrayOfGames(gamesData);
-    // }, [gamesData]);
+
+    //     console.log("useEffect triggered on the component being invoked")
+
+    //     isProfileDataGot.current = false;
+    //     isStatsDataGot.current = false;
+    //     isEndpointDataGot.current = false;
+
+    // }, []);
+
+    useEffect(() => {
+        console.log("useEffect triggered on the data being grabbed")
+
+        if (!profileData) {
+            console.log("Profile data is null");
+            return;
+        } else {console.log(profileData)}
 
 
-    //   useEffect(() => {
-
-    //     console.log('-----useEffect Triggered ---- ')
-
-
-    //     if (!archiveLinksData || !archiveLinksData.archives) return;
-    //     setArrayOfURL(archiveLinksData['archives'].reverse())
-
-    //     if (!gamesData ) return;
-    //     setArrayOfGames(gamesData)
+        if (!statsData) {
+            console.log("Stats data is null");
+            return;
+        } else {console.log(statsData)}
 
 
-    //   }, [archiveLinksData, gamesData])
+        if (!archiveLinksData) {
+            console.log("Archive data is null");
+            return;
+        } else {console.log(archiveLinksData)}
 
 
+
+        isProfileDataGot.current = true;
+        isStatsDataGot.current = true;
+        isEndpointDataGot.current = true;
+
+    // }, [profileData, statsData, archiveLinksData]); 
+}, []); 
+
+  
 
     const handleTestButtonClick = () => {
-        console.log("==handleButtonClick==");
         console.log("Profile Data:", profileData);
-        console.log("Stats Data:", statsData);
-        console.log("Links Data:", archiveLinksData);
-        console.log("Games Data:", gamesData);
-        console.log("Parsed Matches:", hookParsedMatches);
+        console.log("Stat Data:", statsData);
+        console.log("Archive Data:", archiveLinksData);
     };
 
 
+
     return (
-
         <>
-
-            {profileData && (
-                <>
-                    <p>HTTP RESULT: User Profile has been found</p>
-                </>
-            )}
-
-            {statsData && (
-                <>
-                    <p>HTTP RESULT: User stats Data</p>
-                </>
-            )}
-
-            {archiveLinksData && (
-                <>
-                    <p>HTTP RESULT: User game archive Urls have been found</p>
-                </>
-            )}
-
-            {gamesData && (
-                <>
-                    <p>HTTP RESULT: Games data has been found</p>
-                </>
-            )}
-        
-            <button onClick={handleTestButtonClick} >TEST</button>
-
+            <button onClick={handleTestButtonClick}>VIEW REQUEST RESULTS</button>
+            <span>
+                RendersCounter rendered <b>{rendersCountRef.current}</b> time(s)
+            </span>
         </>
-
     );
-}
+};
 
 export default MakeRequestsChessCom;

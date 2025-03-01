@@ -97,7 +97,7 @@ const SingleOpeningLevel3 = (props) => {
 
         const firstMatch = Object.values(matchArray)[0]
 
-        const variationName = firstMatch.openingDataNew.NAME
+        const variationName = firstMatch.openingData.NAME
 
         const result = Object.values(dict).filter(entry => entry.NAME === variationName);
 
