@@ -23,12 +23,16 @@ class StaticErrorCheck {
      * Checks if the Game object has a PGN to send to the Parser.
      *
      * @param {string} pgn The PGN string
+     * @param {string} fromClass the class where the error check was invoked
+     * @param {string} fromFunction the function where the error check was invoked
      * @throws {Error} If the PGN string is null or undefined
      */
-    static validatePGNExistence(pgn) {
+    static validatePGNExistence(pgn, fromClass, fromFunction) {
         if (!pgn) {
-            throw new Error(`[StaticErrorCheck] [validatePGNExistence] Parser did not receive a PGN. Code stopped`);
-        }
+            const errorMsg = `[StaticErrorCheck] [${fromClass}] [${fromFunction}] : No PGN found`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
+        };
     };
 
 
@@ -40,7 +44,9 @@ class StaticErrorCheck {
      */
     static validateBoardExistence(board) {
         if (!board) {
-            throw new Error(`[StaticErrorCheck] [validateBoardExistence] the board object is null. Code stopped`);
+            const errorMsg = `[StaticErrorCheck] [validateBoardExistence] the board object is null`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         }
     };
 
@@ -53,7 +59,9 @@ class StaticErrorCheck {
      */
     static validateParserExistence(parser) {
         if (!parser) {
-            throw new Error(`[StaticErrorCheck] [validateParserExistence] the Parser object is null. Code stopped`);
+            const errorMsg = `[StaticErrorCheck] [validateParserExistence] the Parser object is null.`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         };
     };
 
@@ -66,7 +74,9 @@ class StaticErrorCheck {
      */
     static checkIfBoardIsPopulated(game) {
         if (!game || !game.board || !Array.isArray(game.board.grid) || game.board.grid.length === 0) {
-            throw new Error(`[StaticErrorCheck] [checkIfBoardIsPopulated] Game.board.grid is empty or not properly populated. Code stopped`);
+            const errorMsg = `[StaticErrorCheck] [checkIfBoardIsPopulated] Game.board.grid is empty or not properly populated`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         };
     };
 
@@ -128,7 +138,9 @@ class StaticErrorCheck {
      */
     static validateTeamNumber(teamNum) {
         if (teamNum !== 0 && teamNum !== 1) {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateTeamNumber] Supplied teamNum of ${teamNum} is invalid.`);
+            const errorMsg = `[StaticErrorCheck] [validateTeamNumber] Supplied teamNum of ${teamNum} is invalid.`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         };
     };
 
@@ -141,7 +153,9 @@ class StaticErrorCheck {
      */
     static validateCastlingCommand(castlingName) {
         if (!castlingName === "Kingside" && !castlingName === "Queenside") {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateCastlingCommand] Supplied castlingName of ${castlingName} is invalid.`);
+            const errorMsg = `[StaticErrorCheck] [validateCastlingCommand] Supplied castlingName of ${castlingName} is invalid.`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         };
 
         // Maybe add more code to validate piece locations?
@@ -181,7 +195,9 @@ class StaticErrorCheck {
         const isValidRow = row >= 0 && row <= 7;
 
         if (!(isValidCol && isValidRow)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] [validateArray] Invalid chess position in array.');
+            const errorMsg = '[StaticErrorCheck] [validateArray] Invalid chess position in array.'
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         }
     };
     
@@ -194,7 +210,9 @@ class StaticErrorCheck {
      */
     static validateSquareContainPiece(square) {
         if (!(square instanceof Square && square.piece)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] [validateSquareContainPiece] Invalid Square object or does not contain a valid chess piece.');
+            const errorMsg = '[StaticErrorCheck] [validateSquareContainPiece] Invalid Square object or does not contain a valid chess piece.'
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         }
     };
 
@@ -209,7 +227,9 @@ class StaticErrorCheck {
     static validateContents(squareObj, whatClass) {
 
         if (!(squareObj && squareObj.piece instanceof whatClass)) {
-            StaticErrorCheck.handleError(`[StaticErrorCheck] [validateContents] Contents of square ${squareObj.positionRef} are not an instance of ${whatClass.name}`);
+            const errorMsg = `[StaticErrorCheck] [validateContents] Contents of square ${squareObj.positionRef} are not an instance of ${whatClass.name}`
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         };
     };
 
@@ -222,8 +242,27 @@ class StaticErrorCheck {
      */
     static validateIsChessPiece(piece) {
         if (!(piece instanceof Piece)) {
-            StaticErrorCheck.handleError('[StaticErrorCheck] [validateIsChessPiece] Invalid chess piece object.');
+            const errorMsg = '[StaticErrorCheck] [validateIsChessPiece] Invalid chess piece object.'
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
         }
+    };
+
+    /**
+     * After reviewing a Parser() move object and Board() for a Piece() that can move, check that at least 1 piece can be moved
+     *
+     * @param {Array} array The array that contains the Piece() object(s)
+     * @throws {Error} If the array parameter is empty
+     */
+
+    static checkPiecesFoundArray(array) {
+        if (array.length === 0) {
+            const errorMsg = '[StaticErrorCheck] [checkPiecesFoundArray] Piece to move not found'
+            console.error(errorMsg)
+            StaticErrorCheck.handleError(errorMsg);
+        }
+        // old error that used to exist in game object. Might need to bring in move and board parameters
+        // throw new Error(`File: [Game.js] Function: [invokeGame]: Piece not found || Turn: ${whiteMoveInfo.turnNumber} | MoveNum: ${whiteMoveInfo.teamNumber} | Notation: ${whiteMoveInfo.notation}`);
     };
 
 

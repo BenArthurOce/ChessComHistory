@@ -51,6 +51,8 @@ class StaticParser {
 
     runParser(string) {
 
+        StaticErrorCheck.validatePGNExistence(string, "StaticParser", "runParser");
+
         try {
             // console.log(string)
 

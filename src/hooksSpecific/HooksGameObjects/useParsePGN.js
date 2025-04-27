@@ -69,6 +69,7 @@ const useParsePGN = (hookInput) => {
                 const blackMove = match[3] || undefined;
                 allMoves[moveNumber] = [whiteMove, blackMove];
             }
+
             return allMoves;
         };
     

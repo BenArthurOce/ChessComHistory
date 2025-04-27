@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import JsonFile from '../../data/openings.json';
 import JsonFileNew from '../../data/openingsNew.json';
 import Game from "../../engine/Game";
+import ErrorCustom from "../../engine/Game";
 
 // matchObjects = All the single match objects from the match history API
 const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
@@ -35,12 +36,14 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             try {
                 const matchObject = matchObjects[index];
                 const pgnObject = pgnObjects[index];
-                const parsedObject = await createSingleMatchObject(matchObject, pgnObject, username, website);
+                const parsedObject = await createSingleMatchObject(matchObject, pgnObject, username, website, index);
                 results.push(parsedObject);
             } catch (err) {
                 console.log("-----ERROR-----")
                 errors.push(err);
                 errorIndexes.push(index)
+
+                console.log(err)
             }
         }));
     
@@ -329,7 +332,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
 
 
 
-    const createSingleMatchObject = (match, parsedData, username, website) => {
+    const createSingleMatchObject = (match, parsedData, username, website, index) => {
 
 
         function getEloDiff() {
@@ -382,7 +385,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         };
 
 
-        const findOpeningMatch = (game, openings) => {
+        const findOpeningMatch = (game, openings, index) => {
 
             //
             // Takes Array of FENs, Finds the most relevant opening
@@ -411,36 +414,60 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 return null;
             }
 
-            // Extract only the first 20 moves (10 white, 10 black from the PGN)
-            const splitMoves2 = game.split(' ').slice(0, 20);
-            const joinedMoves = splitMoves2.join(" ")
+            try {
+                // Extract only the first 20 moves (10 white, 10 black from the PGN)
+                const splitMoves2 = game.split(' ').slice(0, 20);
+                let joinedMoves = splitMoves2.join(" ");
 
-            // Create a new Game(). Game() will invoke itself
-            const newGame = new Game(joinedMoves);
-
-            // Reverse the FEN array, Loop through each FEN against the dictionary. Set an index if a match is found
-            // Lowest index = Opening
-            const reverseFENarray = newGame.boardStates.reverse()
-            const opening = loopThroughFENS(reverseFENarray, openings);
-
-
-            const emptyOpening = {
-                'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
-            };
-
-            if (!opening) {
+                // Some PGNs might fail because of the win/loss at the end. Removing it
+                joinedMoves = joinedMoves.replace(" 1-0", "");
+                joinedMoves = joinedMoves.replace(" 0-1", "");
+                joinedMoves = joinedMoves.replace(" 1/2-1/2", "");
                 
-                console.log(game)
+                // Create a new Game(). Game() will invoke itself
+                const newGame = new Game(index, joinedMoves);
+
+                // Reverse the FEN array, Loop through each FEN against the dictionary. Set an index if a match is found
+                // Lowest index = Opening
+                const reverseFENarray = newGame.boardStates.reverse()
+                const opening = loopThroughFENS(reverseFENarray, openings);
+
+
+                const emptyOpening = {
+                    'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
+                };
+
+            // If no opening was found, construct an error object
+            if (!opening) {
+
+                // const errorMessage = {"PGN": null, "boardStates": [], }
+                const errorObject = {}
+
+                console.log(index)
+                console.log(joinedMoves)
+
+                errorObject["index"] = index
+                errorObject["PGN"] = joinedMoves
+                errorObject["boardStates"] = reverseFENarray
+                errorObject["errorMessage"] = 'ERROR: findOpeningMatch No Opening was Found!'
+
                 console.error('ERROR: findOpeningMatch No Opening was Found!');
-                throw new Error('ERROR: findOpeningMatch No Opening was Found!')
-                // return emptyOpening;
+                throw new Error(errorObject);
+                
             };
 
             return opening;
 
+            }
+            catch(err) {
+                console.error("reeeeeeeeee")
+            }
 
 
-        
+
+
+
+
         };
         
         
@@ -540,7 +567,7 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
                 , name:         adaptedInformation["opening_name"]
             }
             ,
-            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionaryNew)
+            openingData:     findOpeningMatch(parsedData.MoveString, openingDictionaryNew, index)
         };
     };
 
