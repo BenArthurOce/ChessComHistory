@@ -1,124 +1,124 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+// import React, { useState, useEffect } from "react";
+// import styled from "styled-components";
 
-import { Inner } from "./styles";
-import { Container, Title } from "./styles3";
+// import { Inner } from "./styles";
+// import { Container, Title } from "./styles3";
 
-// Components
-import ChessAppSwitcher from "./ChessAppSwitcher";
-import NavigationBarSliding from "./NavigationBarSliding";
+// // Components
+// import ChessAppSwitcher from "./ChessAppSwitcher";
+// import NavigationBarSliding from "./NavigationBarSliding";
 
-// Custom Hooks
-import useIsMobile from "../hooks/useIsMobile";
+// // Custom Hooks
+// import useIsMobile from "../hooks/useIsMobile";
 
-//
-// Component Styles
-//
-const Wrapper = styled.div
-`
-    width: 100vw;
-    height: 100vh;
-    overflow-y: hidden;
-`
-;
+// //
+// // Component Styles
+// //
+// const Wrapper = styled.div
+// `
+//     width: 100vw;
+//     height: 100vh;
+//     overflow-y: hidden;
+// `
+// ;
 
-function ChessApp() {
+// function ChessApp() {
 
-    //
-    // States
-    //
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [formData, setFormData] = useState(null);
-    const [activeModule, setActiveModule] = useState("playerInfo");
+//     //
+//     // States
+//     //
+//     const [data, setData] = useState(null);
+//     const [loading, setLoading] = useState(false);
+//     const [error, setError] = useState(false);
+//     const [formData, setFormData] = useState(null);
+//     const [activeModule, setActiveModule] = useState("playerInfo");
 
-    //
-    // Hooks
-    //
-    const isMobile = useIsMobile();
+//     //
+//     // Hooks
+//     //
+//     const isMobile = useIsMobile();
 
-    //
-    // Handlers
-    //
-    const handleFormSubmit = (formData) => {
-        setFormData(formData);
-        performFetch(formData.username);
-    };
+//     //
+//     // Handlers
+//     //
+//     const handleFormSubmit = (formData) => {
+//         setFormData(formData);
+//         performFetch(formData.username);
+//     };
 
-    const handleNavigationButtonClick = (selectedModule) => {
-        setActiveModule(selectedModule);
-    };
+//     const handleNavigationButtonClick = (selectedModule) => {
+//         setActiveModule(selectedModule);
+//     };
 
-    //
-    // Helpers
-    //
-    const performFetch = (username) => {
-        const url = `https://api.chess.com/pub/player/${username}`;
+//     //
+//     // Helpers
+//     //
+//     const performFetch = (username) => {
+//         const url = `https://api.chess.com/pub/player/${username}`;
 
-        setLoading(true);
-        setData(null);
-        setError(null);
+//         setLoading(true);
+//         setData(null);
+//         setError(null);
 
-        fetch(url)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                setData(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setError(error.message);
-                setLoading(false);
-            });
-    };
+//         fetch(url)
+//             .then((res) => {
+//                 if (!res.ok) {
+//                     throw new Error('Network response was not ok');
+//                 }
+//                 return res.json();
+//             })
+//             .then((data) => {
+//                 setData(data);
+//                 setLoading(false);
+//             })
+//             .catch((error) => {
+//                 setError(error.message);
+//                 setLoading(false);
+//             });
+//     };
 
-    return (
-        <Wrapper isMobile={isMobile}>
-            <Inner>
-                <NavigationBarSliding
-                    onFormSubmit={handleFormSubmit}
-                    onNavigationButtonClick={handleNavigationButtonClick}
-                    userFound={data ? true : false}
-                />
+//     return (
+//         <Wrapper isMobile={isMobile}>
+//             <Inner>
+//                 <NavigationBarSliding
+//                     onFormSubmit={handleFormSubmit}
+//                     onNavigationButtonClick={handleNavigationButtonClick}
+//                     userFound={data ? true : false}
+//                 />
 
-                {loading && (
-                    <>
-                        <Title>Chess Match History</Title>
-                        <p>Loading...</p>
-                    </>
-                )}
+//                 {loading && (
+//                     <>
+//                         <Title>Chess Match History</Title>
+//                         <p>Loading...</p>
+//                     </>
+//                 )}
 
-                {error && (
-                    <>
-                        <Title>Chess Match History</Title>
-                        <p>Error: {error}</p>
-                    </>
-                )}
+//                 {error && (
+//                     <>
+//                         <Title>Chess Match History</Title>
+//                         <p>Error: {error}</p>
+//                     </>
+//                 )}
 
-                {!formData && !loading && !error && (
-                    <>
-                        <Title>Chess Match History</Title>
-                        <p>Waiting on user...</p>
-                    </>
-                )}
+//                 {!formData && !loading && !error && (
+//                     <>
+//                         <Title>Chess Match History</Title>
+//                         <p>Waiting on user...</p>
+//                     </>
+//                 )}
 
-                {formData && activeModule && !loading && (
-                    <ChessAppSwitcher
-                        username={formData.username}
-                        lastNGames={formData.lastNGames}
-                        activeModule={activeModule}
-                        playerInformation={data}
-                        website={formData.website}
-                    />
-                )}
-            </Inner>
-        </Wrapper>
-    );
-}
+//                 {formData && activeModule && !loading && (
+//                     <ChessAppSwitcher
+//                         username={formData.username}
+//                         lastNGames={formData.lastNGames}
+//                         activeModule={activeModule}
+//                         playerInformation={data}
+//                         website={formData.website}
+//                     />
+//                 )}
+//             </Inner>
+//         </Wrapper>
+//     );
+// }
 
-export default ChessApp;
+// export default ChessApp;

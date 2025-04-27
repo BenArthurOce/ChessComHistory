@@ -45,8 +45,8 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
         }));
     
         // console.log(results);
-        // console.log(errors);
-        // console.log(errorIndexes);
+        console.log(errors);
+        console.log(errorIndexes);
 
         setHookOutput(results);
         setErroredGames(errors);
@@ -423,16 +423,23 @@ const useSingleMatchObjects = (matchObjects, pgnObjects, username, website) => {
             const reverseFENarray = newGame.boardStates.reverse()
             const opening = loopThroughFENS(reverseFENarray, openings);
 
+
+            const emptyOpening = {
+                'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
+            };
+
             if (!opening) {
-                console.error('No Opening was Found!');
+                
+                console.log(game)
+                console.error('ERROR: findOpeningMatch No Opening was Found!');
+                throw new Error('ERROR: findOpeningMatch No Opening was Found!')
+                // return emptyOpening;
             };
 
             return opening;
 
 
-            // const emptyOpening = {
-            //     'ID': null, 'ECO': null, 'VOLUME': null, 'NAME': null, "FULL": null, 'FEN': null, 'PGN': null, "NUMTURNS": null, 'NUMMOVES': null, 'NEXTTOMOVE': null, 'FAMILY': null, "VARIATION": null, "SUBVARIATION": null, "ECOFAMILY": null
-            // };
+
         
         };
         

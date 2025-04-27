@@ -49,6 +49,11 @@ export const ContainerUserInput = styled.div
 `
 ;
 
+export const Form = styled.form
+`
+    margin-bottom: 20px;
+`
+;
 
 /*  */
 // export const FlexRow = styled.div
@@ -101,5 +106,18 @@ export const FlexDropDown = styled.select
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+`
+;
+
+
+const ButtonSubmit = styled.button
+`
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
 `
 ;

@@ -1,102 +1,124 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styled from "styled-components";
+import { Container, Inner, FlexRow, FlexLabel, FlexInput, FlexDropDown } from "./styles3";
 
-import Form from "./Form";
-
-import MakeRequestsChessCom from "./MakeRequestsChessCom";
-import MakeRequestsChessCom2 from "./MakeRequestsChessCom2";
-
-import MatchHistoryDisplay from "./moduleMatchHistoryDisplay/MatchHistoryDisplay";
-
-import useToggle from "../hooksSpecific/useToggle";
 
 import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildMatchesChessCom";
 
+
+
+
+
+// Components
+import PlayerInformation from './modulePlayerInformation/PlayerInformation';
+import MatchHistoryDisplay from './moduleMatchHistoryDisplay/MatchHistoryDisplay';
+import MatchHistoryTableMaster from './moduleMatchHistoryTable/MatchHistoryTableMaster';
+import HeatmapMaster from './moduleHeatmap/HeatmapMaster';
+import OpeningAnalysisMaster from './moduleOpeningAnalysis/OpeningAnalysisMaster';
+import OtherStatsMaster from './moduleOtherStats/OtherStatsMaster';
+
+
+import RequestsMaster from "./moduleDataRequests/RequestsMaster";
+
+
 ;
+
+
+//
+// Component Styles
+//
+
+
+
+
+
 
 const ChessAppDebug = () => {
 
-    const [formData, setFormData] = useState(null);
     const [matchHistory, setMatchHistory] = useState(null);
-    const [isFormSubmitted, toggle] = useToggle(false);
-
-
-    const refPlayerProfileUrl = useRef(null)
-    const refPlayerStatsUrl = useRef(null)
-    const refPlayerArchiveURls = useRef(null)
-
-
-    const hookParsedMatches = useBuildMatchesChessCom(matchHistory, formData?.username);
 
 
 
-    const handleChildData = useCallback((data) => {
-        if (data.length == 0) {return};
-        if (!data) {return};
-        console.log(data)
-        setMatchHistory(data);
-        }, []);
+    const hookParsedMatches = useBuildMatchesChessCom(matchHistory, 'BenArthurOCE');
+    // const hookParsedMatches = useBuildMatchesChessCom(matchHistory, formData?.username);
+    const [activeModule, setActiveModule] = useState('formInput');
 
 
 
+    const receiveRequestGameObjects = useCallback((requestGameObjects) => {
+        if (requestGameObjects.length == 0) {return};
+        if (!requestGameObjects) {return};
+        setMatchHistory(requestGameObjects)
+    }, []);
 
-
-
-    const handleFormSubmit = useCallback((submittedForm) => {
-      if (!submittedForm) return;
-
-      setFormData(submittedForm);
-
-      refPlayerProfileUrl.current = `https://api.chess.com/pub/player/${submittedForm.username}`
-      refPlayerStatsUrl.current = `https://api.chess.com/pub/player/${submittedForm.username}/stats`
-      refPlayerArchiveURls.current = `https://api.chess.com/pub/player/${submittedForm.username}/games/archives`
-
-
-      toggle();
-      // setFormData(submittedForm);
-    }, [toggle]);
 
 
     const handleTestButtonClick = () => {
         console.log("==handleButtonClick==");
-        console.log(refPlayerProfileUrl)
-        console.log(refPlayerStatsUrl)
-        console.log(refPlayerArchiveURls)
         console.log(hookParsedMatches)
     };
 
+    const handleModuleChange = (event) => {
+        setActiveModule(event.target.value)
+    };
 
     return (
         <>
 
-            <Form onFormSubmit={handleFormSubmit}></Form>
-            {/* {formData && (
-                <Form onFormSubmit={handleFormSubmit}></Form>
-            )} */}
+            <button onClick={handleTestButtonClick}>View Game Objects</button>
 
-            <button onClick={handleTestButtonClick}>Test Form Data</button>
+            <select name="module" id="module" value={activeModule} onChange={handleModuleChange}>
+                <option value="formInput">Input</option>
+                <option value="playerInfo">Player Info</option>
+                <option value="matchHistory">Match History</option>
+                <option value="tableSummary">Table Summary</option>
+                <option value="heatMapMaster">Heat Map</option>
+                <option value="openingAnalysis">Openings</option>
+                <option value="debugging">Debugging</option>
+            </select>
 
 
-            {/* {refPlayerProfileUrl.current && refPlayerStatsUrl.current && refPlayerArchiveURls.current && ( */}
-            {isFormSubmitted && (
-              <>
-              <p>form has been accepted</p>
-              <MakeRequestsChessCom2
-                formData={formData}
-                playerProfileUrl={refPlayerProfileUrl.current}
-                playerStatsUrl={refPlayerStatsUrl.current}
-                gameArchiveURls={refPlayerArchiveURls.current}
-                onDataRequest={handleChildData}
-              />
-              </>
+            {activeModule === 'formInput' && (
+                <RequestsMaster receiveRequestGameObjects={receiveRequestGameObjects} />
             )}
+
 
             { matchHistory && (
-              <p>data got</p>
+            <p>data got</p>
             )}
-          
+
+
+            {matchHistory && (
+                <Inner>
+
+                    {/* {hookParsedMatches && activeModule === 'playerInfo' && (
+                        <PlayerInformation playerInformation={playerInformation} />
+                    )} */}
+
+                    {hookParsedMatches && activeModule === 'matchHistory' && (
+                        <MatchHistoryDisplay matchHistory={hookParsedMatches} />
+                    )}
+
+                    {hookParsedMatches && activeModule === 'tableSummary' && (
+                        <MatchHistoryTableMaster matchHistory={hookParsedMatches} />
+                    )}
+
+                    {hookParsedMatches && activeModule === 'otherStats' && (
+                        <OtherStatsMaster matchHistory={hookParsedMatches} />
+                    )}
+
+                    {hookParsedMatches && activeModule === 'heatMapMaster' && (
+                        <HeatmapMaster matchHistory={hookParsedMatches} />
+                    )}
+
+                    {hookParsedMatches && activeModule === 'openingAnalysis' && (
+                        <OpeningAnalysisMaster matchHistory={hookParsedMatches} />
+                    )}
+
+                </Inner>
+            )}
+
         </>
-      );
-    }
+    );
+}
 
 export default ChessAppDebug;
