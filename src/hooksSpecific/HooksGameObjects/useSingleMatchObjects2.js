@@ -4,38 +4,77 @@ import JsonFileNew from '../../data/openingsNew.json';
 import Game from "../../engine/Game";
 
 // matchObjects = All the single match objects from the match history API
-const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => {
+const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website, isTriggerBuildStage) => {
 
 
-    console.log(`useSingleMatchObjects2 || matchObjects: ${matchObjects} || pgnObjects: ${pgnObjects} || username: ${username} || website: ${website}`)
-    console.log(matchObjects)
-    console.log(pgnObjects)
 
-    // const [hookData, setHookData] = useState('')
-    // const [erroredGames, setHookErrors] = useState([]);
+
+    // console.log("=== useSingleMatchObjects2 ===");
+    // console.log(matchObjects)
+    // console.log(pgnObjects)
+
+    // const [builtGameData, setBuiltGameData] = useState('')
+    // const [erroredGames, setBuiltGameErrors] = useState([]);
     const openingDictionary = JsonFile;
     const openingDictionaryNew = JsonFileNew
 
 
-    const [hookData, setHookData] = useState(null);
-    const [hookPending, setHookPending] = useState(null);
-    const [hookErrors, setHookErrors] = useState(null);
+    const [builtGameData, setBuiltGameData] = useState(null);
+    const [isBuiltPending, setIsBuiltPending] = useState(null);
+    const [builtGameErrors, setBuiltGameErrors] = useState(null);
 
-
-    // const [hookDataAlt, setHookDataAlt] = useState(null);
-    // const [hookPendingAlt, setHookPendingAlt] = useState(null);
-    // const [hookErrorsalt, setHookErrorsAlt] = useState(null);
 
 
     useEffect(() => {
-        if (!matchObjects || matchObjects.length === 0) { return};
-        if (!pgnObjects || pgnObjects.length === 0) { return};
-        if (!username || username.length === 0) { return};
-        if (!website || website.length === 0) { return};
-        console.log(`==useSingleMatchObjects2 RUNHOOK==`);
+        // if (isTriggerBuildStage) return;
+
+        console.log("====useSingleMatchObjects2====")
+        // console.log(matchObjects);
+        // console.log(pgnObjects);
+        // console.log();
+        // console.log();
+        
+    console.log(isTriggerBuildStage)
+        // console.log("useEffect triggered");
+        // console.log(`matchObjects:`, matchObjects);
+        // console.log(`pgnObjects:`, pgnObjects);
+        // console.log(`username:`, username);
+        // console.log(`website:`, website);
+
+        if (isTriggerBuildStage === 0) {
+            console.log("[useSingleMatchObjects2] Return early on [isTriggerBuildStage = 0]");
+            return;
+        }
+
+        if (!matchObjects || matchObjects.length === 0) {
+            console.log("[useSingleMatchObjects2] Return early on [matchObjects]");
+            return;
+        }
+
+        if (!pgnObjects || pgnObjects.length === 0) {
+            console.log("[useSingleMatchObjects2] Return early on [pgnObjects]");
+            return;
+        }
+
+        if (!username || username.length === 0) {
+            console.log("[useSingleMatchObjects2] Return early on [username]");
+            return;
+        }
+
+        if (!website || website.length === 0) {
+            console.log("[useSingleMatchObjects2] Return early on [website]");
+            return;
+        }
+
+        console.log("[useSingleMatchObjects2] - Running hook...")
+        
         runHook();
-    }, [matchObjects, pgnObjects, username, website]);
+    // }, [pgnObjects, username, website]);
     // }, [matchObjects, pgnObjects, username, website]);
+    // }, [username, website]);
+    // }, [isTriggerBuildStage, username, website]);
+    }, [isTriggerBuildStage]);
+    // }, []);
 
 
     async function runHook() {
@@ -45,12 +84,17 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
     
         await Promise.all(matchObjects.map(async (match, index) => {
             try {
+                // console.log(index)
+                // console.log(match)
+                // console.log(matchObjects)
+                // console.log(pgnObjects)
                 const matchObject = matchObjects[index];
                 const pgnObject = pgnObjects[index];
                 const parsedObject = await createSingleMatchObject(matchObject, pgnObject, username, website);
                 results.push(parsedObject);
             } catch (err) {
                 console.log("-----ERROR-----")
+                console.error(err)
                 errors.push(err);
                 errorIndexes.push(index)
             }
@@ -62,14 +106,38 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
 
         // console.log("===========================")
         // console.log(results)
-        setHookData(results);
-        setHookErrors(errors);
+        setBuiltGameData(results);
+        setBuiltGameErrors(errors);
         // console.log("===========================")
     };
   
 
     const adaptMatchInformation = (match, parsedData, username, website) => { 
 
+
+        // console.log(match);
+        // console.log(parsedData);
+        // console.log();
+        // console.log();
+        
+
+        ///
+        ///
+        ///
+        function getGameType() {
+            try {
+                if (website === "chesscom") {return parsedData["Event"]}
+                if (website === "lichess") {return match.variant.charAt(0).toUpperCase() + match.variant.slice(1);};
+                return "[getGameType] WEBSITE NOT FOUND";
+            }
+            catch (err) {
+                return "[getGameType] TRY/CATCH ERROR";
+            };
+        };
+
+        ///
+        ///
+        ///
         function getGameURL() {
             try {
                 if (website === "chesscom") {return parsedData.Link};
@@ -82,6 +150,8 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
         };
 
         // currently doesnt really work
+        //
+        //
         function getOpeningName() {
             try {
                 if (website === "chesscom") {
@@ -95,6 +165,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getWebsite() {
             try {
                 if (website === "chesscom") {return "ChessCom"};
@@ -106,6 +179,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getUserPlayedColor() {
             try {
 
@@ -118,6 +194,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getWinningPlayerColor() {
             try {
                 if (parsedData.Result === "1/2-1/2") {return ""}
@@ -130,6 +209,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getWinningPlayerName() {
             try {
                 const matchWinner = getWinningPlayerColor();
@@ -144,6 +226,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getUserResult() {
             try {
                 const userPlayed = getUserPlayedColor();
@@ -159,6 +244,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getEndingPosition() {
             try {
                 if (website === "chesscom") {return parsedData.CurrentPosition};
@@ -170,6 +258,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getTimeClassType() {
             try {
                 if (website === "chesscom") {return match.time_class};
@@ -181,6 +272,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getTerminationWord() {
             try {
                 if (website === "chesscom") {return parsedData.Termination.split(' ').pop()};
@@ -207,6 +301,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getTerminationFull() {
             const winnerGetPlayerName = getWinningPlayerName();
             const terminationWord = getTerminationWord();
@@ -227,6 +324,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getGameID() {
             try {
                 if (website === "chesscom") {
@@ -241,6 +341,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+        ///
+        ///
+        ///
         function getIsRated() {
             try {
                 if (website === "chesscom") {return match.rated}
@@ -252,6 +355,10 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
+
+        ///
+        ///
+        ///
         function getTime() {
             try {
 
@@ -294,16 +401,7 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             };
         };
 
-        function getGameType() {
-            try {
-                if (website === "chesscom") {return parsedData["Event"]}
-                if (website === "lichess") {return match.variant.charAt(0).toUpperCase() + match.variant.slice(1);};
-                return "[getGameType] WEBSITE NOT FOUND";
-            }
-            catch (err) {
-                return "[getGameType] TRY/CATCH ERROR";
-            };
-        };
+
 
         return {
               "game_website":               getWebsite()
@@ -346,7 +444,7 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
 
     const createSingleMatchObject = (match, parsedData, username, website) => {
 
-        console.log(parsedData.ECO)
+        // console.log(parsedData.ECO)
 
 
         function getEloDiff() {
@@ -401,6 +499,9 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
 
         const findOpeningMatch = (game, openings) => {
 
+            // console.log("====findOpeningMatch===findOpeningMatch")
+            // console.log(game)
+
             //
             // Takes Array of FENs, Finds the most relevant opening
             //
@@ -431,9 +532,14 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
             // Extract only the first 20 moves (10 white, 10 black from the PGN)
             const splitMoves2 = game.split(' ').slice(0, 20);
             const joinedMoves = splitMoves2.join(" ")
+            // Replace spaces after a period (move numbers) globally
+            const joinedMoves2 = joinedMoves.replace(/\. /g, ".");
+
+
+            // console.log(joinedMoves)
 
             // Create a new Game(). Game() will invoke itself
-            const newGame = new Game(joinedMoves);
+            const newGame = new Game(1, joinedMoves2);
 
             // Reverse the FEN array, Loop through each FEN against the dictionary. Set an index if a match is found
             // Lowest index = Opening
@@ -554,9 +660,13 @@ const useSingleMatchObjects2 = (matchObjects, pgnObjects, username, website) => 
         };
     };
 
-    // return hookData;
-    console.log({hookData, hookPending, hookErrors})
-    return {hookData, hookPending, hookErrors}
+    // return builtGameData;
+    // console.log("===RETURN useSingleMatchObjects2===")
+    // console.log({builtGameData, isBuiltPending, builtGameErrors})
+    return {builtGameData, isBuiltPending, builtGameErrors}
+
+// const {data, isBuiltPending: isBuildPending, errors: buildErrors
+
 };
 
 

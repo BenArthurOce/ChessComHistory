@@ -29,7 +29,7 @@ class StaticErrorCheck {
      */
     static validatePGNExistence(pgn, fromClass, fromFunction) {
         if (!pgn) {
-            const errorMsg = `[StaticErrorCheck] [${fromClass}] [${fromFunction}] : No PGN found`
+            const errorMsg = `[StaticErrorCheck] [validatePGNExistence] [${fromClass}] [${fromFunction}] : No PGN found`
             console.error(errorMsg)
             StaticErrorCheck.handleError(errorMsg);
         };

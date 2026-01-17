@@ -19,7 +19,8 @@ import OtherStatsMaster from './moduleOtherStats/OtherStatsMaster';
 
 import RequestsMaster from "./moduleDataRequests/RequestsMaster";
 
-
+// TestSpinner component
+import TestSpinner from "./TestSpinner";
 ;
 
 
@@ -38,8 +39,8 @@ const ChessAppDebug = () => {
 
 
 
-    const hookParsedMatches = useBuildMatchesChessCom(matchHistory, 'BenArthurOCE');
-    // const hookParsedMatches = useBuildMatchesChessCom(matchHistory, formData?.username);
+    const {builtGameData, isPending, builtGameErrors} = useBuildMatchesChessCom(matchHistory, 'BenArthurOCE');
+    // const builtGameData = useBuildMatchesChessCom(matchHistory, formData?.username);
     const [activeModule, setActiveModule] = useState('formInput');
 
 
@@ -54,7 +55,12 @@ const ChessAppDebug = () => {
 
     const handleTestButtonClick = () => {
         console.log("==handleButtonClick==");
-        console.log(hookParsedMatches)
+        // console.log(builtGameData)
+        // console.log(builtGameData)
+        // console.log({builtGameData, isBuiltPending, builtGameErrors})
+        // console.log(builtGameData['hookUseSingleMatchObjects'])
+        // console.log(builtGameData['hookData'])
+        // console.log(builtGameData['hookUseSingleMatchObjects']['hookData'])
     };
 
     const handleModuleChange = (event) => {
@@ -82,36 +88,47 @@ const ChessAppDebug = () => {
             )}
 
 
+            {/* --- TestSpinner while building games --- */}
+            {isPending && (
+                <TestSpinner 
+                    size="60px" 
+                    thickness="6px" 
+                    color="#eee" 
+                    colorTop="#007bff" 
+                    text="Processing games..." 
+                />
+            )}
+
             { matchHistory && (
             <p>data got</p>
             )}
 
-
             {matchHistory && (
                 <Inner>
 
-                    {/* {hookParsedMatches && activeModule === 'playerInfo' && (
+                    {/* {builtGameData && activeModule === 'playerInfo' && (
                         <PlayerInformation playerInformation={playerInformation} />
                     )} */}
 
-                    {hookParsedMatches && activeModule === 'matchHistory' && (
-                        <MatchHistoryDisplay matchHistory={hookParsedMatches} />
+                    {builtGameData && activeModule === 'matchHistory' && (
+                        // <MatchHistoryDisplay matchHistory={builtGameData} />
+                        <MatchHistoryDisplay matchHistory={builtGameData} />
                     )}
 
-                    {hookParsedMatches && activeModule === 'tableSummary' && (
-                        <MatchHistoryTableMaster matchHistory={hookParsedMatches} />
+                    {builtGameData && activeModule === 'tableSummary' && (
+                        <MatchHistoryTableMaster matchHistory={builtGameData} />
                     )}
 
-                    {hookParsedMatches && activeModule === 'otherStats' && (
-                        <OtherStatsMaster matchHistory={hookParsedMatches} />
+                    {builtGameData && activeModule === 'otherStats' && (
+                        <OtherStatsMaster matchHistory={builtGameData} />
                     )}
 
-                    {hookParsedMatches && activeModule === 'heatMapMaster' && (
-                        <HeatmapMaster matchHistory={hookParsedMatches} />
+                    {builtGameData && activeModule === 'heatMapMaster' && (
+                        <HeatmapMaster matchHistory={builtGameData} />
                     )}
 
-                    {hookParsedMatches && activeModule === 'openingAnalysis' && (
-                        <OpeningAnalysisMaster matchHistory={hookParsedMatches} />
+                    {builtGameData && activeModule === 'openingAnalysis' && (
+                        <OpeningAnalysisMaster matchHistory={builtGameData} />
                     )}
 
                 </Inner>

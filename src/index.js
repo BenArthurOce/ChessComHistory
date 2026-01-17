@@ -21,6 +21,8 @@ root.render(
     <ChessAppDebug />
 </React.StrictMode>
 
+
+
 );
 
 {/* <Router>
