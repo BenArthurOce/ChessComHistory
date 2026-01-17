@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useFetch from "../../hooksSpecific/HooksAPI/useFetch";
-import useFetchGameObjects from "../../hooksSpecific/HooksAPI/useFetchGameObjects";
+import useFetchGameObjectsChessCom from "../../hooksSpecific/HooksAPI/useFetchGameObjectsChessCom";
 
+import useBuildMatchesChessCom from "../../hooksSpecific/HooksAPI/useBuildMatchesChessCom";
 
 const StatusBar = styled.div
 `
@@ -20,20 +21,34 @@ const StatusBar = styled.div
 
 const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest }) => {
 
-    // console.log(formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest)
+    // First API: Get player profile summary
+    const { data: profileData, isPending: isProfilePending, error: profileError 
+    } = useFetch(playerProfileUrl);
 
-    
-    const { data: profileData, isPending: isProfilePending, error: profileError } = useFetch(playerProfileUrl);
-    const { data: statsData, isPending: isStatsPending, error: statsError } = useFetch(playerStatsUrl);
-    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError } = useFetch(gameArchiveURls);
-    const { data: gameObjects, isPending: isGameObjectsPending, error: gameObjectsError } = useFetchGameObjects(archiveLinksData, parseInt(formData.numgames));
+    // Second API: Get player stats, rating
+    const { data: statsData, isPending: isStatsPending, error: statsError 
+    } = useFetch(playerStatsUrl);
+
+    // Third API: Get array of each month API urls
+    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError 
+    } = useFetch(gameArchiveURls);
+
+    // Third API: Fetch the data from each month, trim to number of games
+    const { data: gameObjects, isPending: isGameObjectsPending, error: gameObjectsError 
+    } = useFetchGameObjectsChessCom(archiveLinksData, parseInt(formData.numgames));
+
+    // Build Game objects
+    const {builtGameData, isPending, errors
+    } = useBuildMatchesChessCom(gameObjects, formData.username);
+
 
     // Send gameObjects to parent when it updates
     useEffect(() => {
-        if (gameObjects && onDataRequest) {
-            onDataRequest(gameObjects);
+        if (gameObjects && builtGameData && onDataRequest) {
+            onDataRequest(builtGameData);
         }
-    }, [gameObjects, onDataRequest]);
+    }, [gameObjects, builtGameData, onDataRequest]);
+
 
     const handleTestButtonClick = () => {
         console.log("Form input", formData);
@@ -41,6 +56,7 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
         console.log("Stats Data:", statsData);
         console.log("Archive Links:", archiveLinksData);
         console.log("Game Objects:", gameObjects);
+        console.log("builtGameData", builtGameData)
     };
 
 
@@ -53,6 +69,9 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
 
     return (
         <>
+
+            <h1> MakeRequestsChessCom2 </h1>
+
             <StatusBar pending={isProfilePending} error={profileError} success={profileData}>
                 {getStatusText(isProfilePending, profileError, profileData, "Profile")}
             </StatusBar>
@@ -69,7 +88,11 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
                 {getStatusText(isGameObjectsPending, gameObjectsError, gameObjects, "Game Objects")}
             </StatusBar>
 
-            <button onClick={handleTestButtonClick}>VIEW REQUEST RESULTS</button>
+            <StatusBar pending={isPending} error={errors?.build} success={builtGameData}>
+                {getStatusText(isPending, errors?.build, builtGameData, "Building Game Data")}
+            </StatusBar>
+
+            <button onClick={handleTestButtonClick}>View ChessCom Requests</button>
         </>
     );
 };

@@ -10,17 +10,19 @@ const InputForm = ({ onFormSubmit }) => {
     const [username, setUsername] = useState("BenArthurOCE");
     // const [lastNGames, setLastNGames] = useState("415");
     const [lastNGames, setLastNGames] = useState("2");
+    const [website, setWebsite] = useState("lichess");
 
     // Handlers for controlled inputs
     const handleUsernameChange = (ev) => setUsername(ev.target.value);
     const handleLastNGamesChange = (ev) => setLastNGames(ev.target.value);
+    const handleWebsiteChange = (ev) => setWebsite(ev.target.value);
 
     // When form is submitted
     const submitTriggered = (event) => {
         event.preventDefault();
 
         const thisFormData = {
-            website: "Chess.com", // Hardcoded for now, adjust if needed
+            website,
             username,
             numgames: lastNGames
         };
@@ -52,6 +54,18 @@ const InputForm = ({ onFormSubmit }) => {
                         value={lastNGames}
                         onChange={handleLastNGamesChange}
                         placeholder="No# of Games"
+                    />
+                </FlexRow>
+
+
+                <FlexRow>
+                    <FlexLabel htmlFor="lastngamesInput"># of Games:</FlexLabel>
+                    <FlexInput
+                        id="websiteInput"
+                        // type="number"
+                        value={website}
+                        onChange={handleWebsiteChange}
+                        placeholder="Website"
                     />
                 </FlexRow>
 

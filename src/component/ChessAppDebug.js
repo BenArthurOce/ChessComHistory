@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Container, Inner, FlexRow, FlexLabel, FlexInput, FlexDropDown } from "./styles3";
 
 
-import useBuildMatchesChessCom from "../hooksSpecific/HooksGameObjects/useBuildMatchesChessCom";
+import useBuildMatchesChessCom from "../hooksSpecific/HooksAPI/useBuildMatchesChessCom";
 
-
+import useBuildMatchesLichess from "../hooksSpecific/HooksGameObjects/useBuildMatchesLichess2";
 
 
 
@@ -35,11 +35,22 @@ import TestSpinner from "./TestSpinner";
 
 const ChessAppDebug = () => {
 
-    const [matchHistory, setMatchHistory] = useState(null);
+    // const [matchHistory, setMatchHistory] = useState(null);
+    const [builtGameData, setBuiltGameData] = useState(null);
+    const website = 'chesscom'
 
 
 
-    const {builtGameData, isPending, builtGameErrors} = useBuildMatchesChessCom(matchHistory, 'BenArthurOCE');
+
+//
+// Progress 17th Jane 2026
+//
+// "useBuildMatchesLichess" / Com should not be in this component, but the match history doesn't run without it
+//
+//
+
+    // const {builtGameData, isPending, builtGameErrors} = useBuildMatchesChessCom(matchHistory, 'BenArthurOCE');
+    // const {builtGameData, isPending, builtGameErrors} = useBuildMatchesLichess(matchHistory, 'BenArthurOCE');
     // const builtGameData = useBuildMatchesChessCom(matchHistory, formData?.username);
     const [activeModule, setActiveModule] = useState('formInput');
 
@@ -48,15 +59,16 @@ const ChessAppDebug = () => {
     const receiveRequestGameObjects = useCallback((requestGameObjects) => {
         if (requestGameObjects.length == 0) {return};
         if (!requestGameObjects) {return};
-        setMatchHistory(requestGameObjects)
+        // setMatchHistory(requestGameObjects)
+        setBuiltGameData(requestGameObjects)
     }, []);
 
 
 
     const handleTestButtonClick = () => {
         console.log("==handleButtonClick==");
-        // console.log(builtGameData)
-        // console.log(builtGameData)
+        // console.log(matchHistory)
+        console.log(builtGameData)
         // console.log({builtGameData, isBuiltPending, builtGameErrors})
         // console.log(builtGameData['hookUseSingleMatchObjects'])
         // console.log(builtGameData['hookData'])
@@ -70,7 +82,9 @@ const ChessAppDebug = () => {
     return (
         <>
 
-            <button onClick={handleTestButtonClick}>View Game Objects</button>
+        <h1> ChessAppDebug Component</h1>
+
+            <button onClick={handleTestButtonClick}>ChessAppDebug</button>
 
             <select name="module" id="module" value={activeModule} onChange={handleModuleChange}>
                 <option value="formInput">Input</option>
@@ -89,7 +103,7 @@ const ChessAppDebug = () => {
 
 
             {/* --- TestSpinner while building games --- */}
-            {isPending && (
+            {/* {isPending && (
                 <TestSpinner 
                     size="60px" 
                     thickness="6px" 
@@ -97,21 +111,22 @@ const ChessAppDebug = () => {
                     colorTop="#007bff" 
                     text="Processing games..." 
                 />
-            )}
+            )} */}
 
-            { matchHistory && (
+            { builtGameData && (
             <p>data got</p>
             )}
 
-            {matchHistory && (
+            {builtGameData && (
                 <Inner>
+
+                    <p>activeModule {activeModule} </p>
 
                     {/* {builtGameData && activeModule === 'playerInfo' && (
                         <PlayerInformation playerInformation={playerInformation} />
                     )} */}
 
                     {builtGameData && activeModule === 'matchHistory' && (
-                        // <MatchHistoryDisplay matchHistory={builtGameData} />
                         <MatchHistoryDisplay matchHistory={builtGameData} />
                     )}
 

@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 
 
-import useParsePGN from "./useParsePGN";
+import useParsePGN from "../HooksGameObjects/useParsePGN";
 // import useSingleMatchObjects from "./useSingleMatchObjects";
-import useSingleMatchObjects from "./useSingleMatchObjects2";
+import useSingleMatchObjects from "../HooksGameObjects/useSingleMatchObjects2";
 
 //
 // "HookInput" is each match object array obtained from the API
 
 const useBuildMatchesChessCom = (hookInput, username) => {
-
 
     //
     // States
