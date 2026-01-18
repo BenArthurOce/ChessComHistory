@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useFetch from "../../hooksSpecific/HooksAPI/useFetch";
-import useFetchGameObjectsChessCom from "../../hooksSpecific/HooksAPI/useFetchGameObjectsChessCom";
+import useFetchRawGameObjectsChessCom from "../../hooksSpecific/HooksAPI/useFetchRawGameObjectsChessCom";
 
 import useBuildMatchesChessCom from "../../hooksSpecific/HooksAPI/useBuildMatchesChessCom";
 
@@ -34,29 +34,35 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
     } = useFetch(gameArchiveURls);
 
     // Third API: Fetch the data from each month, trim to number of games
-    const { data: gameObjects, isPending: isGameObjectsPending, error: gameObjectsError 
-    } = useFetchGameObjectsChessCom(archiveLinksData, parseInt(formData.numgames));
+    const { data: rawGameObjects, isPending: israwGameObjectsPending, error: rawGameObjectsError 
+    } = useFetchRawGameObjectsChessCom(archiveLinksData, parseInt(formData.numgames));
 
     // Build Game objects
     const {builtGameData, isPending, errors
-    } = useBuildMatchesChessCom(gameObjects, formData.username);
+    } = useBuildMatchesChessCom(rawGameObjects, formData.username);
 
 
-    // Send gameObjects to parent when it updates
+    // Send rawGameObjects to parent when it updates
     useEffect(() => {
-        if (gameObjects && builtGameData && onDataRequest) {
+        if (rawGameObjects && builtGameData && onDataRequest) {
             onDataRequest(builtGameData);
         }
-    }, [gameObjects, builtGameData, onDataRequest]);
+    }, [rawGameObjects, builtGameData, onDataRequest]);
 
 
-    const handleTestButtonClick = () => {
+    const handleRequestResultsClick = () => {
+        console.log("====handleRequestResultsClick====")
         console.log("Form input", formData);
         console.log("Profile Data:", profileData);
         console.log("Stats Data:", statsData);
         console.log("Archive Links:", archiveLinksData);
-        console.log("Game Objects:", gameObjects);
+        console.log("Game Objects:", rawGameObjects);
         console.log("builtGameData", builtGameData)
+    };
+
+    const handleErrorResultsClick = () => {
+        console.log("====handleErrorResultsClick====")
+        console.log("errors", errors);
     };
 
 
@@ -84,15 +90,16 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
                 {getStatusText(isArchiveLinksPending, archiveLinksError, archiveLinksData, "Archive Links")}
             </StatusBar>
 
-            <StatusBar pending={isGameObjectsPending} error={gameObjectsError} success={gameObjects}>
-                {getStatusText(isGameObjectsPending, gameObjectsError, gameObjects, "Game Objects")}
+            <StatusBar pending={israwGameObjectsPending} error={rawGameObjectsError} success={rawGameObjects}>
+                {getStatusText(israwGameObjectsPending, rawGameObjectsError, rawGameObjects, "Raw Game Objects")}
             </StatusBar>
 
             <StatusBar pending={isPending} error={errors?.build} success={builtGameData}>
                 {getStatusText(isPending, errors?.build, builtGameData, "Building Game Data")}
             </StatusBar>
 
-            <button onClick={handleTestButtonClick}>View ChessCom Requests</button>
+            <button onClick={handleRequestResultsClick}>View ChessCom Requests</button>
+            <button onClick={handleErrorResultsClick}>View ChessCom Errors</button>
         </>
     );
 };

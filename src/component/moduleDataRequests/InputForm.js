@@ -10,7 +10,7 @@ const InputForm = ({ onFormSubmit }) => {
     const [username, setUsername] = useState("BenArthurOCE");
     // const [lastNGames, setLastNGames] = useState("415");
     const [lastNGames, setLastNGames] = useState("2");
-    const [website, setWebsite] = useState("lichess");
+    const [website, setWebsite] = useState("chesscom");
 
     // Handlers for controlled inputs
     const handleUsernameChange = (ev) => setUsername(ev.target.value);

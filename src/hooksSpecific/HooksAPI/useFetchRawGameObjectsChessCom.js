@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useFetchGameObjectsChessCom = (urls, lastNGames) => {
+const useFetchRawGameObjectsChessCom = (urls, lastNGames) => {
     const [data, setData] = useState([]);
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
@@ -27,10 +27,10 @@ const useFetchGameObjectsChessCom = (urls, lastNGames) => {
 
                 while (outputArray.length < lastNGames && index < reverseArray.length) {
                     const url = reverseArray[index];
-                    const gameObjects = await getData(url);
+                    const rawGameObjects = await getData(url);
 
-                    if (gameObjects?.games?.length) {
-                        outputArray.push(...gameObjects.games.reverse());
+                    if (rawGameObjects?.games?.length) {
+                        outputArray.push(...rawGameObjects.games.reverse());
                     }
 
                     index++;
@@ -73,4 +73,4 @@ const useFetchGameObjectsChessCom = (urls, lastNGames) => {
     return { data, isPending, error };
 };
 
-export default useFetchGameObjectsChessCom;
+export default useFetchRawGameObjectsChessCom;

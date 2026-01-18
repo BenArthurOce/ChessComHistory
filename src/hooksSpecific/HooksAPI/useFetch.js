@@ -8,7 +8,9 @@ const useFetch = (url) => {
 
 
     useEffect(() => {
+        console.log(url)
         if (!url) return; 
+        console.log("useeffect allowed")
         runHook(url);
     }, [url]);
 
@@ -37,6 +39,7 @@ const useFetch = (url) => {
         }
     };
 
+    console.log(data)
     return { data, isPending, error };
 };
 

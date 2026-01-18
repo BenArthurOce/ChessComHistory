@@ -5,8 +5,8 @@ import useFetch from "../../hooksSpecific/HooksAPI/useFetch";
 import useBuildMatchesLichess from "../../hooksSpecific/HooksGameObjects/useBuildMatchesLichess2";
 
 
-const StatusBar = styled.div
-`
+const StatusBar = React.memo(styled.div
+    `
     width: 100%;
     margin: 10px 0;
     background-color: ${(props) => {
@@ -16,8 +16,9 @@ const StatusBar = styled.div
         return "grey";
     }};
     transition: background-color 0.3s ease-in-out;
-`
-;
+`);
+
+
 
 const MakeRequestsLichess2 = ({ formData, playerProfileUrl, playerStatsUrl, gamesUrl, onDataRequest }) => {
 // const MakeRequestsLichess2 = ({ formData, playerProfileUrl, playerStatsUrl, onDataRequest }) => {
