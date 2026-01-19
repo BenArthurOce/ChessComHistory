@@ -8,8 +8,11 @@ import useSingleMatchObjects from "./useSingleMatchObjects2";
 //
 // "HookInput" is each match object array obtained from the API
 
-const useBuildMatchesLichess = (hookInput, username) => {
+const useBuildMatchesLichess2 = (hookInput, username) => {
 
+    // console.log("========useBuildMatchesLichess2=========")
+    // console.log(hookInput)
+    // console.log(username)
 
     //
     // States
@@ -36,7 +39,7 @@ const useBuildMatchesLichess = (hookInput, username) => {
         if (!hookInput || hookInput.length === 0) return;
         if (!username || username.length === 0) return;
 
-        console.log("[useBuildMatchesLichess] - Triggering Parse Stage");
+        // console.log("[useBuildMatchesLichess] - Triggering Parse Stage");
         setIsTriggerParseStage(true);
     }, [hookInput, username]);
 
@@ -46,7 +49,7 @@ const useBuildMatchesLichess = (hookInput, username) => {
         if (isParsePending) return; // wait until parsing finishes
         if (!parsedGames || parsedGames.length === 0) return;
 
-        console.log("[useBuildMatchesLichess] - Triggering Build Stage");
+        // console.log("[useBuildMatchesLichess] - Triggering Build Stage");
         setIsTriggerBuildStage(true);
     }, [isParsePending, parsedGames]);
 
@@ -75,4 +78,4 @@ const useBuildMatchesLichess = (hookInput, username) => {
     };
 };
 
-export default useBuildMatchesLichess;
+export default useBuildMatchesLichess2;

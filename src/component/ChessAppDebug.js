@@ -31,6 +31,7 @@ const ChessAppDebug = () => {
         setBuiltGameData(requestGameObjects)
     }, []);
 
+    
     // Debugging
     const handleMainAppButtonClick = () => {
         console.log("==handleMainAppButtonClick==");

@@ -5,6 +5,8 @@ import useFetchRawGameObjectsChessCom from "../../hooksSpecific/HooksAPI/useFetc
 
 import useBuildMatchesChessCom from "../../hooksSpecific/HooksAPI/useBuildMatchesChessCom";
 
+import useEffectWithDebug from "../useEffectWithDebug";
+
 const StatusBar = styled.div
 `
     width: 100%;
@@ -20,17 +22,17 @@ const StatusBar = styled.div
 ;
 
 const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gameArchiveURls, onDataRequest }) => {
-
+    
     // First API: Get player profile summary
-    const { data: profileData, isPending: isProfilePending, error: profileError 
+    const { data: profileData, isPending: isProfilePending, error: profileError, errorMessage: profileErrorMessage
     } = useFetch(playerProfileUrl);
 
     // Second API: Get player stats, rating
-    const { data: statsData, isPending: isStatsPending, error: statsError 
+    const { data: statsData, isPending: isStatsPending, error: statsError, errorMessage: statsErrorMessage
     } = useFetch(playerStatsUrl);
 
     // Third API: Get array of each month API urls
-    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError 
+    const { data: archiveLinksData, isPending: isArchiveLinksPending, error: archiveLinksError, errorMessage: archiveLinksErrorMessage
     } = useFetch(gameArchiveURls);
 
     // Third API: Fetch the data from each month, trim to number of games
@@ -38,16 +40,29 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
     } = useFetchRawGameObjectsChessCom(archiveLinksData, parseInt(formData.numgames));
 
     // Build Game objects
-    const {builtGameData, isPending, errors
+    const {builtGameData, isPending: isBuiltGamePending, errors: builtGameErrors
     } = useBuildMatchesChessCom(rawGameObjects, formData.username);
 
 
-    // Send rawGameObjects to parent when it updates
+    // // Send rawGameObjects to parent when it updates
     useEffect(() => {
-        if (rawGameObjects && builtGameData && onDataRequest) {
+        if (!builtGameData || !onDataRequest) return;
+
+        // Only call if the data has meaningful content
+        if (Array.isArray(builtGameData) ? builtGameData.length > 0 : true) {
             onDataRequest(builtGameData);
         }
-    }, [rawGameObjects, builtGameData, onDataRequest]);
+    }, [builtGameData, onDataRequest]);
+
+
+    // useEffectWithDebug(() => {
+    // if (!builtGameData || !onDataRequest) return;
+
+    // if (Array.isArray(builtGameData) ? builtGameData.length > 0 : true) {
+    //     console.log("===============USE EFFECT TRIGGERED=2==============");
+    //     onDataRequest(builtGameData);
+    // }
+    // }, [builtGameData, onDataRequest]);
 
 
     const handleRequestResultsClick = () => {
@@ -62,7 +77,7 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
 
     const handleErrorResultsClick = () => {
         console.log("====handleErrorResultsClick====")
-        console.log("errors", errors);
+        console.log("errors", builtGameErrors);
     };
 
 
@@ -78,7 +93,7 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
 
             <h1> MakeRequestsChessCom2 </h1>
 
-            <StatusBar pending={isProfilePending} error={profileError} success={profileData}>
+            {/* <StatusBar pending={isProfilePending} error={profileError} success={profileData}>
                 {getStatusText(isProfilePending, profileError, profileData, "Profile")}
             </StatusBar>
 
@@ -94,9 +109,9 @@ const MakeRequestsChessCom2 = ({ formData, playerProfileUrl, playerStatsUrl, gam
                 {getStatusText(israwGameObjectsPending, rawGameObjectsError, rawGameObjects, "Raw Game Objects")}
             </StatusBar>
 
-            <StatusBar pending={isPending} error={errors?.build} success={builtGameData}>
-                {getStatusText(isPending, errors?.build, builtGameData, "Building Game Data")}
-            </StatusBar>
+            <StatusBar pending={isBuiltGamePending} error={builtGameErrors?.build} success={builtGameData}>
+                {getStatusText(isBuiltGamePending, builtGameErrors?.build, builtGameData, "Building Game Data")}
+            </StatusBar> */}
 
             <button onClick={handleRequestResultsClick}>View ChessCom Requests</button>
             <button onClick={handleErrorResultsClick}>View ChessCom Errors</button>

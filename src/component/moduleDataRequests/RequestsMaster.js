@@ -1,130 +1,90 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useCallback, useMemo } from "react";
+
 
 import InputForm from "./InputForm";
 import MakeRequestsChessCom2 from "./MakeRequestsChessCom2";
 import MakeRequestsLichess2 from "./MakeRequestsLichess2";
 
-const RequestsMaster = ({receiveRequestGameObjects}) => {
 
-    const [formData, setFormData] = useState(null);
+const RequestsMaster = ({ receiveRequestGameObjects }) => {
+  const [formData, setFormData] = useState(null);
 
-
-    const refPlayerProfileUrlChessCom = useRef(null)
-    const refPlayerStatsUrlChessCom = useRef(null)
-    const refPlayerArchiveURlsChessCom = useRef(null)
-
-
-
-    const refPlayerProfileUrlLichess = useRef(null)
-    const refPlayerStatsUrlLichess = useRef(null)
-    const refPlayerArchiveURlsLichess = useRef(null)
-
-    const refPlayerGamesUrlLichess = useRef(null)
+  
+  const handleFormSubmit = useCallback((submittedForm) => {
+    if (!submittedForm) return;
+    setFormData(submittedForm);
+  }, []);
 
 
-    const masterHandleFormSubmit = useCallback((submittedForm) => {
-        if (!submittedForm) return;
-
-        setFormData(submittedForm);
-
-        // refPlayerProfileUrlChessCom.current = `https://api.chess.com/pub/player/${submittedForm.username}`
-        // refPlayerStatsUrlChessCom.current = `https://api.chess.com/pub/player/${submittedForm.username}/stats`
-        // refPlayerArchiveURlsChessCom.current = `https://api.chess.com/pub/player/${submittedForm.username}/games/archives`
- 
- 
- 
-        /* ---------------- CHESS.COM ---------------- */
-        if (submittedForm.website === "chesscom") {
-            refPlayerProfileUrlChessCom.current =
-                `https://api.chess.com/pub/player/${submittedForm.username}`;
-
-            refPlayerStatsUrlChessCom.current =
-                `https://api.chess.com/pub/player/${submittedForm.username}/stats`;
-
-            refPlayerArchiveURlsChessCom.current =
-                `https://api.chess.com/pub/player/${submittedForm.username}/games/archives`;
-        }
+  const handleRequestGet = useCallback(
+    (data) => {
+      if (!data || data.length === 0) return;
+      receiveRequestGameObjects(data);
+    },
+    [receiveRequestGameObjects]
+  );
 
 
+  // 🔹 Derive URLs from formData
+  const urls = useMemo(() => {
+    if (!formData) return null;
 
-// const url = `https://lichess.org/api/games/user/${username}?pgnInJson=true&max=${lastNGames}&accuracy=true&opening=true&evals=true&lastFen=true`;
- 
+    const { username, website, numgames } = formData;
 
-
-        /* ---------------- LICHESS ---------------- */
-        if (submittedForm.website === "lichess") {
-
-            refPlayerProfileUrlLichess.current =
-                `https://lichess.org/api/user/${submittedForm.username}`;
-
-            refPlayerStatsUrlLichess.current =
-                `https://lichess.org/api/user/${submittedForm.username}`;
-                
-            refPlayerStatsUrlLichess.current =
-                `https://lichess.org/api/user/${submittedForm.username}`;
-
-            refPlayerGamesUrlLichess.current =
-                `https://lichess.org/api/games/user/${submittedForm.username}?pgnInJson=true&max=${submittedForm.numgames}&accuracy=true&opening=true&evals=true&lastFen=true`;
-            }
+    if (website === "chesscom") {
+      return {
+        profile: `https://api.chess.com/pub/player/${username}`,
+        stats: `https://api.chess.com/pub/player/${username}/stats`,
+        archives: `https://api.chess.com/pub/player/${username}/games/archives`,
+      };
+    }
 
 
-    }, []);
+    if (website === "lichess") {
+      return {
+        profile: `https://lichess.org/api/user/${username}`,
+        stats: `https://lichess.org/api/user/${username}`,
+        games: `https://lichess.org/api/games/user/${username}?pgnInJson=true&max=${numgames}&accuracy=true&opening=true&evals=true&lastFen=true`,
+      };
+    }
 
+    return null;
+  }, [formData]);
 
-    const masterHandleRequestGet = useCallback((data) => {
-        if (data.length == 0) {return};
-        if (!data) {return};
-        console.log(data)
-        receiveRequestGameObjects(data)
-    }, []);
+  
+  return (
+    <>
+      <h1>RequestsMaster</h1>
 
+      <InputForm onFormSubmit={handleFormSubmit} />
 
-
-
-
-    return (
+      {formData && urls && (
         <>
-            <h1>RequestsMaster</h1>
+          <p>Form has been accepted</p>
 
-            <InputForm onFormSubmit={masterHandleFormSubmit} />
+          {formData.website === "chesscom" && (
+            <MakeRequestsChessCom2
+              formData={formData}
+              playerProfileUrl={urls.profile}
+              playerStatsUrl={urls.stats}
+              gameArchiveURls={urls.archives}
+              onDataRequest={handleRequestGet}
+            />
+          )}
 
-            {formData && (
-                <>
-                    <p>form has been accepted</p>
-
-                    {/* -------- CHESS.COM -------- */}
-                    {formData.website === "chesscom" && (
-                        <MakeRequestsChessCom2
-                            formData={formData}
-                            playerProfileUrl={refPlayerProfileUrlChessCom.current}
-                            playerStatsUrl={refPlayerStatsUrlChessCom.current}
-                            gameArchiveURls={refPlayerArchiveURlsChessCom.current}
-                            onDataRequest={masterHandleRequestGet}
-                        />
-                        
-                    )}
-
-                    {/* -------- LICHESS -------- */}
-                    {formData.website === "lichess" && (
-                        <>
-
-                        <h1>MakeRequestsLichess2</h1>
-                            {/* Placeholder for future */}
-                            
-                            <MakeRequestsLichess2
-                                formData={formData}
-                                playerProfileUrl={refPlayerProfileUrlLichess.current}
-                                playerStatsUrl={refPlayerStatsUrlLichess.current}
-                                gamesUrl={refPlayerGamesUrlLichess.current}
-                                onDataRequest={masterHandleRequestGet}
-                            />
-                            
-                        </>
-                    )}
-                </>
-            )}
+          {formData.website === "lichess" && (
+            <MakeRequestsLichess2
+              formData={formData}
+              playerProfileUrl={urls.profile}
+              playerStatsUrl={urls.stats}
+              gamesUrl={urls.games}
+              onDataRequest={handleRequestGet}
+            />
+          )}
         </>
-    );
+      )}
+    </>
+  );
 };
 
 export default RequestsMaster;

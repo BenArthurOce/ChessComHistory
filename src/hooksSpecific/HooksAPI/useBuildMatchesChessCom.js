@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 
 
 import useParsePGN from "../HooksGameObjects/useParsePGN";
-// import useSingleMatchObjects from "./useSingleMatchObjects";
 import useSingleMatchObjects from "../HooksGameObjects/useSingleMatchObjects2";
 
 //

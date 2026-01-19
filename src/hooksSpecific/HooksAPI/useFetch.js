@@ -1,46 +1,43 @@
 import { useState, useEffect } from "react";
 
 const useFetch = (url) => {
-
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(false);
-    const [error, setError] = useState(null);
-
+    const [hasError, setHasError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        console.log(url)
-        if (!url) return; 
-        console.log("useeffect allowed")
+        if (!url) return;
         runHook(url);
     }, [url]);
 
-
     async function runHook(url) {
         setIsPending(true);
+        setHasError(false);
+        setErrorMessage(null);
+
         try {
             const json = await getData(url);
             setData(json);
         } catch (err) {
-            setError(err.message);
+            setHasError(true);
+            setErrorMessage(err.message);
         } finally {
             setIsPending(false);
         }
-    };
-
+    }
 
     async function getData(url) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
-            return await response.json();
-        } catch (error) {
-            console.error(error.message);
-            throw error;
-        }
-    };
+        const response = await fetch(url);
 
-    console.log(data)
-    return { data, isPending, error };
+        if (!response.ok) {
+            throw new Error(`Network error (${response.status})`);
+        }
+
+        return response.json();
+    }
+
+    return { data, isPending, hasError, errorMessage };
 };
 
 export default useFetch;
